@@ -119,19 +119,7 @@ function HomePage() {
         rating: 4.8,
         reviews: 267,
       },
-      {
-        id: 9,
-        name: "Compression Shorts",
-        price: 320000,
-        originalPrice: 450000,
-        image:
-          "https://images.unsplash.com/photo-1506629082632-daf0f3a3c1b5?w=300&h=350&fit=crop",
-        discount: 28,
-        category: "Apparel",
-        description: "High-performance compression fit",
-        rating: 4.7,
-        reviews: 201,
-      },
+
     ];
     setProducts(sampleProducts);
   }, []);
