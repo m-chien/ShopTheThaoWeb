@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
+import Filter from "../Component/Filter.jsx";
 import Header from "../Component/Header.jsx";
 import "../styles/HomePage.css";
+import image from "../assets/bannerImage.jpg";
+import CardProduct from "../Component/CardProduct.jsx";
+import Footer from "../Component/Footer.jsx";
 
 function HomePage() {
   const [products, setProducts] = useState([]);
@@ -160,20 +164,20 @@ function HomePage() {
       {/* Banner chính */}
       <section className="banner">
         <div className="banner-content">
-          <h1>High-Quality Sports Gear</h1>
-          <p>Where passion for sport becomes reality</p>
+          <h1>Đồ thể thao chất lượng cao</h1>
+          <p>Nơi đam mê thể thao trở thành hiện thực</p>
           <div className="banner-stats">
             <div className="stat">
               <span className="stat-number">500+</span>
-              <span className="stat-label">Products</span>
+              <span className="stat-label">Sản phẩm</span>
             </div>
             <div className="stat">
               <span className="stat-number">100%</span>
-              <span className="stat-label">Authentic</span>
+              <span className="stat-label">Chính hãng</span>
             </div>
             <div className="stat">
               <span className="stat-number">Free</span>
-              <span className="stat-label">Shipping</span>
+              <span className="stat-label">Miễn phí vận chuyển</span>
             </div>
           </div>
         </div>
@@ -181,178 +185,33 @@ function HomePage() {
 
       {/* Main Content */}
       <div className="main-content">
-        {/* Sidebar */}
-        <aside className="sidebar">
-          <div className="filter-section">
-            <h3>Category</h3>
-            <ul className="filter-list">
-              <li>
-                <label>
-                  <input
-                    type="radio"
-                    name="category"
-                    value="All"
-                    checked={selectedCategory === "All"}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                  />
-                  All
-                </label>
-              </li>
-              <li>
-                <label>
-                  <input
-                    type="radio"
-                    name="category"
-                    value="Running"
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                  />
-                  Running
-                </label>
-              </li>
-              <li>
-                <label>
-                  <input
-                    type="radio"
-                    name="category"
-                    value="Training"
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                  />
-                  Training
-                </label>
-              </li>
-              <li>
-                <label>
-                  <input
-                    type="radio"
-                    name="category"
-                    value="Basketball"
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                  />
-                  Basketball
-                </label>
-              </li>
-            </ul>
-          </div>
-
-          <div className="filter-section">
-            <h3>Price Range</h3>
-            <div className="price-inputs">
-              <input type="number" placeholder="Min" defaultValue="0" />
-              <span>-</span>
-              <input type="number" placeholder="Max" defaultValue="5000000" />
-            </div>
-            <div className="price-range-slider">
-              <div className="price-range-track">
-                <div className="price-range-fill"></div>
-              </div>
-            </div>
-            <div className="price-options">
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={(e) => {
-                    if (e.target.checked) setPriceRange([0, 500000]);
-                  }}
-                />
-                Under $50
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={(e) => {
-                    if (e.target.checked) setPriceRange([500000, 1000000]);
-                  }}
-                />
-                $50 - $100
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={(e) => {
-                    if (e.target.checked) setPriceRange([1000000, 5000000]);
-                  }}
-                />
-                Over $100
-              </label>
-            </div>
-          </div>
-
-          <div className="filter-section">
-            <h3>Brand</h3>
-            <ul className="filter-list">
-              <li>
-                <label>
-                  <input type="checkbox" /> Nike
-                </label>
-              </li>
-              <li>
-                <label>
-                  <input type="checkbox" /> Adidas
-                </label>
-              </li>
-              <li>
-                <label>
-                  <input type="checkbox" /> Puma
-                </label>
-              </li>
-            </ul>
-          </div>
-        </aside>
+        {/* Filter Component */}
+        <Filter
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          priceRange={priceRange}
+          setPriceRange={setPriceRange}
+        />
 
         {/* Products Section */}
         <section className="featured-products">
           <div className="products-header">
-            <h2>Featured Products</h2>
-            <p className="product-count">{filteredProducts.length} products</p>
+            <h2>Danh sách sản phẩm</h2>
+            <p className="product-count">{filteredProducts.length} Sản phẩm</p>
           </div>
 
           <div className="products-grid">
             {filteredProducts.map((product) => (
-              <div key={product.id} className="product-card">
-                <div className="product-image-wrapper">
-                  <img src={product.image} alt={product.name} />
-                  {product.badge && (
-                    <div
-                      className={`badge badge-${product.badge.toLowerCase()}`}
-                    >
-                      {product.badge}
-                    </div>
-                  )}
-                  {product.discount > 0 && (
-                    <div className="discount-badge">-{product.discount}%</div>
-                  )}
-                </div>
-                <div className="product-info">
-                  <h3>{product.name}</h3>
-                  <p className="product-description">{product.description}</p>
-                  <div className="product-price">
-                    <span className="price">
-                      {product.price.toLocaleString("vi-VN")} đ
-                    </span>
-                    {product.originalPrice && (
-                      <span className="original-price">
-                        {product.originalPrice.toLocaleString("vi-VN")} đ
-                      </span>
-                    )}
-                  </div>
-                  <div className="product-rating">
-                    <span className="stars">⭐</span>
-                    <span className="rating-value">
-                      {product.rating} ({product.reviews} reviews)
-                    </span>
-                  </div>
-                  <button
-                    className="add-to-cart-btn"
-                    onClick={() => handleAddToCart(product)}
-                  >
-                    🛒 Add to Cart
-                  </button>
-                </div>
-              </div>
+              <CardProduct
+                key={product.id}
+                product={product}
+                onAddToCart={handleAddToCart}
+              />
             ))}
           </div>
         </section>
       </div>
+      <Footer />
     </div>
   );
 }
