@@ -2,6 +2,7 @@ import { useState } from "react";
 import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import "../styles/CartPage.css";
+import Breadcrumb from "../Component/Breadcrumb";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([
@@ -53,14 +54,8 @@ export default function CartPage() {
   return (
     <div className="cart-page">
       <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      <div className="breadcrumb">
-        <span className="HomePage">Trang chủ</span>
-        <span>›</span>
-        <span>Giỏ hàng</span>
-      </div>
+      <Breadcrumb type="Giỏ hàng" />
       <div className="cart-container">
-        {/* Breadcrumb */}
-
         <h1 className="cart-title">Giỏ hàng</h1>
 
         <div className="cart-content">

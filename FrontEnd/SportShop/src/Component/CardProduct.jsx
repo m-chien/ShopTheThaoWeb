@@ -1,10 +1,12 @@
 import PropTypes from "prop-types";
 import React from "react";
 import "../styles/CardProduct.css";
+import { useNavigate } from "react-router-dom";
 
 export default function CardProduct({ product, onAddToCart }) {
+  const navigate = useNavigate();
   return (
-    <div className="product-card">
+    <div className="product-card" onClick={() => navigate("/detail-product")}>
       <div className="product-image-wrapper">
         <img src={product.image} alt={product.name} />
         {product.badge && (

@@ -13,21 +13,6 @@
   padding: 20px;
 }
 
-/* Breadcrumb */
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
-  font-size: 0.9rem;
-  color: #999;
-}
-
-.breadcrumb span:last-child {
-  color: #333;
-  font-weight: 500;
-}
-
 /* Page Title */
 .page-title {
   font-size: 2rem;
@@ -186,7 +171,7 @@
 }
 
 .delete-btn {
-    color: white;
+  color: white;
   background: #ff3838;
 }
 
@@ -386,7 +371,6 @@
 }
 
 .order-detail-btn {
-    
   padding: 8px 14px;
   background: #77e51f;
   color: black;

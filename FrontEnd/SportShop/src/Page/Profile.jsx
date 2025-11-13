@@ -3,6 +3,7 @@ import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import "../styles/Profile.css";
 import avatar from "../assets/IMG_6162.JPG";
+import Breadcrumb from "../Component/Breadcrumb";
 
 export default function Profile() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,11 +79,7 @@ export default function Profile() {
   return (
     <div className="profile-page">
       <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      <div className="breadcrumb">
-        <span className="HomePage">Trang chủ</span>
-        <span>›</span>
-        <span>Hồ sơ</span>
-      </div>
+      <Breadcrumb type="Hồ sơ" />
 
       <div className="profile-container">
         <h1 className="page-title">Tài khoản của tôi</h1>

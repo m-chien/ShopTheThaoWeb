@@ -5,6 +5,7 @@ import "../styles/HomePage.css";
 import image from "../assets/bannerImage.jpg";
 import CardProduct from "../Component/CardProduct.jsx";
 import Footer from "../Component/Footer.jsx";
+import { useNavigate } from "react-router-dom";
 
 function HomePage() {
   const [products, setProducts] = useState([]);
