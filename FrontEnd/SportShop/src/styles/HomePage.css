@@ -78,44 +78,24 @@ body {
   opacity: 0.9;
   font-weight: 400;
 }
-
-/* ==================== MAIN CONTENT ==================== */
-.main-content {
-  max-width: 1600px;
+.NewProduct {
+  position: relative;
+  width: 1600px;
   margin: 0 auto;
   padding: 40px 20px;
-  display: grid;
-  grid-template-columns: 250px 1fr;
-  gap: 40px;
 }
-
-/* ==================== FEATURED PRODUCTS SECTION ==================== */
-.featured-products {
-  background-color: #ffffff;
+.NewProductName {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
 }
-
-.products-header {
-  margin-bottom: 30px;
+.swiper-button-next,
+.swiper-button-prev {
+  color: #000000 !important;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000 !important;
 }
-
-.products-header h2 {
-  font-size: 1.8rem;
-  color: #333;
-  margin-bottom: 8px;
-  font-weight: 600;
-}
-
-.product-count {
-  color: #999;
-  font-size: 0.95rem;
-}
-
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 25px;
-}
-/* Product card styles moved to src/styles/CardProduct.css */
 
 /* ==================== RESPONSIVE DESIGN ==================== */
 @media (max-width: 1024px) {

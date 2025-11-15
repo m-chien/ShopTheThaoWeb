@@ -101,7 +101,7 @@ export default function Header({ searchTerm, setSearchTerm }) {
               onMouseEnter={() => item.submenu && setActiveDropdown(index)}
               onMouseLeave={() => setActiveDropdown(null)}
             >
-              <a href={item.href} className={styles.navLink}>
+              <a href={item.href} className={styles.navLink} onClick={() => navigate("/ProductList")}>
                 {item.label}
                 {item.submenu && <span className={styles.dropdownIcon}>▼</span>}
               </a>
@@ -114,6 +114,7 @@ export default function Header({ searchTerm, setSearchTerm }) {
                       key={subindex}
                       href={subitem.href}
                       className={styles.dropdownItem}
+                      onClick={() => navigate("/ProductList")}
                     >
                       {subitem.label}
                     </a>

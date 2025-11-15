@@ -59,7 +59,7 @@
 
 .image-thumbnails img:hover {
   opacity: 1;
-  border-color: #3366cc;
+  border-color: #0c8623;
 }
 
 .image-thumbnails img.active {
@@ -138,7 +138,7 @@
 .price {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #3366cc;
+  color: #0c8623;
 }
 
 .original-price {
@@ -181,17 +181,17 @@
 }
 
 .color-option:hover {
-  border-color: #3366cc;
+  border-color: #0c8623;
   background-color: #f0f5ff;
   transform: translateY(-2px);
 }
 
 .color-option.selected {
-  border-color: #3366cc;
-  background: linear-gradient(135deg, #3366cc 0%, #1a4fa0 100%);
+  border-color: #0c8623;
+  background: linear-gradient(135deg, #0c8623 0%, #0a6e1c 100%);
   color: white;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(51, 102, 204, 0.3);
+  box-shadow: 0 2px 8px rgba(12, 134, 35, 0.3);
 }
 
 .color-option span {
