@@ -26,9 +26,6 @@ public partial class Product
     [StringLength(500)]
     public string? Description { get; set; }
 
-    [StringLength(200)]
-    public string? Image { get; set; }
-
     [Column(TypeName = "datetime")]
     public DateTime? CreatedAt { get; set; }
 

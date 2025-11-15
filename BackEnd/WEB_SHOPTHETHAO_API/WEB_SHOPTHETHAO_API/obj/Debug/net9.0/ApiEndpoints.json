@@ -164,6 +164,16 @@
   },
   {
     "ContainingType": "ProductVariantController",
+    "Method": "GetGroupedProducts",
+    "RelativePath": "api/ProductVariant/grouped-products",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProductVariantController",
     "Method": "GetByProduct",
     "RelativePath": "api/ProductVariant/product/{productId}",
     "HttpMethod": "GET",
@@ -176,6 +186,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProductVariantController",
+    "Method": "GetAllWithProduct",
+    "RelativePath": "api/ProductVariant/with-product",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

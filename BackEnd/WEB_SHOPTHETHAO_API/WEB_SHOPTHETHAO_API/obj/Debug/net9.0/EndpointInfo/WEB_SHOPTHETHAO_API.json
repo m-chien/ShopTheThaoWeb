@@ -258,6 +258,30 @@
         }
       }
     },
+    "/api/ProductVariant/with-product": {
+      "get": {
+        "tags": [
+          "ProductVariant"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ProductVariant/grouped-products": {
+      "get": {
+        "tags": [
+          "ProductVariant"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/ProductVariant": {
       "post": {
         "tags": [
@@ -464,12 +488,6 @@
             "type": "string",
             "nullable": true
           },
-          "image": {
-            "maxLength": 200,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "createdAt": {
             "type": "string",
             "format": "date-time",
@@ -524,6 +542,12 @@
           },
           "size": {
             "$ref": "#/components/schemas/Size"
+          },
+          "image": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -597,12 +621,6 @@
           },
           "avatarUrl": {
             "maxLength": 200,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "role": {
-            "maxLength": 50,
             "minLength": 0,
             "type": "string",
             "nullable": true

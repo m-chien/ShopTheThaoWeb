@@ -39,7 +39,6 @@ CREATE TABLE Product (
     BrandID INT NOT NULL,                      -- FK liên kết tới Brand(ID)
     Name NVARCHAR(100) NOT NULL,               -- Tên sản phẩm
     Description NVARCHAR(500),                 -- Mô tả sản phẩm
-    Image NVARCHAR(200),                       -- Đường dẫn hoặc URL hình ảnh
     CreatedAt DATETIME DEFAULT GETDATE(),      -- Ngày tạo sản phẩm
     Status BIT DEFAULT 1,                      -- Trạng thái sản phẩm (1: active, 0: inactive)
     CONSTRAINT FK_Product_Category FOREIGN KEY (CategoryID) REFERENCES Category(ID),
@@ -73,6 +72,7 @@ CREATE TABLE ProductVariant (
     ColorID INT NOT NULL,                       -- FK tới Color(ID)
     StockQuantity INT DEFAULT 0,                -- Số lượng tồn kho
     Price DECIMAL(18,2) NOT NULL,              -- Giá bán
+	Image NVARCHAR(200),                       -- Đường dẫn hoặc URL hình ảnh
     CONSTRAINT FK_ProductVariant_Product FOREIGN KEY (ProductID) REFERENCES Product(ID),
     CONSTRAINT FK_ProductVariant_Size FOREIGN KEY (SizeID) REFERENCES Size(ID),
     CONSTRAINT FK_ProductVariant_Color FOREIGN KEY (ColorID) REFERENCES Color(ID)
@@ -86,8 +86,7 @@ CREATE TABLE [User] (
     Email NVARCHAR(100) NOT NULL UNIQUE,       -- Email đăng nhập, duy nhất
     SDT NVARCHAR(20),                           -- Số điện thoại
     DiaChi NVARCHAR(200),                       -- Địa chỉ
-    AvatarURL NVARCHAR(200),                    -- URL avatar
-    Role NVARCHAR(50),                          -- Role chính của người dùng
+    AvatarURL NVARCHAR(200),                    -- URL avatar 
     DOB DATE                                    -- Ngày sinh
 );
 
@@ -225,27 +224,27 @@ INSERT INTO Color (Name) VALUES
 -- ========================
 -- Thêm dữ liệu cho Product
 -- ========================
-INSERT INTO Product (CategoryID, BrandID, Name, Description, Image, Status) VALUES
-(1, 1, 'Nike Air Max', N'Giày chạy bộ Nike Air Max', 'nike_airmax.png', 1),
-(1, 2, 'Adidas Ultraboost', N'Giày chạy bộ Adidas Ultraboost', 'adidas_ultraboost.png', 1),
-(2, 3, N'Puma Quần Jogger', N'Quần thể thao Puma Jogger', 'puma_jogger.png', 1);
+INSERT INTO Product (CategoryID, BrandID, Name, Description, Status) VALUES
+(1, 1, 'Nike Air Max', N'Giày chạy bộ Nike Air Max', 1),
+(1, 2, 'Adidas Ultraboost', N'Giày chạy bộ Adidas Ultraboost', 1),
+(2, 3, N'Puma Quần Jogger', N'Quần thể thao Puma Jogger', 1);
 
 -- ========================
 -- Thêm dữ liệu cho ProductVariant
 -- ========================
-INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price) VALUES
-(1, 1, 1, 10, 2500000),
-(1, 2, 2, 15, 2600000),
-(2, 2, 3, 8, 2800000),
-(3, 1, 1, 20, 500000),
-(3, 3, 2, 10, 550000);
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image) VALUES
+(1, 1, 1, 10, 2500000, 'nike_red.png'),
+(1, 2, 2, 15, 2600000, 'nike_blue.png'),
+(2, 2, 3, 8, 2800000, 'puma_jogger.png'),
+(3, 1, 1, 20, 500000, 'nike_airmax.png'),
+(3, 3, 2, 10, 550000, 'puma_jogger.png');
 
 -- ========================
 -- Thêm dữ liệu cho User
 -- ========================
-INSERT INTO [User] (Name, Email, SDT, DiaChi, AvatarURL, Role, DOB) VALUES
-(N'Trần Đặng Tuấn Khanh', 'a@gmail.com', '0912345678', 'Hà Nội', 'avatar1.png', 'Customer', '1995-05-10'),
-(N'Trần Trần', 'b@gmail.com', '0987654321', 'Hồ Chí Minh', 'avatar2.png', 'Customer', '1998-08-15');
+INSERT INTO [User] (Name, Email, SDT, DiaChi, AvatarURL, DOB) VALUES
+(N'Trần Đặng Tuấn Khanh', 'a@gmail.com', '0912345678', 'Hà Nội', 'avatar1.png', '1995-05-10'),
+(N'Trần Minh Chiến', 'chientranminh355@gmail.com', '0987654321', 'Đà Nẵng', 'avatar2.png', '1998-08-15');
 
 -- ========================
 -- Thêm dữ liệu cho Role
@@ -360,3 +359,22 @@ SELECT * FROM OrderDetail;
 
 -- 16. Payment
 SELECT * FROM Payment;
+--lấy thông tin tất cả sản phảm
+select distinct pv.ProductID,  p.name, p.Description,pv.ColorID,c.Name, pv.Image, MIN(pv.Price) as price
+from ProductVariant pv 
+	join Product p on p.ID = pv.ProductID
+	join Color c on c.ID = pv.ColorID
+GROUP BY pv.ProductID, p.Name, p.Description,pv.ColorID,c.Name, pv.Image;
+--
+select * from Product
+
+--lấy thông tin chi tiết sản phẩm
+select *
+from ProductVariant pv 
+	join Product p on p.ID = pv.ProductID
+	join Size s on s.ID = pv.SizeID
+	join Color c on c.ID = pv.ColorID
+where pv.ProductID = 1
+
+select * from Color
+select * from [User]

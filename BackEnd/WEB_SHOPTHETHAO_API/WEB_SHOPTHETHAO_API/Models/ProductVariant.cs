@@ -47,4 +47,7 @@ public partial class ProductVariant
     [ForeignKey("SizeId")]
     [InverseProperty("ProductVariants")]
     public virtual Size Size { get; set; } = null!;
+
+    [StringLength(200)]
+    public string? Image { get; set; }
 }

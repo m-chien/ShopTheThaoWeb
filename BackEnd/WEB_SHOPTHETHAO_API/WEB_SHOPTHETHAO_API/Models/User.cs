@@ -32,9 +32,6 @@ public partial class User
     [StringLength(200)]
     public string? AvatarUrl { get; set; }
 
-    [StringLength(50)]
-    public string? Role { get; set; }
-
     [Column("DOB")]
     public DateOnly? Dob { get; set; }
 
