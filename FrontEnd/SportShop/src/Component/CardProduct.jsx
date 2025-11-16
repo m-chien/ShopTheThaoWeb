@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 
 export default function CardProduct({ product, onAddToCart }) {
   const navigate = useNavigate();
-  
+
   // Safety checks
   const images = product.images || [];
   const colors = product.colors || [];
   const prices = product.prices || [];
-  
+
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [selectedImage, setSelectedImage] = useState(images[0] || "");
 
@@ -25,7 +25,7 @@ export default function CardProduct({ product, onAddToCart }) {
   const handleCardClick = (e) => {
     // Không navigate nếu click vào button hoặc color selector hoặc thumbnails
     if (
-      e.target.tagName === "BUTTON" || 
+      e.target.tagName === "BUTTON" ||
       e.target.closest(".color-selector") ||
       e.target.closest(".image-thumbnails")
     ) {
@@ -49,18 +49,22 @@ export default function CardProduct({ product, onAddToCart }) {
   return (
     <div className="product-card" onClick={handleCardClick}>
       <div className="product-image-wrapper">
-        <img 
-          src={selectedImage ? `/${selectedImage}` : "/placeholder.png"} 
-          alt={product.name} 
+        <img
+          src={
+            selectedImage
+              ? `/public/Product/${selectedImage}`
+              : "/placeholder.png"
+          }
+          alt={product.name}
         />
-        
+
         {/* Thumbnails ảnh - chỉ hiển thị nếu có nhiều hơn 1 ảnh */}
         {images.length > 1 && (
           <div className="image-thumbnails">
             {images.map((img, idx) => (
               <img
                 key={idx}
-                src={`/${img}`}
+                src={`/public/Product/${img}`}
                 alt=""
                 className={selectedImage === img ? "active" : ""}
                 onClick={(e) => {
@@ -85,9 +89,7 @@ export default function CardProduct({ product, onAddToCart }) {
               {Math.max(...prices).toLocaleString("vi-VN")} đ
             </span>
           ) : prices.length === 1 ? (
-            <span className="price">
-              {prices[0].toLocaleString("vi-VN")} đ
-            </span>
+            <span className="price">{prices[0].toLocaleString("vi-VN")} đ</span>
           ) : (
             <span className="price">Liên hệ</span>
           )}
@@ -101,16 +103,17 @@ export default function CardProduct({ product, onAddToCart }) {
               {colors.map((color, idx) => (
                 <div
                   key={color.colorID}
-                  className={`color-option ${
-                    selectedColorIndex === idx ? "selected" : ""
-                  }`}
+                  className={`color-option ${selectedColorIndex === idx ? "selected" : ""}`}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleColorChange(idx);
                   }}
-                  title={color.colorName}
+                  title={color.colorName} // vẫn giữ tooltip nếu muốn
                 >
-                  <span>{color.colorName}</span>
+                  <span
+                    className="color-dot"
+                    style={{ backgroundColor: color.colorCode }}
+                  ></span>
                 </div>
               ))}
             </div>
@@ -118,7 +121,7 @@ export default function CardProduct({ product, onAddToCart }) {
         )}
 
         <button className="add-to-cart-btn" onClick={handleAddToCart}>
-          🛒 Add to Cart
+          Add to Cart
         </button>
       </div>
     </div>
@@ -136,7 +139,7 @@ CardProduct.propTypes = {
       PropTypes.shape({
         colorID: PropTypes.number.isRequired,
         colorName: PropTypes.string.isRequired,
-      })
+      }),
     ),
   }).isRequired,
   onAddToCart: PropTypes.func,

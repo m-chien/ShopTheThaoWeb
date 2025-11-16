@@ -6,7 +6,7 @@ const TypingText = ({ text }) => {
     gsap.fromTo(
       ".jump-char",
       { y: 20, opacity: 0 },
-      { y: 0, opacity: 1, stagger: 0.1, duration: 0.2, ease: "power1.out" },
+      { y: 0, opacity: 1, stagger: 0.07, duration: 0.1, ease: "power1.out" },
     );
   }, []);
 

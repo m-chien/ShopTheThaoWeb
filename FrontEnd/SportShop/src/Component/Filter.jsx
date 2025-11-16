@@ -10,9 +10,9 @@ export default function Filter({
 }) {
   const [expandedSections, setExpandedSections] = useState({
     brand: true,
-    size: false,
-    color: false,
-    price: false,
+    size: true,
+    color: true,
+    price: true,
   });
 
   const [selectedBrands, setSelectedBrands] = useState([]);

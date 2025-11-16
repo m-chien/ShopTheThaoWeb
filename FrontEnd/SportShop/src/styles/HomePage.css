@@ -19,65 +19,6 @@ body {
   background-color: #ffffff;
   margin-top: 70px;
 }
-
-/* ==================== BANNER SECTION ==================== */
-.banner {
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-    url("../assets/bannerImage.jpg");
-  background-size: cover;
-  background-position: center;
-  color: white;
-  padding: 80px 20px;
-  text-align: center;
-  min-height: 500px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.banner-content h1 {
-  font-size: 3rem;
-  margin-bottom: 15px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
-.banner-content p {
-  font-size: 1.2rem;
-  margin-bottom: 50px;
-  opacity: 0.95;
-  font-weight: 300;
-}
-
-.banner-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.stat {
-  display: flex;
-  flex-direction: column;
-  background: rgba(255, 255, 255, 0.15);
-  padding: 25px 20px;
-  border-radius: 8px;
-  backdrop-filter: blur(10px);
-}
-
-.stat-number {
-  font-size: 2.2rem;
-  font-weight: 700;
-  margin-bottom: 5px;
-}
-
-.stat-label {
-  font-size: 0.9rem;
-  opacity: 0.9;
-  font-weight: 400;
-}
 .NewProduct {
   position: relative;
   width: 1600px;
@@ -91,7 +32,7 @@ body {
 }
 .swiper-button-next,
 .swiper-button-prev {
-  color: #000000 !important;
+  color: #77e51f !important;
   top: 50%;
   transform: translateY(-50%);
   z-index: 1000 !important;
