@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\WEB_SHOPTHETHAO_API.props" />
+</Project>

@@ -10,9 +10,9 @@ export default function Filter({
 }) {
   const [expandedSections, setExpandedSections] = useState({
     brand: true,
-    size: false,
-    color: false,
-    price: false,
+    size: true,
+    color: true,
+    price: true,
   });
 
   const [selectedBrands, setSelectedBrands] = useState([]);
@@ -67,15 +67,10 @@ export default function Filter({
 
   const colors = [
     { name: "ĐEN", color: "#000000", count: 0 },
-    { name: "ĐỎ", color: "#FF0000", count: 0 },
-    { name: "HỒNG", color: "#FFB6C1", count: 0 },
-    {
-      name: "NHIỀU MÀU",
-      color: "linear-gradient(90deg, #FF0000, #FFFF00, #00FF00, #0000FF)",
-      count: 0,
-    },
-    { name: "TRẮNG", color: "#FFFFFF", count: 0 },
     { name: "XANH DƯƠNG", color: "#0000FF", count: 0 },
+    { name: "HỒNG", color: "#FFB6C1", count: 0 },
+    { name: "TRẮNG", color: "#FFFFFF", count: 0 },
+    { name: "ĐỎ", color: "#FF0000", count: 0 },
     { name: "XANH LÁ", color: "#008000", count: 0 },
   ];
 
