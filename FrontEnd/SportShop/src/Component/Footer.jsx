@@ -27,16 +27,16 @@ function Footer() {
             <h4>Dịch vụ</h4>
             <ul>
               <li>
-                <a href="#">Đặt hàng online</a>
+                <a href="#">Giới thiệu</a>
               </li>
               <li>
-                <a href="#">Chọn hãng</a>
+                <a href="#">Hệ thống cửa hàng</a>
               </li>
               <li>
-                <a href="#">Thẻ thành viên</a>
+                <a href="#">Thông tin liên hệ</a>
               </li>
               <li>
-                <a href="#">Voucher</a>
+                <a href="#">Các điều khoản và điều kiện</a>
               </li>
             </ul>
           </div>

@@ -209,22 +209,3 @@
 .rating-value {
   color: #999;
 }
-
-.add-to-cart-btn {
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(90deg, #1a1a2e 0%, #001a2d 100%);
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.add-to-cart-btn:hover {
-  background: linear-gradient(90deg, #2a2a3e 0%, #002a3d 100%);
-  transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}

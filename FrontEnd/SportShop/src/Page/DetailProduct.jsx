@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CardProduct from "../Component/CardProduct";
 import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import styles from "../styles/DetailProduct.module.css";
 
 export default function DetailProduct() {
+  const navigate = useNavigate();
   // Sample product data
   const product = {
     id: 1,
@@ -113,6 +115,7 @@ export default function DetailProduct() {
       size: selectedSize,
       width: selectedWidth,
     });
+    navigate("/payment");
   };
 
   const handleQuantityChange = (e) => {

@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import { useState } from "react";
 import "../styles/CardProduct.css";
 import { useNavigate } from "react-router-dom";
 
-export default function CardProduct({ product, onAddToCart }) {
+export default function CardProduct({ product }) {
   const navigate = useNavigate();
 
   // Safety checks
@@ -32,18 +32,6 @@ export default function CardProduct({ product, onAddToCart }) {
       return;
     }
     navigate("/detail-product");
-  };
-
-  const handleAddToCart = (e) => {
-    e.stopPropagation();
-    if (onAddToCart) {
-      onAddToCart({
-        ...product,
-        selectedColor: colors[selectedColorIndex],
-        selectedImage: selectedImage,
-        selectedPrice: prices[selectedColorIndex],
-      });
-    }
   };
 
   return (
@@ -119,10 +107,6 @@ export default function CardProduct({ product, onAddToCart }) {
             </div>
           </div>
         )}
-
-        <button className="add-to-cart-btn" onClick={handleAddToCart}>
-          Add to Cart
-        </button>
       </div>
     </div>
   );
