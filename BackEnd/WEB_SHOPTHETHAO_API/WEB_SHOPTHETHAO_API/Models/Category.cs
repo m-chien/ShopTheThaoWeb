@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using AutoMapper.Configuration.Annotations;
 using Microsoft.EntityFrameworkCore;
 
 namespace WEB_SHOPTHETHAO_API.Models;
@@ -22,6 +23,10 @@ public partial class Category
 
     [Column(TypeName = "datetime")]
     public DateTime? CreatedAt { get; set; }
+
+    [Column("image")]
+    [StringLength(200)]
+    public string? Image { get; set; }
 
     [InverseProperty("Category")]
     [JsonIgnore]

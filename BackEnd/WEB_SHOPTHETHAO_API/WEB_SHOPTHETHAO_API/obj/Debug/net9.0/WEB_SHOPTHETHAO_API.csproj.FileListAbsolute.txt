@@ -337,3 +337,7 @@ D:\Private_Project\shopthethaotest\ShopTheThaoWeb\BackEnd\WEB_SHOPTHETHAO_API\WE
 D:\Private_Project\shopthethaotest\ShopTheThaoWeb\BackEnd\WEB_SHOPTHETHAO_API\WEB_SHOPTHETHAO_API\obj\Debug\net9.0\WEB_SHOPTHETHAO_API.pdb
 D:\Private_Project\shopthethaotest\ShopTheThaoWeb\BackEnd\WEB_SHOPTHETHAO_API\WEB_SHOPTHETHAO_API\obj\Debug\net9.0\WEB_SHOPTHETHAO_API.genruntimeconfig.cache
 D:\Private_Project\shopthethaotest\ShopTheThaoWeb\BackEnd\WEB_SHOPTHETHAO_API\WEB_SHOPTHETHAO_API\obj\Debug\net9.0\ref\WEB_SHOPTHETHAO_API.dll
+F:\UTE\NamBaHocKi1\LapTrinhWebNangCao\WebCuoiKy\ShopTheThaoWeb\BackEnd\WEB_SHOPTHETHAO_API\WEB_SHOPTHETHAO_API\bin\Debug\net9.0\BCrypt.Net-Next.dll
+F:\UTE\NamBaHocKi1\LapTrinhWebNangCao\WebCuoiKy\ShopTheThaoWeb\BackEnd\WEB_SHOPTHETHAO_API\WEB_SHOPTHETHAO_API\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+F:\UTE\NamBaHocKi1\LapTrinhWebNangCao\WebCuoiKy\ShopTheThaoWeb\BackEnd\WEB_SHOPTHETHAO_API\WEB_SHOPTHETHAO_API\bin\Debug\net9.0\AutoMapper.dll
+F:\UTE\NamBaHocKi1\LapTrinhWebNangCao\WebCuoiKy\ShopTheThaoWeb\BackEnd\WEB_SHOPTHETHAO_API\WEB_SHOPTHETHAO_API\bin\Debug\net9.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
