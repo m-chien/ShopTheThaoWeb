@@ -100,7 +100,7 @@ export default function CardProduct({ product }) {
                 >
                   <span
                     className="color-dot"
-                    style={{ backgroundColor: color.colorCode }}
+                    style={{ backgroundColor: color.colorcode }}
                   ></span>
                 </div>
               ))}

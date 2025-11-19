@@ -142,8 +142,20 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("RequireAuthenticated", policy =>
         policy.RequireAuthenticatedUser());
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost5173", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173") // ⚠ chỉ định frontend origin
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); // ⚠ cần cho cookie + credentials
+    });
+});
+
 var app = builder.Build();
 
+app.UseCors("AllowLocalhost5173");
 
 
 // ===== ĐĂNG KÝ MIDDLEWARE =====

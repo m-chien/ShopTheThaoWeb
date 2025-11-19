@@ -21,7 +21,7 @@ function HomePage() {
     const fetchProducts = async () => {
       try {
         const res = await getAllProduct();
-        setProducts(res.data);
+        setProducts(res.data.data);
       } catch (error) {
         console.error("❌ Lỗi khi fetch sản phẩm:", error);
       }

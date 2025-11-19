@@ -46,7 +46,7 @@ namespace WEB_SHOPTHETHAO_API.Service
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(5), // Token có hiệu lực 5 phút
+                Expires = DateTime.UtcNow.AddMinutes(30), // Token có hiệu lực 5 phút
                 Issuer = _configuration["AppSettings:Issuer"],
                 Audience = _configuration["AppSettings:Audience"],
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),

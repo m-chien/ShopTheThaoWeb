@@ -8,7 +8,7 @@ export default function Category() {
   useEffect(() => {
       const fetchProducts = async () => {
         const res = await getAllCategory();
-        setCategories(res.data);
+        setCategories(res.data.data);
       };
   
       fetchProducts();

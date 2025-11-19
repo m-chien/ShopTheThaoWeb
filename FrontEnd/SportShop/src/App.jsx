@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Profile from "./Page/Profile";
 import CartPage from "./Page/CartPage";
 import DetailProduct from "./Page/DetailProduct";
@@ -8,11 +8,13 @@ import ProductListPage from "./Page/ProductListPage";
 import Payment from "./Page/Payment";
 import { LoginPage } from "./Page/LoginPage";
 function App() {
+
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<Navigate to="/trangchu" replace />} />
+          <Route path="/trangchu" element={<HomePage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/Login" element={<LoginPage />} />
           <Route path="/profile" element={<Profile />} />

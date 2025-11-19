@@ -3,8 +3,10 @@ import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import "../styles/CartPage.css";
 import Breadcrumb from "../Component/Breadcrumb";
+import { useNavigate } from "react-router-dom";
 
 export default function CartPage() {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([
     {
       id: 1,
@@ -68,10 +70,16 @@ export default function CartPage() {
   const shippingFee = 0; // Miễn phí vận chuyển
   const total = subtotal - discount + shippingFee;
 
+  if (!sessionStorage.getItem("accessToken")) {
+    alert("Vui lòng đăng nhập trước khi vào");
+    navigate("/");
+    return <div>đăng nhập đi bạn eyy!!</div>;
+  }
+
   return (
     <div className="cart-page">
       <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      <Breadcrumb type="Giỏ hàng" />
+      <Breadcrumb items={[{ label: "Giỏ Hàng", link: "/cart" }]} />
       <div className="cart-container">
         <h1 className="cart-title">Giỏ hàng</h1>
 

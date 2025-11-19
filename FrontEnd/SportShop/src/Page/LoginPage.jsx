@@ -1,17 +1,41 @@
-import React, { useState } from "react";
+import { useRef, useState } from "react";
 import "../styles/AuthPage.css";
+import { useNavigate } from "react-router-dom";
+import { User } from "../Api/User";
 import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import { RegisterPage } from "./RegisterPage";
 
 export function LoginPage() {
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState("login");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const usernameRef = useRef();
+  const passwordRef = useRef();
 
   const handleSubmit = () => {
-    console.log("Login:", { email, password, rememberMe });
+    if (
+      usernameRef.current.value != "" &&
+      passwordRef.current.value != "" &&
+      rememberMe
+    ) {
+      User()
+        .login(usernameRef.current.value, passwordRef.current.value)
+        .then((data) => {
+          console.log("Login successful:", data);
+          navigate("/")
+          // const token = data.accessToken;
+          // if (token) {
+          //   const decoded = jwt_decode(token);
+          //   navigate(decoded.role == "Admin" ? "/admin" : "/");
+          // }
+        })
+        .catch((error) => {
+          console.error("Login failed:", error.message);
+        });
+    } else {
+      alert("Vui lòng nhập đầy đủ thông tin và đồng ý ghi nhớ đăng nhập!");
+    }
   };
 
   if (currentPage === "register") {
@@ -24,7 +48,6 @@ export function LoginPage() {
 
       <div className="auth-main">
         <div className="auth-content-wrapper">
-
           <div className="form-section">
             <div className="form-container">
               <div className="form-header">
@@ -36,14 +59,11 @@ export function LoginPage() {
 
               <div className="auth-form">
                 <div className="input-group">
-                  <label className="input-label">
-                    Email hoặc số điện thoại
-                  </label>
+                  <label className="input-label">Nhập tên đăng nhập</label>
                   <input
                     type="text"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Nhập email hoặc số điện thoại"
+                    ref={usernameRef}
+                    placeholder="Nhập tên đăng nhập"
                     className="input-field"
                   />
                 </div>
@@ -57,8 +77,7 @@ export function LoginPage() {
                   </div>
                   <input
                     type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    ref={passwordRef}
                     placeholder="Nhập mật khẩu"
                     className="input-field"
                   />

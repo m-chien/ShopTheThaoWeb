@@ -514,3 +514,7 @@ F:\UTE\NamBaHocKi1\LapTrinhWebNangCao\WebCuoiKy\ShopTheThaoWeb\BackEnd\WEB_SHOPT
 F:\UTE\NamBaHocKi1\LapTrinhWebNangCao\WebCuoiKy\ShopTheThaoWeb\BackEnd\WEB_SHOPTHETHAO_API\WEB_SHOPTHETHAO_API\bin\Debug\net9.0\AutoMapper.dll
 F:\UTE\NamBaHocKi1\LapTrinhWebNangCao\WebCuoiKy\ShopTheThaoWeb\BackEnd\WEB_SHOPTHETHAO_API\WEB_SHOPTHETHAO_API\bin\Debug\net9.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 >>>>>>> origin/TuanKhanh
+D:\Private_Project\ShopTheThaoWEb\BackEnd\WEB_SHOPTHETHAO_API\WEB_SHOPTHETHAO_API\bin\Debug\net9.0\AutoMapper.dll
+D:\Private_Project\ShopTheThaoWEb\BackEnd\WEB_SHOPTHETHAO_API\WEB_SHOPTHETHAO_API\bin\Debug\net9.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+D:\Private_Project\ShopTheThaoWEb\BackEnd\WEB_SHOPTHETHAO_API\WEB_SHOPTHETHAO_API\bin\Debug\net9.0\BCrypt.Net-Next.dll
+D:\Private_Project\ShopTheThaoWEb\BackEnd\WEB_SHOPTHETHAO_API\WEB_SHOPTHETHAO_API\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

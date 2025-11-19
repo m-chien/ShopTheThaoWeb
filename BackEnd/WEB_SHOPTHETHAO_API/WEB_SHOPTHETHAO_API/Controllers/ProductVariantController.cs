@@ -49,6 +49,7 @@ public class ProductVariantController : ControllerBase
                 ProductDescription = pv.Product.Description,
                 pv.ColorId,
                 ColorName = pv.Color.Name,
+                colorCode = pv.Color.ColorCode,
                 pv.Image,
                 pv.Price
             })
@@ -63,6 +64,7 @@ public class ProductVariantController : ControllerBase
                 Description = g.Key.ProductDescription,
                 Colors = g.Select(x => new
                 {
+                    colorcode = x.colorCode,
                     ColorID = x.ColorId,
                     ColorName = x.ColorName
                 }).Distinct().ToList(),

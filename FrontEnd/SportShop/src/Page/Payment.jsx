@@ -46,7 +46,7 @@ export default function CheckoutPage() {
       <Header />
       <div className={styles.checkoutContainer}>
         {/* Breadcrumb */}
-        <Breadcrumb type="payment" />
+        <Breadcrumb items={[{label: "Payment", link: "/payment"}]} />
 
         <div className={styles.checkoutGrid}>
           {/* Left Column - Payment Form */}
