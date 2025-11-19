@@ -1,14 +1,14 @@
 import "./App.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import Profile from "./Page/Profile";
 import CartPage from "./Page/CartPage";
 import DetailProduct from "./Page/DetailProduct";
 import HomePage from "./Page/HomePage";
-import ProductListPage from "./Page/ProductListPage";
-import Payment from "./Page/Payment";
 import { LoginPage } from "./Page/LoginPage";
-function App() {
+import Payment from "./Page/Payment";
+import ProductListPage from "./Page/ProductListPage";
+import Profile from "./Page/Profile";
 
+function App() {
   return (
     <>
       <BrowserRouter>
@@ -20,7 +20,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/detail-product" element={<DetailProduct />} />
           <Route path="/productList" element={<ProductListPage />} />
-          <Route path ="/payment" element={<Payment />} />
+          <Route path="/payment" element={<Payment />} />
         </Routes>
       </BrowserRouter>
     </>
