@@ -5,7 +5,7 @@
   padding: 0;
 }
 
-.checkout-page {
+.checkoutPage {
   min-height: 100vh;
   background-color: #f9fafb;
   font-family:
@@ -13,12 +13,12 @@
     Arial, sans-serif;
 }
 
-.checkout-container {
+.checkoutContainer {
   margin: 70px auto;
 }
 
 /* Grid Layout */
-.checkout-grid {
+.checkoutGrid {
   max-width: 1280px;
   display: grid;
   grid-template-columns: 1fr;
@@ -27,39 +27,39 @@
 }
 
 @media (min-width: 1024px) {
-  .checkout-grid {
+  .checkoutGrid {
     grid-template-columns: 1fr 1fr;
   }
 }
 
 /* Payment Section */
-.payment-section {
+.paymentSection {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
 /* Info Box */
-.info-box {
+.infoBox {
   background-color: white;
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
   padding: 1.5rem;
 }
 
-.info-header {
+.infoHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5rem;
 }
 
-.info-label {
+.infoLabel {
   color: #6b7280;
   font-size: 0.875rem;
 }
 
-.change-button {
+.changeButton {
   color: #2563eb;
   font-size: 0.875rem;
   background: none;
@@ -68,22 +68,22 @@
   padding: 0;
 }
 
-.change-button:hover {
+.changeButton:hover {
   text-decoration: underline;
 }
 
-.info-value {
+.infoValue {
   font-weight: 500;
   color: #111827;
 }
 
-.free-shipping {
+.freeShipping {
   color: #059669;
   font-weight: 600;
 }
 
 /* Checkbox Group */
-.checkbox-group {
+.checkboxGroup {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
@@ -98,58 +98,58 @@
   cursor: pointer;
 }
 
-.checkbox-label {
+.checkboxLabel {
   font-size: 0.875rem;
   color: #374151;
   cursor: pointer;
   line-height: 1.5;
 }
 
-.terms-link {
+.termsLink {
   color: #2563eb;
   text-decoration: none;
 }
 
-.terms-link:hover {
+.termsLink:hover {
   text-decoration: underline;
 }
 
 /* Payment Box */
-.payment-box {
+.paymentBox {
   background-color: white;
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
   overflow: hidden;
 }
 
-.payment-header {
+.paymentHeader {
   padding: 1.5rem;
   border-bottom: 1px solid #e5e7eb;
 }
 
-.payment-title {
+.paymentTitle {
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: #111827;
 }
 
-.payment-description {
+.paymentDescription {
   font-size: 0.875rem;
   color: #6b7280;
   line-height: 1.6;
 }
 
 /* Payment Options */
-.payment-option-wrapper {
+.paymentOptionWrapper {
   border-bottom: 1px solid #e5e7eb;
 }
 
-.payment-option-last {
+.paymentOptionLast {
   border-bottom: none;
 }
 
-.payment-option {
+.paymentOption {
   width: 100%;
   padding: 1.5rem;
   background: none;
@@ -159,11 +159,11 @@
   transition: background-color 0.2s;
 }
 
-.payment-option:hover {
+.paymentOption:hover {
   background-color: #f9fafb;
 }
 
-.payment-option-content {
+.paymentOptionContent {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -181,53 +181,53 @@
   flex-shrink: 0;
 }
 
-.radio-checked {
+.radioChecked {
   border-color: #2563eb;
 }
 
-.radio-dot {
+.radioDot {
   width: 0.75rem;
   height: 0.75rem;
   background-color: #2563eb;
   border-radius: 50%;
 }
 
-.payment-name {
+.paymentName {
   font-weight: 500;
   color: #111827;
   flex: 1;
 }
 
-.payment-logos {
+.paymentLogos {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.payment-logo {
+.paymentLogo {
   height: 1.25rem;
   object-fit: contain;
 }
 
-.payment-more {
+.paymentMore {
   font-size: 0.75rem;
   color: #6b7280;
 }
 
 /* Payment Expanded */
-.payment-expanded {
+.paymentExpanded {
   padding: 0 1.5rem 1.5rem;
   background-color: #f9fafb;
 }
 
-.payment-info {
+.paymentInfo {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 2rem 0;
 }
 
-.payment-placeholder {
+.paymentPlaceholder {
   width: 8rem;
   height: 5rem;
   border: 2px solid #d1d5db;
@@ -236,7 +236,7 @@
   margin-bottom: 1rem;
 }
 
-.payment-text {
+.paymentText {
   font-size: 0.875rem;
   color: #6b7280;
   text-align: center;
@@ -245,12 +245,12 @@
 }
 
 /* Action Buttons */
-.action-buttons {
+.actionButtons {
   display: flex;
   gap: 1rem;
 }
 
-.back-button {
+.backButton {
   color: #2563eb;
   background: none;
   border: none;
@@ -258,11 +258,11 @@
   font-size: 0.875rem;
 }
 
-.back-button:hover {
+.backButton:hover {
   text-decoration: underline;
 }
 
-.submit-button {
+.submitButton {
   flex: 1;
   background-color: #1e293b;
   color: white;
@@ -274,24 +274,24 @@
   transition: background-color 0.2s;
 }
 
-.submit-button:hover {
+.submitButton:hover {
   background-color: #0f172a;
 }
 
 /* Order Summary */
-.order-summary {
+.orderSummary {
   position: relative;
 }
 
 @media (min-width: 1024px) {
-  .order-summary {
+  .orderSummary {
     position: sticky;
     top: 2rem;
     height: fit-content;
   }
 }
 
-.summary-box {
+.summaryBox {
   background-color: white;
   border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
@@ -299,24 +299,24 @@
 }
 
 /* Cart Items */
-.cart-items {
+.cartItems {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
-.cart-item {
+.cartItem {
   display: flex;
   gap: 1rem;
 }
 
-.item-image-wrapper {
+.itemImageWrapper {
   position: relative;
   flex-shrink: 0;
 }
 
-.item-image {
+.itemImage {
   width: 5rem;
   height: 5rem;
   object-fit: cover;
@@ -324,7 +324,7 @@
   border: 1px solid #e5e7eb;
 }
 
-.item-badge {
+.itemBadge {
   position: absolute;
   top: -0.5rem;
   right: -0.5rem;
@@ -339,11 +339,11 @@
   justify-content: center;
 }
 
-.item-details {
+.itemDetails {
   flex: 1;
 }
 
-.item-name {
+.itemName {
   font-weight: 500;
   font-size: 0.875rem;
   margin-bottom: 0.25rem;
@@ -351,25 +351,25 @@
   line-height: 1.4;
 }
 
-.item-size {
+.itemSize {
   font-size: 0.75rem;
   color: #6b7280;
 }
 
-.item-price {
+.itemPrice {
   font-weight: 500;
   color: #111827;
   flex-shrink: 0;
 }
 
 /* Promo Section */
-.promo-section {
+.promoSection {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
 }
 
-.promo-input {
+.promoInput {
   flex: 1;
   padding: 0.5rem 1rem;
   border: 1px solid #d1d5db;
@@ -378,12 +378,12 @@
   outline: none;
 }
 
-.promo-input:focus {
+.promoInput:focus {
   border-color: #2563eb;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-.promo-button {
+.promoButton {
   padding: 0.5rem 1.5rem;
   background-color: #e5e7eb;
   color: #374151;
@@ -395,12 +395,12 @@
   transition: background-color 0.2s;
 }
 
-.promo-button:hover {
+.promoButton:hover {
   background-color: #d1d5db;
 }
 
 /* Price Summary */
-.price-summary {
+.priceSummary {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -409,28 +409,28 @@
   margin-bottom: 1rem;
 }
 
-.price-row {
+.priceRow {
   display: flex;
   justify-content: space-between;
   font-size: 0.875rem;
 }
 
-.price-label {
+.priceLabel {
   color: #6b7280;
 }
 
-.price-value {
+.priceValue {
   font-weight: 500;
   color: #111827;
 }
 
-.price-free {
+.priceFree {
   color: #059669;
   font-weight: 600;
 }
 
 /* Total Section */
-.total-section {
+.totalSection {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -438,23 +438,23 @@
   border-top: 1px solid #e5e7eb;
 }
 
-.total-label {
+.totalLabel {
   font-size: 1.125rem;
   font-weight: 600;
   color: #111827;
 }
 
-.total-amount {
+.totalAmount {
   text-align: right;
 }
 
-.total-currency {
+.totalCurrency {
   font-size: 0.75rem;
   color: #6b7280;
   margin-bottom: 0.25rem;
 }
 
-.total-price {
+.totalPrice {
   font-size: 1.5rem;
   font-weight: 700;
   color: #111827;
@@ -462,7 +462,7 @@
 
 /* Responsive Adjustments */
 @media (max-width: 640px) {
-  .checkout-container {
+  .checkoutContainer {
     padding: 1rem;
   }
 
@@ -470,33 +470,33 @@
     font-size: 0.75rem;
   }
 
-  .payment-title {
+  .paymentTitle {
     font-size: 1.125rem;
   }
 
-  .item-image {
+  .itemImage {
     width: 4rem;
     height: 4rem;
   }
 
-  .item-name {
+  .itemName {
     font-size: 0.8125rem;
   }
 
-  .total-price {
+  .totalPrice {
     font-size: 1.25rem;
   }
 
-  .action-buttons {
+  .actionButtons {
     flex-direction: column;
   }
 
-  .back-button {
+  .backButton {
     order: 2;
     text-align: center;
   }
 
-  .submit-button {
+  .submitButton {
     order: 1;
   }
 }

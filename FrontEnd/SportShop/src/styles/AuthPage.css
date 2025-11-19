@@ -55,7 +55,8 @@
 
 /* Main Content */
 .auth-main {
-  margin-top: 70px;
+  max-width: 700px;
+  margin: 70px auto;
   padding: 3rem 1rem;
 }
 
@@ -63,106 +64,8 @@
   max-width: 1400px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr;
   gap: 3rem;
   align-items: start;
-}
-
-@media (min-width: 1024px) {
-  .auth-content-wrapper {
-    grid-template-columns: 1fr 1.2fr;
-  }
-}
-
-/* Brand Section */
-.brand-section {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-  padding: 3rem;
-  border-radius: 1rem;
-  position: sticky;
-  top: 2rem;
-}
-
-.brand-content {
-  max-width: 500px;
-}
-
-.brand-title {
-  font-size: 2.25rem;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 0.75rem;
-  line-height: 1.2;
-}
-
-.brand-subtitle {
-  font-size: 1.125rem;
-  color: #6b7280;
-  margin-bottom: 2.5rem;
-  line-height: 1.6;
-}
-
-/* Benefits List */
-.benefits-list {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
-
-.benefit-item {
-  display: flex;
-  gap: 1.25rem;
-  align-items: flex-start;
-}
-
-.benefit-icon {
-  width: 3rem;
-  height: 3rem;
-  background-color: #10b981;
-  color: white;
-  border-radius: 0.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.benefit-icon svg {
-  width: 1.5rem;
-  height: 1.5rem;
-  stroke-width: 2.5;
-}
-
-.benefit-text h4 {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #111827;
-  margin-bottom: 0.25rem;
-}
-
-.benefit-text p {
-  font-size: 0.9375rem;
-  color: #6b7280;
-  line-height: 1.5;
-}
-
-/* Promo Badge */
-.promo-badge {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  padding: 1rem 1.5rem;
-  border-radius: 0.75rem;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-}
-
-.badge-text {
-  font-size: 1rem;
-  font-weight: 600;
-  color: white;
 }
 
 /* Form Section */
@@ -358,7 +261,6 @@
 .divider-line {
   position: relative;
   text-align: center;
-  margin: 1.5rem 0;
 }
 
 .divider-line::before {
@@ -546,7 +448,6 @@
 .remember-checkbox:focus-visible,
 .submit-btn:focus-visible,
 .social-btn:focus-visible {
-  outline: 2px solid #10b981;
   outline-offset: 2px;
 }
 

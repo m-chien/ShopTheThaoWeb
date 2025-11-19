@@ -1,6 +1,6 @@
 import { ChevronDown, CreditCard } from "lucide-react";
 import React, { useState } from "react";
-import "../styles/Payment.css";
+import styles from "../styles/Payment.module.css";
 import Breadcrumb from "../Component/Breadcrumb";
 import Footer from "../Component/Footer";
 import Header from "../Component/Header";
@@ -42,64 +42,64 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="checkout-page">
+    <div className={styles.checkoutPage}>
       <Header />
-      <div className="checkout-container">
+      <div className={styles.checkoutContainer}>
         {/* Breadcrumb */}
         <Breadcrumb type="payment" />
 
-        <div className="checkout-grid">
+        <div className={styles.checkoutGrid}>
           {/* Left Column - Payment Form */}
-          <div className="payment-section">
+          <div className={styles.paymentSection}>
             {/* Contact Info */}
-            <div className="info-box">
-              <div className="info-header">
-                <span className="info-label">Liên hệ</span>
-                <button className="change-button">Thay đổi</button>
+            <div className={styles.infoBox}>
+              <div className={styles.infoHeader}>
+                <span className={styles.infoLabel}>Liên hệ</span>
+                <button className={styles.changeButton}>Thay đổi</button>
               </div>
-              <p className="info-value">chientranminh355@gmail.com</p>
+              <p className={styles.infoValue}>chientranminh355@gmail.com</p>
             </div>
 
             {/* Shipping Address */}
-            <div className="info-box">
-              <div className="info-header">
-                <span className="info-label">Vận chuyển tới</span>
-                <button className="change-button">Thay đổi</button>
+            <div className={styles.infoBox}>
+              <div className={styles.infoHeader}>
+                <span className={styles.infoLabel}>Vận chuyển tới</span>
+                <button className={styles.changeButton}>Thay đổi</button>
               </div>
-              <p className="info-value">
+              <p className={styles.infoValue}>
                 88 nguyen gian thanh, Đà Nẵng, Việt Nam
               </p>
             </div>
 
             {/* Shipping Method */}
-            <div className="info-box">
-              <div className="info-header">
-                <span className="info-label">Phương thức vận chuyển</span>
+            <div className={styles.infoBox}>
+              <div className={styles.infoHeader}>
+                <span className={styles.infoLabel}>Phương thức vận chuyển</span>
               </div>
-              <p className="info-value">
-                Phí vận chuyển · <span className="free-shipping">MIỄN PHÍ</span>
+              <p className={styles.infoValue}>
+                Phí vận chuyển · <span className={styles.freeShipping}>MIỄN PHÍ</span>
               </p>
             </div>
 
             {/* Invoice Checkbox */}
-            <div className="checkbox-group">
+            <div className={styles.checkboxGroup}>
               <input
                 type="checkbox"
                 id="invoice"
                 checked={invoiceRequired}
                 onChange={(e) => setInvoiceRequired(e.target.checked)}
-                className="checkbox"
+                className={styles.checkbox}
               />
-              <label htmlFor="invoice" className="checkbox-label">
+              <label htmlFor="invoice" className={styles.checkboxLabel}>
                 Yêu cầu xuất hóa đơn
               </label>
             </div>
 
             {/* Payment Section */}
-            <div className="payment-box">
-              <div className="payment-header">
-                <h2 className="payment-title">Thanh toán</h2>
-                <p className="payment-description">
+            <div className={styles.paymentBox}>
+              <div className={styles.paymentHeader}>
+                <h2 className={styles.paymentTitle}>Thanh toán</h2>
+                <p className={styles.paymentDescription}>
                   Địa chỉ thanh toán của phương thức thanh toán phải khớp với
                   địa chỉ giao hàng. Toàn bộ các giao dịch được bảo mật và mã
                   hóa.
@@ -107,46 +107,46 @@ export default function CheckoutPage() {
               </div>
 
               {/* OnePay - ATM/QR/MoMo */}
-              <div className="payment-option-wrapper">
+              <div className={styles.paymentOptionWrapper}>
                 <button
                   onClick={() =>
                     setExpandedPayment(
                       expandedPayment === "onepay" ? "" : "onepay",
                     )
                   }
-                  className="payment-option"
+                  className={styles.paymentOption}
                 >
-                  <div className="payment-option-content">
+                  <div className={styles.paymentOptionContent}>
                     <div
-                      className={`radio ${expandedPayment === "onepay" ? "radio-checked" : ""}`}
+                      className={`${styles.radio} ${expandedPayment === "onepay" ? styles.radioChecked : ""}`}
                     >
                       {expandedPayment === "onepay" && (
-                        <div className="radio-dot"></div>
+                        <div className={styles.radioDot}></div>
                       )}
                     </div>
-                    <span className="payment-name">
+                    <span className={styles.paymentName}>
                       Cổng OnePAY - Thẻ ATM/QR/MoMo
                     </span>
-                    <div className="payment-logos">
+                    <div className={styles.paymentLogos}>
                       <img
                         src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png"
                         alt="Visa"
-                        className="payment-logo"
+                        className={styles.paymentLogo}
                       />
                       <img
                         src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
                         alt="Mastercard"
-                        className="payment-logo"
+                        className={styles.paymentLogo}
                       />
-                      <span className="payment-more">+2</span>
+                      <span className={styles.paymentMore}>+2</span>
                     </div>
                   </div>
                 </button>
                 {expandedPayment === "onepay" && (
-                  <div className="payment-expanded">
-                    <div className="payment-info">
-                      <div className="payment-placeholder"></div>
-                      <p className="payment-text">
+                  <div className={styles.paymentExpanded}>
+                    <div className={styles.paymentInfo}>
+                      <div className={styles.paymentPlaceholder}></div>
+                      <p className={styles.paymentText}>
                         Sau khi nhấp vào "Thanh toán ngay", bạn sẽ được chuyển
                         hướng đến Cổng OnePAY - Thẻ ATM/QR/MoMo để hoàn tất việc
                         mua hàng một cách an toàn.
@@ -157,36 +157,36 @@ export default function CheckoutPage() {
               </div>
 
               {/* Installment 0% */}
-              <div className="payment-option-wrapper">
+              <div className={styles.paymentOptionWrapper}>
                 <button
                   onClick={() =>
                     setExpandedPayment(
                       expandedPayment === "installment" ? "" : "installment",
                     )
                   }
-                  className="payment-option"
+                  className={styles.paymentOption}
                 >
-                  <div className="payment-option-content">
+                  <div className={styles.paymentOptionContent}>
                     <div
-                      className={`radio ${expandedPayment === "installment" ? "radio-checked" : ""}`}
+                      className={`${styles.radio} ${expandedPayment === "installment" ? styles.radioChecked : ""}`}
                     >
                       {expandedPayment === "installment" && (
-                        <div className="radio-dot"></div>
+                        <div className={styles.radioDot}></div>
                       )}
                     </div>
-                    <span className="payment-name">
+                    <span className={styles.paymentName}>
                       Trả góp 0% lãi suất qua thẻ tín dụng
                     </span>
-                    <div className="payment-logos">
+                    <div className={styles.paymentLogos}>
                       <img
                         src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png"
                         alt="Visa"
-                        className="payment-logo"
+                        className={styles.paymentLogo}
                       />
                       <img
                         src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
                         alt="Mastercard"
-                        className="payment-logo"
+                        className={styles.paymentLogo}
                       />
                     </div>
                   </div>
@@ -194,53 +194,53 @@ export default function CheckoutPage() {
               </div>
 
               {/* ZaloPay */}
-              <div className="payment-option-wrapper">
+              <div className={styles.paymentOptionWrapper}>
                 <button
                   onClick={() =>
                     setExpandedPayment(
                       expandedPayment === "zalopay" ? "" : "zalopay",
                     )
                   }
-                  className="payment-option"
+                  className={styles.paymentOption}
                 >
-                  <div className="payment-option-content">
+                  <div className={styles.paymentOptionContent}>
                     <div
-                      className={`radio ${expandedPayment === "zalopay" ? "radio-checked" : ""}`}
+                      className={`${styles.radio} ${expandedPayment === "zalopay" ? styles.radioChecked : ""}`}
                     >
                       {expandedPayment === "zalopay" && (
-                        <div className="radio-dot"></div>
+                        <div className={styles.radioDot}></div>
                       )}
                     </div>
-                    <span className="payment-name">Ví ZaloPay</span>
-                    <div className="payment-logos">
+                    <span className={styles.paymentName}>Ví ZaloPay</span>
+                    <div className={styles.paymentLogos}>
                       <img
                         src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
                         alt="Mastercard"
-                        className="payment-logo"
+                        className={styles.paymentLogo}
                       />
-                      <span className="payment-more">+2</span>
+                      <span className={styles.paymentMore}>+2</span>
                     </div>
                   </div>
                 </button>
               </div>
 
               {/* MoMo via OnePay */}
-              <div className="payment-option-wrapper">
+              <div className={styles.paymentOptionWrapper}>
                 <button
                   onClick={() =>
                     setExpandedPayment(expandedPayment === "momo" ? "" : "momo")
                   }
-                  className="payment-option"
+                  className={styles.paymentOption}
                 >
-                  <div className="payment-option-content">
+                  <div className={styles.paymentOptionContent}>
                     <div
-                      className={`radio ${expandedPayment === "momo" ? "radio-checked" : ""}`}
+                      className={`${styles.radio} ${expandedPayment === "momo" ? styles.radioChecked : ""}`}
                     >
                       {expandedPayment === "momo" && (
-                        <div className="radio-dot"></div>
+                        <div className={styles.radioDot}></div>
                       )}
                     </div>
-                    <span className="payment-name">
+                    <span className={styles.paymentName}>
                       Thanh toán MoMo qua OnePay
                     </span>
                   </div>
@@ -248,22 +248,22 @@ export default function CheckoutPage() {
               </div>
 
               {/* COD */}
-              <div className="payment-option-wrapper payment-option-last">
+              <div className={`${styles.paymentOptionWrapper} ${styles.paymentOptionLast}`}>
                 <button
                   onClick={() =>
                     setExpandedPayment(expandedPayment === "cod" ? "" : "cod")
                   }
-                  className="payment-option"
+                  className={styles.paymentOption}
                 >
-                  <div className="payment-option-content">
+                  <div className={styles.paymentOptionContent}>
                     <div
-                      className={`radio ${expandedPayment === "cod" ? "radio-checked" : ""}`}
+                      className={`${styles.radio} ${expandedPayment === "cod" ? styles.radioChecked : ""}`}
                     >
                       {expandedPayment === "cod" && (
-                        <div className="radio-dot"></div>
+                        <div className={styles.radioDot}></div>
                       )}
                     </div>
-                    <span className="payment-name">
+                    <span className={styles.paymentName}>
                       Thanh toán khi nhận hàng (COD)
                     </span>
                   </div>
@@ -272,11 +272,11 @@ export default function CheckoutPage() {
             </div>
 
             {/* Terms */}
-            <div className="checkbox-group">
-              <input type="checkbox" id="terms" className="checkbox" />
-              <label htmlFor="terms" className="checkbox-label">
+            <div className={styles.checkboxGroup}>
+              <input type="checkbox" id="terms" className={styles.checkbox} />
+              <label htmlFor="terms" className={styles.checkboxLabel}>
                 Tôi đồng ý với{" "}
-                <a href="#" className="terms-link">
+                <a href="#" className={styles.termsLink}>
                   Điều khoản và Chính sách
                 </a>{" "}
                 quy định bởi Supersports*
@@ -284,64 +284,64 @@ export default function CheckoutPage() {
             </div>
 
             {/* Action Buttons */}
-            <div className="action-buttons">
-              <button className="back-button">‹ Quay trở lại vận chuyển</button>
-              <button className="submit-button">Thanh toán ngay</button>
+            <div className={styles.actionButtons}>
+              <button className={styles.backButton}>‹ Quay trở lại vận chuyển</button>
+              <button className={styles.submitButton}>Thanh toán ngay</button>
             </div>
           </div>
 
           {/* Right Column - Order Summary */}
-          <div className="order-summary">
-            <div className="summary-box">
+          <div className={styles.orderSummary}>
+            <div className={styles.summaryBox}>
               {/* Cart Items */}
-              <div className="cart-items">
+              <div className={styles.cartItems}>
                 {cartItems.map((item) => (
-                  <div key={item.id} className="cart-item">
-                    <div className="item-image-wrapper">
+                  <div key={item.id} className={styles.cartItem}>
+                    <div className={styles.itemImageWrapper}>
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="item-image"
+                        className={styles.itemImage}
                       />
-                      <div className="item-badge">{item.quantity}</div>
+                      <div className={styles.itemBadge}>{item.quantity}</div>
                     </div>
-                    <div className="item-details">
-                      <h3 className="item-name">{item.name}</h3>
-                      <p className="item-size">{item.size}</p>
+                    <div className={styles.itemDetails}>
+                      <h3 className={styles.itemName}>{item.name}</h3>
+                      <p className={styles.itemSize}>{item.size}</p>
                     </div>
-                    <div className="item-price">{formatPrice(item.price)}</div>
+                    <div className={styles.itemPrice}>{formatPrice(item.price)}</div>
                   </div>
                 ))}
               </div>
 
               {/* Promo Code */}
-              <div className="promo-section">
+              <div className={styles.promoSection}>
                 <input
                   type="text"
                   placeholder="Nhập mã khuyến mãi"
-                  className="promo-input"
+                  className={styles.promoInput}
                 />
-                <button className="promo-button">Áp dụng</button>
+                <button className={styles.promoButton}>Áp dụng</button>
               </div>
 
               {/* Price Summary */}
-              <div className="price-summary">
-                <div className="price-row">
-                  <span className="price-label">Tổng phụ - 2 mặt hàng</span>
-                  <span className="price-value">{formatPrice(subtotal)}</span>
+              <div className={styles.priceSummary}>
+                <div className={styles.priceRow}>
+                  <span className={styles.priceLabel}>Tổng phụ - 2 mặt hàng</span>
+                  <span className={styles.priceValue}>{formatPrice(subtotal)}</span>
                 </div>
-                <div className="price-row">
-                  <span className="price-label">Phí vận chuyển</span>
-                  <span className="price-value price-free">MIỄN PHÍ</span>
+                <div className={styles.priceRow}>
+                  <span className={styles.priceLabel}>Phí vận chuyển</span>
+                  <span className={`${styles.priceValue} ${styles.priceFree}`}>MIỄN PHÍ</span>
                 </div>
               </div>
 
               {/* Total */}
-              <div className="total-section">
-                <span className="total-label">Tổng</span>
-                <div className="total-amount">
-                  <div className="total-currency">VND</div>
-                  <div className="total-price">{formatPrice(total)}</div>
+              <div className={styles.totalSection}>
+                <span className={styles.totalLabel}>Tổng</span>
+                <div className={styles.totalAmount}>
+                  <div className={styles.totalCurrency}>VND</div>
+                  <div className={styles.totalPrice}>{formatPrice(total)}</div>
                 </div>
               </div>
             </div>
