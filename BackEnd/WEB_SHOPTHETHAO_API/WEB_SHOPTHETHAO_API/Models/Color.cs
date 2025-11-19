@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using AutoMapper.Configuration.Annotations;
 using Microsoft.EntityFrameworkCore;
 
 namespace WEB_SHOPTHETHAO_API.Models;
@@ -16,6 +17,11 @@ public partial class Color
 
     [StringLength(50)]
     public string Name { get; set; } = null!;
+
+    [Column("colorCode")]
+    [StringLength(10)]
+    [Unicode(false)]
+    public string? ColorCode { get; set; }
 
     [InverseProperty("Color")]
     [JsonIgnore]

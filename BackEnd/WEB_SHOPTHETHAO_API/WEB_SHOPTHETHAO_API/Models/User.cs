@@ -3,40 +3,34 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using AutoMapper.Configuration.Annotations;
 using Microsoft.EntityFrameworkCore;
 
 namespace WEB_SHOPTHETHAO_API.Models;
 
 [Table("User")]
-[Index("Email", Name = "UQ__User__A9D10534B5DE110A", IsUnique = true)]
 public partial class User
 {
     [Key]
-    [Column("ID")]
-    public int Id { get; set; }
+    public int UserId { get; set; }
 
     [StringLength(100)]
-    public string Name { get; set; } = null!;
+    public string UserName { get; set; } = null!;
 
-    [StringLength(100)]
-    public string Email { get; set; } = null!;
+    [StringLength(255)]
+    public string Password { get; set; } = null!;
 
-    [Column("SDT")]
-    [StringLength(20)]
-    public string? Sdt { get; set; }
+    [StringLength(255)]
+    public string? Email { get; set; }
 
-    [StringLength(200)]
-    public string? DiaChi { get; set; }
+    [StringLength(255)]
+    public string? FullName { get; set; }
 
-    [Column("AvatarURL")]
-    [StringLength(200)]
-    public string? AvatarUrl { get; set; }
+    public string? RefreshToken { get; set; }
 
-    [StringLength(50)]
-    public string? Role { get; set; }
+    public bool IsActive { get; set; }
 
-    [Column("DOB")]
-    public DateOnly? Dob { get; set; }
+    public DateTime CreatedDate { get; set; }
 
     [InverseProperty("User")]
     [JsonIgnore]

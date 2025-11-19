@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using AutoMapper.Configuration.Annotations;
 using Microsoft.EntityFrameworkCore;
 
 namespace WEB_SHOPTHETHAO_API.Models;
@@ -27,6 +28,12 @@ public partial class ProductVariant
 
     [Column(TypeName = "decimal(18, 2)")]
     public decimal Price { get; set; }
+
+    [StringLength(200)]
+    public string? Image { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? NgayNhap { get; set; }
 
     [InverseProperty("ProductVariant")]
     [JsonIgnore]
