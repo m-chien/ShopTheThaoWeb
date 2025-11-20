@@ -1,0 +1,21 @@
+.breadcrumb {
+  background: #eaeaea;
+  padding: 20px 40px 10px 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  color: #999;
+}
+.breadcrumb .HomePage, .type {
+  cursor: pointer;
+}
+.HomePage:hover, .type:hover {
+  color: #77e51f;
+}
+
+.breadcrumb span:last-child {
+  color: #333;
+  font-weight: 500;
+}
