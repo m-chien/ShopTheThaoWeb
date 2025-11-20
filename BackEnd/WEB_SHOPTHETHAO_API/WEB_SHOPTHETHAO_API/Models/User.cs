@@ -25,6 +25,15 @@ public partial class User
 
     [StringLength(255)]
     public string? FullName { get; set; }
+    // Thêm các thuộc tính mới
+    [StringLength(20)]
+    public string? PhoneNumber { get; set; }
+
+    [StringLength(500)]
+    public string? AvatarUrl { get; set; }
+
+    [StringLength(255)]
+    public string? Address { get; set; }
 
     public string? RefreshToken { get; set; }
 

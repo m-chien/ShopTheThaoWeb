@@ -88,10 +88,17 @@ CREATE TABLE [User] (
     Password NVARCHAR(255) NOT NULL,
     Email NVARCHAR(255),
     FullName NVARCHAR(255),
+
+    -- Thuộc tính mới
+    PhoneNumber NVARCHAR(20),
+    AvatarUrl NVARCHAR(500),
+    Address NVARCHAR(255),
+
     RefreshToken NVARCHAR(MAX),
     IsActive BIT NOT NULL DEFAULT 1,
     CreatedDate DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()
 );
+
 
 -- Bảng Role
 CREATE TABLE Role (
@@ -285,10 +292,12 @@ INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Im
 -- ========================
 -- Thêm dữ liệu cho User
 -- ========================
-INSERT INTO [User] (UserName, Password, Email, FullName, RefreshToken, IsActive, CreatedDate)
+INSERT INTO [User] 
+(UserName, Password, Email, FullName, PhoneNumber, AvatarUrl, Address, RefreshToken, IsActive, CreatedDate)
 VALUES
-('tuan_khanh', '123456', 'khanh@example.com', N'Trần Đăng Tuấn Khanh', NULL, 1, SYSUTCDATETIME()),
-('admin01', 'admin123', 'admin@example.com', N'Quản trị viên', NULL, 1, SYSUTCDATETIME());
+('tuan_khanh', '123456', 'khanh@example.com', N'Trần Đăng Tuấn Khanh', '0900000001', NULL, N'Đà Nẵng', NULL, 1, SYSUTCDATETIME()),
+('admin01', 'admin123', 'admin@example.com', N'Quản trị viên', '0900000002', NULL, N'Hồ Chí Minh', NULL, 1, SYSUTCDATETIME());
+
 
 -- Role
 INSERT INTO Role (RoleName, Description) VALUES
