@@ -28,7 +28,7 @@ export default function ProductListPage() {
     <>
       <div className={styles.pageContainer}>
         <Header />
-        <Breadcrumb items={[{label: "Sản Phẩm", link: "/productList"}]} />
+        <Breadcrumb items={[{label: "Sản Phẩm", link: "/product" }]} />
         <div className={styles.mainContent}>
           {/* Filter Component */}
           <Filter
