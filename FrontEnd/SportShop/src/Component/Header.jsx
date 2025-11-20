@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/Header.module.css";
+import { useSelector } from "react-redux";
+import { selectTotalQty } from "../Redux/Slices/CartSlice.js";
 
 export default function Header({ searchTerm, setSearchTerm }) {
+  const totalQuantity = useSelector(selectTotalQty);
   const navigate = useNavigate();
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -150,7 +153,7 @@ export default function Header({ searchTerm, setSearchTerm }) {
           <button
             className={styles.iconBtn}
             title="Tài khoản"
-            onClick={() => navigate("/profile")}
+            onClick={() => navigate(sessionStorage.getItem("accessToken") ? "/profile" : "/login")}
           >
             <i class="fa-regular fa-user"></i>
           </button>
@@ -160,7 +163,7 @@ export default function Header({ searchTerm, setSearchTerm }) {
             onClick={() => navigate("/cart")}
           >
             <i class="fa-solid fa-cart-shopping"></i>
-            <span className={styles.cartBadge}>0</span>
+            <span className={styles.cartBadge}>{totalQuantity || 0}</span>
           </button>
           <button className={styles.iconBtn} title="Vị trí">
             <i class="fas fa-location-dot"></i>

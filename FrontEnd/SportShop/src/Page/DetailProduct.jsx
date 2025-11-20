@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CardProduct from "../Component/CardProduct";
 import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import styles from "../styles/DetailProduct.module.css";
+import Breadcrumb from "../Component/Breadcrumb";
 
 export default function DetailProduct() {
+  const navigate = useNavigate();
   // Sample product data
   const product = {
     id: 1,
@@ -113,6 +116,7 @@ export default function DetailProduct() {
       size: selectedSize,
       width: selectedWidth,
     });
+    navigate("/payment");
   };
 
   const handleQuantityChange = (e) => {
@@ -136,13 +140,10 @@ export default function DetailProduct() {
 
       <div className={styles["detail-product-container"]}>
         {/* Breadcrumb */}
-        <div className={styles["breadcrumb-nav"]}>
-          <a href="/">Trang chủ</a>
-          <span>/</span>
-          <a href="/">{product.category}</a>
-          <span>/</span>
-          <span className={styles.current}>{product.name}</span>
-        </div>
+        <Breadcrumb items={[
+          {label: "Sản Phẩm", link: "/product"},
+          {label: "Giày nike", link: "/nike"}
+        ]}/>
 
         {/* Main Content */}
         <div className={styles["product-detail-content"]}>

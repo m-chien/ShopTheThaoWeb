@@ -20,7 +20,8 @@ CREATE TABLE Category (
     ID INT IDENTITY(1,1) PRIMARY KEY,          -- Khóa chính, tự tăng, định danh duy nhất cho danh mục
     Name NVARCHAR(100) NOT NULL,               -- Tên danh mục sản phẩm
     Description NVARCHAR(500),                 -- Mô tả chi tiết về danh mục
-    CreatedAt DATETIME DEFAULT GETDATE()       -- Ngày tạo danh mục, mặc định là ngày hiện tại
+    CreatedAt DATETIME DEFAULT GETDATE(),
+	image NVARCHAR(200) -- Ngày tạo danh mục, mặc định là ngày hiện tại
 );
 
 
@@ -39,7 +40,6 @@ CREATE TABLE Product (
     BrandID INT NOT NULL,                      -- FK liên kết tới Brand(ID)
     Name NVARCHAR(100) NOT NULL,               -- Tên sản phẩm
     Description NVARCHAR(500),                 -- Mô tả sản phẩm
-    Image NVARCHAR(200),                       -- Đường dẫn hoặc URL hình ảnh
     CreatedAt DATETIME DEFAULT GETDATE(),      -- Ngày tạo sản phẩm
     Status BIT DEFAULT 1,                      -- Trạng thái sản phẩm (1: active, 0: inactive)
     CONSTRAINT FK_Product_Category FOREIGN KEY (CategoryID) REFERENCES Category(ID),
@@ -61,7 +61,8 @@ CREATE TABLE Size (
 -- Bảng Color
 CREATE TABLE Color (
     ID INT IDENTITY(1,1) PRIMARY KEY,          -- Khóa chính
-    Name NVARCHAR(50) NOT NULL                 -- Tên màu
+    Name NVARCHAR(50) NOT NULL,                -- Tên màu
+	colorCode varchar(10)
 );
 
 
@@ -73,40 +74,39 @@ CREATE TABLE ProductVariant (
     ColorID INT NOT NULL,                       -- FK tới Color(ID)
     StockQuantity INT DEFAULT 0,                -- Số lượng tồn kho
     Price DECIMAL(18,2) NOT NULL,              -- Giá bán
+	Image NVARCHAR(200),                       -- Đường dẫn hoặc URL hình ảnh
+	NgayNhap DATETIME DEFAULT GETDATE(),
     CONSTRAINT FK_ProductVariant_Product FOREIGN KEY (ProductID) REFERENCES Product(ID),
     CONSTRAINT FK_ProductVariant_Size FOREIGN KEY (SizeID) REFERENCES Size(ID),
     CONSTRAINT FK_ProductVariant_Color FOREIGN KEY (ColorID) REFERENCES Color(ID)
 );
 
 
--- Bảng User
 CREATE TABLE [User] (
-    ID INT IDENTITY(1,1) PRIMARY KEY,          -- Khóa chính
-    Name NVARCHAR(100) NOT NULL,               -- Tên người dùng
-    Email NVARCHAR(100) NOT NULL UNIQUE,       -- Email đăng nhập, duy nhất
-    SDT NVARCHAR(20),                           -- Số điện thoại
-    DiaChi NVARCHAR(200),                       -- Địa chỉ
-    AvatarURL NVARCHAR(200),                    -- URL avatar
-    Role NVARCHAR(50),                          -- Role chính của người dùng
-    DOB DATE                                    -- Ngày sinh
+    UserId INT IDENTITY(1,1) PRIMARY KEY,
+    UserName NVARCHAR(100) NOT NULL,
+    Password NVARCHAR(255) NOT NULL,
+    Email NVARCHAR(255),
+    FullName NVARCHAR(255),
+    RefreshToken NVARCHAR(MAX),
+    IsActive BIT NOT NULL DEFAULT 1,
+    CreatedDate DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME()
 );
-
 
 -- Bảng Role
 CREATE TABLE Role (
-    RoleId INT IDENTITY(1,1) PRIMARY KEY,      -- Khóa chính
-    RoleName NVARCHAR(50) NOT NULL UNIQUE,     -- Tên quyền/role
-    Description NVARCHAR(200)                  -- Mô tả quyền/role
+    RoleId INT IDENTITY(1,1) PRIMARY KEY,
+    RoleName NVARCHAR(50) NOT NULL UNIQUE,
+    Description NVARCHAR(200)
 );
 
-
--- Bảng UserRole (N:N giữa User và Role)
+-- Bảng UserRole
 CREATE TABLE UserRole (
-    UserId INT NOT NULL,                        -- FK tới User(ID)
-    RoleId INT NOT NULL,                        -- FK tới Role(RoleId)
-    AssignedDate DATETIME DEFAULT GETDATE(),    -- Ngày gán role
+    UserId INT NOT NULL,
+    RoleId INT NOT NULL,
+    AssignedDate DATETIME DEFAULT GETDATE(),
     PRIMARY KEY (UserId, RoleId),
-    CONSTRAINT FK_UserRole_User FOREIGN KEY (UserId) REFERENCES [User](ID) ON DELETE CASCADE,
+    CONSTRAINT FK_UserRole_User FOREIGN KEY (UserId) REFERENCES [User](UserId) ON DELETE CASCADE,
     CONSTRAINT FK_UserRole_Role FOREIGN KEY (RoleId) REFERENCES Role(RoleId) ON DELETE CASCADE
 );
 
@@ -115,7 +115,7 @@ CREATE TABLE UserRole (
 CREATE TABLE Cart (
     ID INT IDENTITY(1,1) PRIMARY KEY,          -- Khóa chính
     UserID INT NOT NULL,                        -- FK tới User(ID)
-    CONSTRAINT FK_Cart_User FOREIGN KEY (UserID) REFERENCES [User](ID)
+    CONSTRAINT FK_Cart_User FOREIGN KEY (UserID) REFERENCES [User](UserId)
 );
 
 
@@ -148,7 +148,7 @@ CREATE TABLE Voucher_User (
     UserID INT NOT NULL,                        -- FK tới User(ID)
     VoucherID INT NOT NULL,                     -- FK tới Voucher(ID)
     ReceivedDate DATE DEFAULT GETDATE(),        -- Ngày nhận voucher
-    CONSTRAINT FK_VoucherUser_User FOREIGN KEY (UserID) REFERENCES [User](ID),
+    CONSTRAINT FK_VoucherUser_User FOREIGN KEY (UserID) REFERENCES [User](UserId),
     CONSTRAINT FK_VoucherUser_Voucher FOREIGN KEY (VoucherID) REFERENCES Voucher(ID)
 );
 
@@ -162,7 +162,7 @@ CREATE TABLE [Order] (
     DeliveryAddress NVARCHAR(200),              -- Địa chỉ nhận hàng
     Phone NVARCHAR(20),                          -- Số điện thoại liên hệ
     OrderDate DATETIME DEFAULT GETDATE(),       -- Ngày tạo đơn
-    CONSTRAINT FK_Order_User FOREIGN KEY (UserID) REFERENCES [User](ID),
+    CONSTRAINT FK_Order_User FOREIGN KEY (UserID) REFERENCES [User](UserId),
     CONSTRAINT FK_Order_Voucher FOREIGN KEY (VoucherID) REFERENCES Voucher(ID)
 );
 
@@ -193,10 +193,17 @@ GO
 -- ========================
 -- Thêm dữ liệu cho Category
 -- ========================
-INSERT INTO Category (Name, Description) VALUES
-(N'Giày Thể Thao', N'Các loại giày cho thể thao và đi chơi'),
-(N'Quần Áo Thể Thao', N'Trang phục tập luyện và thể thao'),
-(N'Phụ Kiện Thể Thao', N'Tất, balo, mũ thể thao');
+INSERT INTO Category (Name, Description, image) VALUES
+(N'Giày Chạy Bộ', NULL, N'GiayChayBo.png'),
+(N'Giày Thời Trang', NULL, N'GiayThoiTrang.png'),
+(N'Áo Thun', NULL, N'AoThun.png'),
+(N'Áo Khoác', NULL, N'AoKhoac.png'),
+(N'Giày Luyện Tập', NULL, N'GiayLuyenTap.png'),
+(N'Xăng Đan & Dép', NULL, N'XangDan.png'),
+(N'Quần Ngắn', NULL, N'QuanNgan.png'),
+(N'Quần Dài', NULL, N'QuanDai.png'),
+(N'Đồ Bơi', NULL, N'DoBoi.png'),
+(N'Ba Lô', NULL, N'BaLo.png');
 
 -- ========================
 -- Thêm dữ liệu cho Brand
@@ -217,49 +224,81 @@ INSERT INTO Size (Name, Length, Width, Weight, Height) VALUES
 -- ========================
 -- Thêm dữ liệu cho Color
 -- ========================
-INSERT INTO Color (Name) VALUES
-(N'Đỏ'),
-(N'Xanh Dương'),
-(N'Đen');
+INSERT INTO Color (Name, colorCode) VALUES
+(N'Đỏ', '#FF0000'),
+(N'Xanh Dương', '#6CABDD'),
+(N'Đen', '#000000'),
+(N'Trắng', '#FFFFFF'),
+(N'Vàng', '#FFFF00'),
+(N'Xanh lá', '#008000'),
+(N'Xám', '#808080'),
+(N'Nâu', '#6E1C1C');
 
 -- ========================
 -- Thêm dữ liệu cho Product
 -- ========================
-INSERT INTO Product (CategoryID, BrandID, Name, Description, Image, Status) VALUES
-(1, 1, 'Nike Air Max', N'Giày chạy bộ Nike Air Max', 'nike_airmax.png', 1),
-(1, 2, 'Adidas Ultraboost', N'Giày chạy bộ Adidas Ultraboost', 'adidas_ultraboost.png', 1),
-(2, 3, N'Puma Quần Jogger', N'Quần thể thao Puma Jogger', 'puma_jogger.png', 1);
+INSERT INTO Product (CategoryID, BrandID, Name, Description, Status) VALUES
+(1, 1, 'Nike Air Max', N'Giày chạy bộ Nike Air Max', 1),
+(1, 2, 'Adidas Ultraboost', N'Giày chạy bộ Adidas Ultraboost', 1),
+(2, 3, N'Puma Giày Jogger', N'Giày thể thao Puma Jogger', 1),
+(1, 1, 'Nike Revolution 6', N'Giày chạy bộ Nike Revolution 6', 1),
+(2, 2, 'Adidas Tiro 23', N'Quần short thể thao Adidas', 1),
+(1, 3, 'Puma Suede Classic', N'Giày thể thao thời trang Puma', 1),
+(2, 1, 'Nike Sportswear Club', N'Áo T-shirt Nike nam', 1),
+(1, 2, 'Adidas Stan Smith', N'Giày sneaker Adidas Stan Smith', 1),
+(2, 3, 'PUMA x REPRESENT', N'Áo thun họa tiết PUMA x REPRESENT dành cho nam', 1),
+(1, 1, 'Nike Air Jordan 1', N'Giày bóng rổ Nike Air Jordan 1', 1),
+(2, 2, 'PumaWARDROBE', N'Quần short nam rộng rãi vải sọc nhăn WARDROBE ESS 6"', 1),
+(2, 1, 'BMW Polo', N'Áo polo nam BMW M Motorsport', 1),
+(1, 3, 'Puma RS-X', N'Giày sneaker Puma RS-X', 1),
+(3, 3, 'Manchester City shirt', N'Áo Thi Đấu Manchester City 25/26 Nam', 1),
+(5, 3, 'Manchester City Hat', N'Mũ Lưỡi Trai Manchester City Essentials', 1);
 
 -- ========================
 -- Thêm dữ liệu cho ProductVariant
 -- ========================
-INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price) VALUES
-(1, 1, 1, 10, 2500000),
-(1, 2, 2, 15, 2600000),
-(2, 2, 3, 8, 2800000),
-(3, 1, 1, 20, 500000),
-(3, 3, 2, 10, 550000);
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image, NgayNhap) VALUES
+(1, 1, 1, 10, 2500000, 'nike_red.png', '2025-10-01 09:00:00'),
+(1, 2, 2, 15, 2600000, 'nike_blue.png', '2025-10-01 09:00:00'),
+(2, 2, 3, 8, 2800000, 'AdidasUltraboost.png', '2025-10-02 14:30:00'),
+(3, 1, 4, 20, 500000, 'puma_jogger_white.png', '2025-10-03 10:15:00'),
+(3, 3, 5, 10, 550000, 'puma_jogger_yellow.png', '2025-10-03 10:15:00'),
+(4, 2, 3, 20, 1800000, 'NikeRevolution_black.png', '2025-10-05 08:20:00'),
+(4, 3, 6, 15, 1800000, 'NikeRevolution_green.png', '2025-10-05 08:20:00'),
+(6, 1, 3, 12, 2200000, 'PumaSuedeClassic.png', '2025-10-07 16:45:00'),
+(5, 2, 3, 30, 850000, 'Quan_Adidas.png', '2025-10-06 11:00:00'),
+(7, 3, 4, 25, 1500000, 'NikeSportswearClub_White.png', '2025-10-10 09:30:00'),
+(7, 3, 2, 10, 1550000, 'NikeSportswearClub_blue.png', '2025-10-10 09:30:00'),
+(8, 2, 4, 18, 2400000, 'AdidasStanSmith.png', '2025-10-11 13:00:00'),
+(9, 1, 4, 50, 450000, 'PUMAREPRESENT_white.png', '2025-10-12 10:00:00'),
+(9, 2, 2, 40, 450000, 'PUMAREPRESENT_blue.png', '2025-10-12 10:00:00'),
+(9, 3, 3, 30, 450000, 'PUMAREPRESENT_black.png', '2025-10-12 10:00:00'),
+(10, 3, 3, 5, 5500000, 'jordan1_red.png', '2025-10-15 17:00:00'),
+(11, 2, 3, 22, 900000, 'PumaWARDROBE.png', '2025-10-18 09:15:00'),
+(12, 3, 8, 15, 1200000, 'PoloBMW_Brown.png', '2025-10-20 11:30:00'),
+(12, 2, 4, 15, 1200000, 'PoloBMW_white.png', '2025-10-20 11:30:00'),
+(13, 1, 6, 10, 3100000, 'sneakerHeritage.png', '2025-10-21 14:00:00'),
+(14, 3, 2, 15, 1200000, 'ManchesterCityHome.png', '2025-10-20 11:30:00'),
+(14, 2, 3, 15, 1200000, 'ManchesterCityAway.png', '2025-10-20 11:30:00'),
+(15, 1, 2, 10, 1100000, 'ManchesterCityHat.png', '2025-10-21 14:00:00');
 
 -- ========================
 -- Thêm dữ liệu cho User
 -- ========================
-INSERT INTO [User] (Name, Email, SDT, DiaChi, AvatarURL, Role, DOB) VALUES
-(N'Trần Đặng Tuấn Khanh', 'a@gmail.com', '0912345678', 'Hà Nội', 'avatar1.png', 'Customer', '1995-05-10'),
-(N'Trần Trần', 'b@gmail.com', '0987654321', 'Hồ Chí Minh', 'avatar2.png', 'Customer', '1998-08-15');
+INSERT INTO [User] (UserName, Password, Email, FullName, RefreshToken, IsActive, CreatedDate)
+VALUES
+('tuan_khanh', '123456', 'khanh@example.com', N'Trần Đăng Tuấn Khanh', NULL, 1, SYSUTCDATETIME()),
+('admin01', 'admin123', 'admin@example.com', N'Quản trị viên', NULL, 1, SYSUTCDATETIME());
 
--- ========================
--- Thêm dữ liệu cho Role
--- ========================
+-- Role
 INSERT INTO Role (RoleName, Description) VALUES
 ('Admin', N'Quản trị hệ thống'),
 ('Customer', N'Khách hàng bình thường');
 
--- ========================
--- Thêm dữ liệu cho UserRole
--- ========================
+-- UserRole
 INSERT INTO UserRole (UserId, RoleId) VALUES
-(1, 1), -- User 1 là Admin
-(2, 2); -- User 2 là Customer
+(1, 1),
+(2, 2);
 
 -- ========================
 -- Thêm dữ liệu cho Cart
@@ -360,3 +399,22 @@ SELECT * FROM OrderDetail;
 
 -- 16. Payment
 SELECT * FROM Payment;
+--lấy thông tin tất cả sản phảm
+select distinct pv.ProductID,  p.name, p.Description,pv.ColorID,c.Name, pv.Image, MIN(pv.Price) as price
+from ProductVariant pv 
+	join Product p on p.ID = pv.ProductID
+	join Color c on c.ID = pv.ColorID
+GROUP BY pv.ProductID, p.Name, p.Description,pv.ColorID,c.Name, pv.Image;
+--
+select * from Product
+
+--lấy thông tin chi tiết sản phẩm
+select *
+from ProductVariant pv 
+	join Product p on p.ID = pv.ProductID
+	join Size s on s.ID = pv.SizeID
+	join Color c on c.ID = pv.ColorID
+where pv.ProductID = 1
+
+select * from Color
+select * from [User]

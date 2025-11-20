@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import "../styles/Profile.css";
+import { useNavigate } from "react-router-dom";
 import avatar from "../assets/IMG_6162.JPG";
 import Breadcrumb from "../Component/Breadcrumb";
+import { User } from "../Api/User";
 
 export default function Profile() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("info");
   const [isEditing, setIsEditing] = useState(false);
 
   const [userInfo, setUserInfo] = useState({
-    name: "Trần Minh Chiến",
+    fullName: "Trần Minh Chiến",
     email: "chientranminh355@gmail.com",
     phone: "0969827284",
     address: "88 Nguyễn Giản Thanh",
@@ -21,6 +24,22 @@ export default function Profile() {
     postalCode: "700000",
     avatar: avatar,
   });
+  console.log("🚀 ~ Profile ~ userInfo:", userInfo)
+
+  useEffect(() => {
+  const fetchUser = async () => {
+    try {
+      const data = await User().getUserInfo(); // gọi trực tiếp
+      console.log("🚀 ~ fetchUser ~ data:", data)
+      setUserInfo(data.data);
+    } catch (err) {
+      console.log("Lỗi:", err);
+    }
+  };
+
+  fetchUser();
+}, []);
+
 
   const [orders] = useState([
     {
@@ -76,10 +95,16 @@ export default function Profile() {
     }
   };
 
+  if (!sessionStorage.getItem("accessToken")) {
+    alert("Vui lòng đăng nhập trước khi vào");
+    navigate("/");
+    return <div>đăng nhập đi bạn eyy!!</div>;
+  }
+
   return (
     <div className="profile-page">
       <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      <Breadcrumb type="Hồ sơ" />
+      <Breadcrumb items={[{ label: "Hồ sơ", link: "" }]} />
 
       <div className="profile-container">
         <h1 className="page-title">Tài khoản của tôi</h1>
@@ -88,8 +113,8 @@ export default function Profile() {
           {/* Sidebar */}
           <div className="profile-sidebar">
             <div className="user-card">
-              <img src={userInfo.avatar} alt="Avatar" className="user-avatar" />
-              <h2>{userInfo.name}</h2>
+              <img src={ "../../public/useAva.png"} alt="Avatar" className="user-avatar" />
+              <h2>{userInfo.fullName}</h2>
               <p className="user-email">{userInfo.email}</p>
             </div>
 
@@ -157,7 +182,7 @@ export default function Profile() {
                   <div className="info-display">
                     <div className="info-row">
                       <label>Họ và tên:</label>
-                      <span>{userInfo.name}</span>
+                      <span>{userInfo.fullName}</span>
                     </div>
                     <div className="info-row">
                       <label>Email:</label>

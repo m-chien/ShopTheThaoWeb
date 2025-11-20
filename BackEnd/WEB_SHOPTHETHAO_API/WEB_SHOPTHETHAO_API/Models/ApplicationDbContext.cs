@@ -48,19 +48,19 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<VoucherUser> VoucherUsers { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost;Database=dbQuanLyShopTheThao;User Id=sa;Password=12345;TrustServerCertificate=True;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=localhost;Database=dbQuanLyShopTheThao;User Id=sa;Password=1234;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Brand>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Brand__3214EC277CAD77E0");
+            entity.HasKey(e => e.Id).HasName("PK__Brand__3214EC2773B25785");
         });
 
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Cart__3214EC277DF3883F");
+            entity.HasKey(e => e.Id).HasName("PK__Cart__3214EC27845E7CFF");
 
             entity.HasOne(d => d.User).WithMany(p => p.Carts)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -69,7 +69,7 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<CartDetail>(entity =>
         {
-            entity.HasKey(e => new { e.CartId, e.ProductVariantId }).HasName("PK__CartDeta__1FF1B1E5250B9102");
+            entity.HasKey(e => new { e.CartId, e.ProductVariantId }).HasName("PK__CartDeta__1FF1B1E5B3BDDCB5");
 
             entity.Property(e => e.Quantity).HasDefaultValue(1);
 
@@ -82,19 +82,19 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Category__3214EC2791119284");
+            entity.HasKey(e => e.Id).HasName("PK__Category__3214EC276532B5BB");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
         });
 
         modelBuilder.Entity<Color>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Color__3214EC272B5D3EFA");
+            entity.HasKey(e => e.Id).HasName("PK__Color__3214EC275F4701C1");
         });
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Order__3214EC27450B44FA");
+            entity.HasKey(e => e.Id).HasName("PK__Order__3214EC27739E563E");
 
             entity.Property(e => e.OrderDate).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Status).HasDefaultValue("Pending");
@@ -108,7 +108,7 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__OrderDet__3214EC27AB32704B");
+            entity.HasKey(e => e.Id).HasName("PK__OrderDet__3214EC27C2058F74");
 
             entity.Property(e => e.Quantity).HasDefaultValue(1);
             entity.Property(e => e.Status).HasDefaultValue("Pending");
@@ -122,7 +122,7 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC2769138681");
+            entity.HasKey(e => e.Id).HasName("PK__Payment__3214EC27C621CD36");
 
             entity.Property(e => e.PaymentDate).HasDefaultValueSql("(getdate())");
 
@@ -133,7 +133,7 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Product__3214EC27516353B5");
+            entity.HasKey(e => e.Id).HasName("PK__Product__3214EC279CEE24E1");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Status).HasDefaultValue(true);
@@ -149,8 +149,9 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<ProductVariant>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ProductV__3214EC2785DFC85F");
+            entity.HasKey(e => e.Id).HasName("PK__ProductV__3214EC270CA130D3");
 
+            entity.Property(e => e.NgayNhap).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.StockQuantity).HasDefaultValue(0);
 
             entity.HasOne(d => d.Color).WithMany(p => p.ProductVariants)
@@ -168,22 +169,25 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("PK__Role__8AFACE1A9D36782D");
+            entity.HasKey(e => e.RoleId).HasName("PK__Role__8AFACE1A0066376A");
         });
 
         modelBuilder.Entity<Size>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Size__3214EC27A694A21A");
+            entity.HasKey(e => e.Id).HasName("PK__Size__3214EC27DE69C28C");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__User__3214EC2709865283");
+            entity.HasKey(e => e.UserId).HasName("PK__User__1788CC4CC907C528");
+
+            entity.Property(e => e.CreatedDate).HasDefaultValueSql("(sysutcdatetime())");
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
         });
 
         modelBuilder.Entity<UserRole>(entity =>
         {
-            entity.HasKey(e => new { e.UserId, e.RoleId }).HasName("PK__UserRole__AF2760ADA1EA65E7");
+            entity.HasKey(e => new { e.UserId, e.RoleId }).HasName("PK__UserRole__AF2760ADF61C8BDE");
 
             entity.Property(e => e.AssignedDate).HasDefaultValueSql("(getdate())");
 
@@ -194,12 +198,12 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Voucher>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Voucher__3214EC272B99D6DB");
+            entity.HasKey(e => e.Id).HasName("PK__Voucher__3214EC27AC31F3D7");
         });
 
         modelBuilder.Entity<VoucherUser>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Voucher___3214EC27549604BB");
+            entity.HasKey(e => e.Id).HasName("PK__Voucher___3214EC2740839C80");
 
             entity.Property(e => e.ReceivedDate).HasDefaultValueSql("(getdate())");
 

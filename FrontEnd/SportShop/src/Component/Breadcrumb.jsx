@@ -1,20 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import "../styles/Breadcrumb.css";
 
-export default function Breadcrumb({ type, productName }) {
+export default function Breadcrumb({ items }) {
   const navigate = useNavigate();
   return (
     <div className="breadcrumb">
       <span className="HomePage" onClick={() => navigate("/")}>
         Trang chủ
       </span>
-      <span>›</span>
-      {type == null ? "" : <span className="type">{type}</span>}
-      {productName == null ? (
-        ""
-      ) : (
-        <span className="product-name">{productName}</span>
-      )}
+      {items.map((item) => {
+        return (
+          <>
+            <span>›</span>
+            <span className="type" onClick={() => navigate(item.link)}>{item.label}</span>
+          </>
+        );
+      })}
     </div>
   );
 }
