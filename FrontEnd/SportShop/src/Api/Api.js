@@ -1,5 +1,12 @@
 import axios from "axios";
 
+export const apiDummy = axios.create({
+  baseURL: "https://dummyjson.com/",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 export const api = axios.create({
   baseURL: "https://localhost:7299/api",
   withCredentials: true,
@@ -23,7 +30,11 @@ api.interceptors.response.use(
 
       try {
         // Gọi API refresh token (lưu trong HttpOnly cookie)
-        const res = await axios.post("https://localhost:7299/api/User/refresh-token", {}, { withCredentials: true });
+        const res = await axios.post(
+          "https://localhost:7299/api/User/refresh-token",
+          {},
+          { withCredentials: true },
+        );
         const newAccessToken = res.data.accessToken;
 
         // Lưu access token mới
@@ -40,5 +51,5 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
