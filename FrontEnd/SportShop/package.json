@@ -10,9 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^6.1.0",
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
     "@gsap/react": "^2.1.2",
     "@reduxjs/toolkit": "^2.10.1",
+    "antd": "^6.0.0",
     "axios": "^1.13.2",
     "gsap": "^3.13.0",
     "lucide-react": "^0.554.0",
