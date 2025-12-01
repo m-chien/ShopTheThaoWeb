@@ -9,7 +9,7 @@ import Test from "./Page/test.jsx";
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <StrictMode>
-      <Test/>
+      <App/>
     </StrictMode>
   </Provider>,
 );

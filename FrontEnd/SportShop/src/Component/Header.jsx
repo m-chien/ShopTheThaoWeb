@@ -1,17 +1,24 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import styles from "../styles/Header.module.css";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { selectTotalQty } from "../Redux/Slices/CartSlice.js";
+import styles from "../styles/Header.module.css";
+import NotificationModal from "./NotificationModal.jsx";
 
 export default function Header({ searchTerm, setSearchTerm }) {
   const totalQuantity = useSelector(selectTotalQty);
+  const [bell, setbell] = useState(false);
   const navigate = useNavigate();
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const toggleDropdown = (menu) => {
     setActiveDropdown(activeDropdown === menu ? null : menu);
+  };
+  const handleBellClick = () => {
+    setShowModal(true);
+    setbell(!bell);
   };
 
   const navItems = [
@@ -104,7 +111,11 @@ export default function Header({ searchTerm, setSearchTerm }) {
               onMouseEnter={() => item.submenu && setActiveDropdown(index)}
               onMouseLeave={() => setActiveDropdown(null)}
             >
-              <a href={item.href} className={styles.navLink} onClick={() => navigate("/ProductList")}>
+              <a
+                href={item.href}
+                className={styles.navLink}
+                onClick={() => navigate("/ProductList")}
+              >
                 {item.label}
                 {item.submenu && <span className={styles.dropdownIcon}>▼</span>}
               </a>
@@ -153,7 +164,11 @@ export default function Header({ searchTerm, setSearchTerm }) {
           <button
             className={styles.iconBtn}
             title="Tài khoản"
-            onClick={() => navigate(sessionStorage.getItem("accessToken") ? "/profile" : "/login")}
+            onClick={() =>
+              navigate(
+                sessionStorage.getItem("accessToken") ? "/profile" : "/login",
+              )
+            }
           >
             <i class="fa-regular fa-user"></i>
           </button>
@@ -168,8 +183,12 @@ export default function Header({ searchTerm, setSearchTerm }) {
           <button className={styles.iconBtn} title="Vị trí">
             <i class="fas fa-location-dot"></i>
           </button>
-          <button className={styles.iconBtn} title="Thông báo">
-            <i class="fa-regular fa-bell"></i>
+          <button
+            className={styles.iconBtn}
+            title="Thông báo"
+            onClick={handleBellClick}
+          >
+            <i className={bell ? "fa-solid fa-bell" : "fa-regular fa-bell"}></i>
           </button>
           <div className={styles.languageSelector}>
             <button className={styles.languageBtn}>
@@ -197,6 +216,13 @@ export default function Header({ searchTerm, setSearchTerm }) {
           </div>
         </div>
       </div>
+      <NotificationModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        status="success"
+        title="Thành công!"
+        message="chúng tôi sẽ thông báo cho bạn khi có sản phẩm mới"
+      />
     </header>
   );
 }

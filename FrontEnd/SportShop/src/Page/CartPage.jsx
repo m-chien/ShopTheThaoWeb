@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import "../styles/CartPage.css";
-import Breadcrumb from "../Component/Breadcrumb";
 import { useNavigate } from "react-router-dom";
+import Breadcrumb from "../Component/Breadcrumb";
+import NotificationModal from "../Component/NotificationModal";
 
 export default function CartPage() {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ export default function CartPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [voucherCode, setVoucherCode] = useState("");
   const [appliedVoucher, setAppliedVoucher] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const updateQuantity = (id, quantity) => {
     if (quantity < 1) return;
@@ -70,11 +72,15 @@ export default function CartPage() {
   const shippingFee = 0; // Miễn phí vận chuyển
   const total = subtotal - discount + shippingFee;
 
-  if (!sessionStorage.getItem("accessToken")) {
-    alert("Vui lòng đăng nhập trước khi vào");
-    navigate("/");
-    return <div>đăng nhập đi bạn eyy!!</div>;
-  }
+  useEffect(() => {
+    if (!sessionStorage.getItem("accessToken")) {
+      setShowModal(true);
+      const timer = setTimeout(() => {
+        navigate("/login");
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [navigate]);
 
   return (
     <div className="cart-page">
@@ -208,6 +214,19 @@ export default function CartPage() {
       </div>
 
       <Footer />
+      <NotificationModal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+          navigate("/");
+        }}
+        status="error"
+        title="Phiên đăng nhập hết hạn"
+        message="Vui lòng đăng nhập để xem giỏ hàng"
+        primaryButtonText="Đăng nhập"
+        onPrimaryClick={() => navigate("/login")}
+        showButtons={true}
+      />
     </div>
   );
 }
