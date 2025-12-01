@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Layout, Menu, theme, Avatar, Space } from "antd";
+import { Layout, Menu, Avatar, Space } from "antd";
 import {
   PieChartOutlined,
   UserOutlined,
@@ -9,13 +9,15 @@ import {
 } from "@ant-design/icons";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
-const { Header, Content, Footer, Sider } = Layout;
+import "../Css/AdminLayout.css";
+
+const { Header, Content, Sider } = Layout;
 
 function getItem(label, key, icon, children) {
   return { key, icon, children, label };
 }
 
-// Lưu ý: Key ở đây phải trùng với đường dẫn URL bạn muốn điều hướng tới
+// Menu cấu hình
 const items = [
   getItem("Dashboard", "/admin", <PieChartOutlined />),
   getItem("Sản Phẩm", "/admin/products", <SkinOutlined />),
@@ -26,31 +28,20 @@ const items = [
 
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
   const navigate = useNavigate();
   const location = useLocation();
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
+      {/* Sidebar bên trái */}
       <Sider
         collapsible
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
       >
-        <div
-          style={{
-            height: 32,
-            margin: 16,
-            color: "white",
-            textAlign: "center",
-            fontWeight: "bold",
-          }}
-        >
-          SHOP ADMIN
-        </div>
+        {/* LOGIC XỬ LÝ LOGO: Nếu đóng thì hiện AD, mở thì hiện TO LA ADMIN NE */}
+        <div className="admin-logo">{collapsed ? "AD" : "TO LA ADMIN NE"}</div>
+
         <Menu
           theme="dark"
           defaultSelectedKeys={[location.pathname]}
@@ -59,29 +50,22 @@ const AdminLayout = () => {
           onClick={({ key }) => navigate(key)}
         />
       </Sider>
+
+      {/* Phần nội dung bên phải */}
       <Layout>
-        <Header
-          style={{
-            padding: "0 16px",
-            background: colorBgContainer,
-            textAlign: "right",
-          }}
-        >
+        <Header className="admin-header">
           <Space>
-            <span>Xin chào, Admin</span>
-            <Avatar icon={<UserOutlined />} />
+            <span className="admin-username">Xin chào, Admin</span>
+            <Avatar
+              icon={<UserOutlined />}
+              style={{ backgroundColor: "#87d068" }}
+            />
           </Space>
         </Header>
-        <Content style={{ margin: "16px 16px" }}>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            {/* Đây là nơi các trang con (Dashboard, Product...) sẽ hiện ra */}
+
+        <Content>
+          <div className="admin-content-wrapper">
+            {/* Nơi hiển thị các trang con (Dashboard, Product...) */}
             <Outlet />
           </div>
         </Content>

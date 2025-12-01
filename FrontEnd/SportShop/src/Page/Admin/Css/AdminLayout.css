@@ -1,0 +1,46 @@
+/* 1. Logo Shop ở góc trái trên cùng */
+.admin-logo {
+  height: 32px;
+  margin: 16px;
+  background: rgba(255, 255, 255, 0.2); /* Màu nền mờ */
+  color: #fff;
+  text-align: center;
+  line-height: 32px; /* Căn giữa theo chiều dọc */
+  font-weight: bold;
+  font-size: 16px;
+  border-radius: 6px;
+
+  /* Xử lý chuyển động mượt mà */
+  white-space: nowrap;
+  overflow: hidden;
+  user-select: none;
+  transition: all 0.2s ease-in-out;
+}
+
+/* 2. Thanh Header trên cùng */
+.admin-header {
+  padding: 0 24px !important;
+  background: #fff !important;
+  display: flex;
+  justify-content: flex-end; /* Đẩy nội dung sang phải */
+  align-items: center;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  z-index: 1;
+}
+
+/* Tên admin */
+.admin-username {
+  margin-right: 10px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* 3. Khung chứa nội dung chính (màu trắng ở giữa) */
+.admin-content-wrapper {
+  margin: 16px;
+  padding: 24px;
+  min-height: 360px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}

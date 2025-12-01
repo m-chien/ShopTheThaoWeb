@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Table, Button, Space, Tag } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 
+import "../Css/ProductManager.css";
+
 const ProductManager = () => {
-  // Dữ liệu giả lập
   const [data] = useState([
     {
       id: 1,
@@ -23,7 +24,12 @@ const ProductManager = () => {
 
   const columns = [
     { title: "ID", dataIndex: "id", key: "id" },
-    { title: "Tên Sản Phẩm", dataIndex: "name", key: "name" },
+    {
+      title: "Tên Sản Phẩm",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => <b>{text}</b>,
+    },
     { title: "Danh Mục", dataIndex: "category", key: "category" },
     {
       title: "Giá",
@@ -46,10 +52,19 @@ const ProductManager = () => {
       key: "action",
       render: () => (
         <Space>
-          <Button icon={<EditOutlined />} size="small">
+          <Button
+            icon={<EditOutlined />}
+            size="small"
+            className="action-btn-edit"
+          >
             Sửa
           </Button>
-          <Button danger icon={<DeleteOutlined />} size="small">
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            size="small"
+            className="action-btn-delete"
+          >
             Xóa
           </Button>
         </Space>
@@ -59,19 +74,20 @@ const ProductManager = () => {
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: 16,
-        }}
-      >
+      {/* Thêm className cho header */}
+      <div className="product-page-header">
         <h2>Quản lý sản phẩm</h2>
         <Button type="primary" icon={<PlusOutlined />}>
           Thêm mới
         </Button>
       </div>
-      <Table columns={columns} dataSource={data} rowKey="id" />
+
+      <Table
+        columns={columns}
+        dataSource={data}
+        rowKey="id"
+        pagination={{ pageSize: 5 }}
+      />
     </div>
   );
 };

@@ -9,9 +9,9 @@ import ProductListPage from "./Page/ProductListPage";
 import Profile from "./Page/Profile";
 
 // --- Import các trang của Admin ---
-import AdminLayout from "./Page/Admin/AdminLayout";
-import Dashboard from "./Page/Admin/Dashboard";
-import ProductManager from "./Page/Admin/ProductManager";
+import AdminLayout from "./Page/Admin/Layout/AdminLayout";
+import Dashboard from "./Page/Admin/Pages/Dashboard";
+import ProductManager from "./Page/Admin/Pages/ProductManager";
 
 function App() {
   return (
