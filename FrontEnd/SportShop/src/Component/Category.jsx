@@ -1,18 +1,14 @@
-import styles from "../styles/Category.module.css";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { getAllCategory } from "../Api/Category.js";
+import styles from "../styles/Category.module.css";
+import useFetchAll from "../hooks/useFetchAll.js";
 
 export default function Category() {
-  const [Categories, setCategories] = useState([]);
+  const { data: Categories, loading } = useFetchAll("/Category");
 
-  useEffect(() => {
-      const fetchProducts = async () => {
-        const res = await getAllCategory();
-        setCategories(res.data.data);
-      };
-  
-      fetchProducts();
-    }, []);
+  if (loading) {
+    return <div>Đang tải...</div>;
+  }
 
   return (
     <section className={styles.setionCategory}>
@@ -22,7 +18,10 @@ export default function Category() {
           {Categories.map((category) => (
             <div key={category.id} className={styles.categoryItem}>
               <div className={styles.card}>
-                <img src={`../../public/Category/${category.image}`} alt={category.name} />
+                <img
+                  src={`../../public/Category/${category.image}`}
+                  alt={category.name}
+                />
                 <a className={styles.nameproduct} href="#">
                   <p>{category.name}</p>
                 </a>

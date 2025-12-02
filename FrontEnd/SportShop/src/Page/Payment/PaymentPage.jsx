@@ -1,0 +1,61 @@
+import React from "react";
+import Breadcrumb from "../../Component/Breadcrumb";
+import Footer from "../../Component/Footer";
+import Header from "../../Component/Header";
+import NotificationModal from "../../Component/NotificationModal";
+import PaymentForm from "../../Component/PaymentForm";
+import styles from "../../styles/Transaction.module.css";
+import OrderSummary from "./OrderSummary";
+import { useState } from "react";
+
+export default function PaymentPage() {
+  const [modal, setModal] = useState({
+    isOpen: false,
+    status: "",
+    title: "",
+    message: "",
+  });
+
+  const handleFormSubmit = (data) => {
+    console.log("Payment submitted:", data);
+    setModal({
+      isOpen: true,
+      status: "success",
+      title: "Thanh toán thành công",
+      message: "Đơn hàng của bạn đã được đặt thành công.",
+    });
+  };
+
+  return (
+    <div className={styles.checkoutPage}>
+      <Header />
+      <div className={styles.checkoutContainer}>
+        {/* Breadcrumb */}
+        <Breadcrumb
+          items={[
+            { label: "Thông tin", link: "/information" },
+            { label: "Vận chuyển", link: "/transportation" },
+            { label: "Thanh toán", link: "/payment" },
+          ]}
+        />
+
+        <div className={styles.checkoutGrid}>
+          {/* Left Column - Payment Form */}
+          <PaymentForm onSubmit={handleFormSubmit} />
+
+          {/* Right Column - Order Summary */}
+          <OrderSummary />
+        </div>
+      </div>
+      <Footer />
+      <NotificationModal
+        isOpen={modal.isOpen}
+        onClose={() => setModal({ ...modal, isOpen: false })}
+        status={modal.status}
+        title={modal.title}
+        message={modal.message}
+        showButtons={false}
+      />
+    </div>
+  );
+}

@@ -12,23 +12,15 @@ import Banner from "../Component/Banner.jsx";
 import CardProduct from "../Component/CardProduct.jsx";
 import Category from "../Component/Category.jsx";
 import Footer from "../Component/Footer.jsx";
+import useFetchAll from "../hooks/useFetchAll.js";
 
 function HomePage() {
-  const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const { data: products, loading } = useFetchAll("/ProductVariant/grouped-products");
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await getAllProduct();
-        setProducts(res.data.data);
-      } catch (error) {
-        console.error("❌ Lỗi khi fetch sản phẩm:", error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+  if (loading) {
+    return <div>Đang tải...</div>;
+  }
 
   return (
     <div className="home-page">
@@ -46,6 +38,7 @@ function HomePage() {
           delay: 10000,
           disableOnInteraction: false,
         }}
+        speed={700}
         className="banner-swiper"
       >
         {bannerData.map((slide) => (
