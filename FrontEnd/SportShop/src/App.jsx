@@ -12,7 +12,7 @@ import Profile from "./Page/Profile";
 import AdminLayout from "./Page/Admin/Layout/AdminLayout";
 import Dashboard from "./Page/Admin/Pages/Dashboard";
 import ProductManager from "./Page/Admin/Pages/ProductManager";
-
+import OrderManager from "./Page/Admin/Pages/OrderManager";
 function App() {
   return (
     <>
@@ -35,12 +35,7 @@ function App() {
 
             {/* /admin/products: Quản lý sản phẩm */}
             <Route path="products" element={<ProductManager />} />
-
-            {/* Các trang chưa làm thì tạm thời để div trống hoặc Dashboard */}
-            <Route
-              path="orders"
-              element={<div>Quản lý đơn hàng (Đang phát triển)</div>}
-            />
+            <Route path="orders" element={<OrderManager />} />
             <Route
               path="users"
               element={<div>Quản lý khách hàng (Đang phát triển)</div>}

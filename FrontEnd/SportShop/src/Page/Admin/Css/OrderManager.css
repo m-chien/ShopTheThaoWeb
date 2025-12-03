@@ -1,0 +1,48 @@
+/* --- OrderManager.css --- */
+
+.order-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.order-page-header h2 {
+    margin: 0;
+    color: #262626;
+    font-size: 22px;
+}
+
+/* Style cho các Tag trạng thái */
+.status-select {
+    width: 100%;
+}
+
+/* Phần thông tin khách hàng trong Modal */
+.customer-info-section {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.info-row {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #555;
+    margin-right: 8px;
+}
+
+.total-price-highlight {
+    font-size: 18px;
+    color: #d4380d; /* Màu đỏ cam */
+    font-weight: bold;
+    text-align: right;
+    margin-top: 20px;
+}
