@@ -20,10 +20,6 @@ export default function ProductListPage() {
 
     fetchProducts();
   }, []);
-  const handleAddToCart = (product) => {
-    alert(`Đã thêm "${product.name}" vào giỏ hàng!`);
-  };
-
   return (
     <>
       <div className={styles.pageContainer}>
@@ -60,7 +56,6 @@ export default function ProductListPage() {
                       minPrice: Math.min(...product.prices),
                       maxPrice: Math.max(...product.prices),
                     }}
-                    onAddToCart={handleAddToCart}
                   />
                 );
               })}

@@ -1,9 +1,11 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import "../styles/CardProduct.css";
+import { useInView } from "react-intersection-observer";
 import { useNavigate } from "react-router-dom";
 
 export default function CardProduct({ product }) {
+  const [ref, inView] = useInView({ triggerOnce: true });
   const navigate = useNavigate();
 
   // Safety checks
@@ -35,9 +37,14 @@ export default function CardProduct({ product }) {
   };
 
   return (
-    <div className="product-card" onClick={handleCardClick}>
+    <div
+      onClick={handleCardClick}
+      ref={ref}
+      className={`product-card ${inView ? "fade-in" : "hidden"}`}
+    >
       <div className="product-image-wrapper">
         <img
+          loading="lazy"
           src={
             selectedImage
               ? `/public/Product/${selectedImage}`
@@ -51,6 +58,7 @@ export default function CardProduct({ product }) {
           <div className="image-thumbnails">
             {images.map((img, idx) => (
               <img
+                loading="lazy"
                 key={idx}
                 src={`/public/Product/${img}`}
                 alt=""

@@ -8,7 +8,7 @@ const slideData = [
       { number: "100%", label: "Chính hãng" },
       { number: "Free", label: "Miễn phí vận chuyển" },
     ],
-    image: "/public/banner1.png",
+    video: "/public/banner_video1.mp4",
   },
   {
     id: 2,
@@ -19,7 +19,7 @@ const slideData = [
       { number: "Công nghệ", label: "Vượt trội" },
       { number: "Hàng tuần", label: "Cập nhật mới" },
     ],
-    image: "/public/banner2.png",
+  video: "/public/banner_video2.mp4",
   },
   {
     id: 3,
@@ -30,7 +30,7 @@ const slideData = [
       { number: "Flash Sale", label: "Khung giờ vàng" },
       { number: "Voucher", label: "Quà tặng kèm" },
     ],
-    image: "/public/banner3.png",
+    video: "/public/banner_video3.mp4",
   },
   {
     id: 4,
@@ -41,7 +41,7 @@ const slideData = [
       { number: "Tốc Độ", label: "Áo đấu & Kit" },
       { number: "Bền Bỉ", label: "Phụ kiện tập luyện" },
     ],
-    image: "/public/banner4.png",
+    video: "/public/banner_video4.mp4",
   },
 ];
 export default slideData;

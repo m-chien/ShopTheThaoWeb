@@ -1,10 +1,11 @@
 import { use, useEffect, useState } from "react";
 import { getAllCategory } from "../Api/Category.js";
-import styles from "../styles/Category.module.css";
 import useFetchAll from "../hooks/useFetchAll.js";
+import styles from "../styles/Category.module.css";
 
-export default function Category() {
-  const { data: Categories, loading } = useFetchAll("/Category");
+export default function Category({ title, path }) {
+  const { data: Categories, loading } = useFetchAll(path);
+  console.log("🚀 ~ Category ~ Categories:", Categories);
 
   if (loading) {
     return <div>Đang tải...</div>;
@@ -13,18 +14,20 @@ export default function Category() {
   return (
     <section className={styles.setionCategory}>
       <div className={styles.Container}>
-        <h1 className={styles.sectionHeading}>Danh mục sản phẩm</h1>
+        <h1 className={styles.sectionHeading}>{title}</h1>
         <div className={styles.categoryGrid}>
           {Categories.map((category) => (
             <div key={category.id} className={styles.categoryItem}>
               <div className={styles.card}>
                 <img
-                  src={`../../public/Category/${category.image}`}
+                  src={`../../public/${path}/${category.logo || category.image}`}
                   alt={category.name}
                 />
-                <a className={styles.nameproduct} href="#">
-                  <p>{category.name}</p>
-                </a>
+                {path === "/Category" ? (
+                  <a className={styles.nameproduct} href="#">
+                    <p>{category.name}</p>
+                  </a>
+                ) : null}
               </div>
             </div>
           ))}

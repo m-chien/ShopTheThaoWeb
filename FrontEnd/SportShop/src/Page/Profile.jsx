@@ -3,9 +3,9 @@ import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import "../styles/Profile.css";
 import { useNavigate } from "react-router-dom";
+import { User } from "../Api/User";
 import avatar from "../assets/IMG_6162.JPG";
 import Breadcrumb from "../Component/Breadcrumb";
-import { User } from "../Api/User";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -24,22 +24,21 @@ export default function Profile() {
     postalCode: "700000",
     avatar: avatar,
   });
-  console.log("🚀 ~ Profile ~ userInfo:", userInfo)
+  console.log("🚀 ~ Profile ~ userInfo:", userInfo);
 
   useEffect(() => {
-  const fetchUser = async () => {
-    try {
-      const data = await User().getUserInfo(); // gọi trực tiếp
-      console.log("🚀 ~ fetchUser ~ data:", data)
-      setUserInfo(data.data);
-    } catch (err) {
-      console.log("Lỗi:", err);
-    }
-  };
+    const fetchUser = async () => {
+      try {
+        const data = await User().getUserInfo(); // gọi trực tiếp
+        console.log("🚀 ~ fetchUser ~ data:", data);
+        setUserInfo(data.data);
+      } catch (err) {
+        console.log("Lỗi:", err);
+      }
+    };
 
-  fetchUser();
-}, []);
-
+    fetchUser();
+  }, []);
 
   const [orders] = useState([
     {
@@ -113,7 +112,11 @@ export default function Profile() {
           {/* Sidebar */}
           <div className="profile-sidebar">
             <div className="user-card">
-              <img src={ "../../public/useAva.png"} alt="Avatar" className="user-avatar" />
+              <img
+                src={"../../public/useAva.png"}
+                alt="Avatar"
+                className="user-avatar"
+              />
               <h2>{userInfo.fullName}</h2>
               <p className="user-email">{userInfo.email}</p>
             </div>

@@ -37,6 +37,54 @@ body {
   transform: translateY(-50%);
   z-index: 1000 !important;
 }
+.banner-ads {
+  text-align: center;
+  margin: 40px auto;
+  box-sizing: border-box;
+  overflow: hidden;
+  width: 100%;
+  border-radius: 12px;
+}
+
+.banner-ads img {
+  cursor: pointer;
+  width: 91%;
+  transition:
+    transform 0.4s ease,
+    filter 0.4s ease;
+  transform-origin: center center; /* zoom từ giữa ảnh */
+}
+
+.banner-ads img:hover {
+  transform: scale(1.01);
+  filter: brightness(0.8);
+}
+.grid-products {
+  width: 1600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+}
+.view-more-button {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.view-more-button a {
+  text-decoration: none;
+  background: linear-gradient(90deg, #1a1a2e 0%, #001a2d 100%);
+  color: #fff;
+  padding: 12px 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+.view-more-button:hover a {
+  color: #77e51f;
+}
 
 /* ==================== RESPONSIVE DESIGN ==================== */
 @media (max-width: 1024px) {
