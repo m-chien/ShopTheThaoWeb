@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using WEB_SHOPTHETHAO_API.DTO.Request;
+using WEB_SHOPTHETHAO_API.DTO.Response;
 using WEB_SHOPTHETHAO_API.Models;
 
 [Route("api/[controller]")]
@@ -79,5 +83,41 @@ public class ProductVariantController : ControllerBase
         _context.ProductVariants.Add(model);
         await _context.SaveChangesAsync();
         return Ok(model);
+    }
+
+    [HttpGet("top-variants")]
+    public async Task<IActionResult> GetTopVariants()
+    {
+        var result = await _context
+            .Set<TopProductVariantResponse>()
+            .FromSqlRaw("EXEC sp_GetTop3ProductVariants")
+            .ToListAsync();
+
+        return Ok(result);
+    }
+
+
+    [HttpPost("filter-sp")]
+    public async Task<IActionResult> FilterByStoredProcedure([FromBody] ProductFilterRequest req)
+    {
+        var result = await _context.FilterProductVariantDtos
+            .FromSqlRaw(@"
+                EXEC dbo.sp_FilterProductVariants 
+                    @BrandIds = {0},
+                    @SizeIds  = {1},
+                    @ColorIds = {2},
+                    @MinPrice = {3},
+                    @MaxPrice = {4},
+                    @Keyword  = {5}",
+                req.BrandIds,
+                req.SizeIds,
+                req.ColorIds,
+                (object?)req.MinPrice ?? DBNull.Value,
+                (object?)req.MaxPrice ?? DBNull.Value,
+                (object?)req.Keyword ?? DBNull.Value
+            )
+            .ToListAsync();
+
+        return Ok(result);
     }
 }

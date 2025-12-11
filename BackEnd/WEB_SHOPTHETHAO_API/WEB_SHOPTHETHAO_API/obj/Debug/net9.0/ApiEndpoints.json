@@ -164,6 +164,22 @@
   },
   {
     "ContainingType": "ProductVariantController",
+    "Method": "FilterByStoredProcedure",
+    "RelativePath": "api/ProductVariant/filter-sp",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "req",
+        "Type": "WEB_SHOPTHETHAO_API.DTO.Request.ProductFilterRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProductVariantController",
     "Method": "GetGroupedProducts",
     "RelativePath": "api/ProductVariant/grouped-products",
     "HttpMethod": "GET",
@@ -186,6 +202,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProductVariantController",
+    "Method": "GetTopVariants",
+    "RelativePath": "api/ProductVariant/top-variants",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

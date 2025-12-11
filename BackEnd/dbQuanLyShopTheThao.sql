@@ -259,7 +259,22 @@ INSERT INTO Product (CategoryID, BrandID, Name, Description, Status) VALUES
 (2, 1, 'BMW Polo', N'Áo polo nam BMW M Motorsport', 1),
 (1, 3, 'Puma RS-X', N'Giày sneaker Puma RS-X', 1),
 (3, 3, 'Manchester City shirt', N'Áo Thi Đấu Manchester City 25/26 Nam', 1),
-(5, 3, 'Manchester City Hat', N'Mũ Lưỡi Trai Manchester City Essentials', 1);
+(5, 3, 'Manchester City Hat', N'Mũ Lưỡi Trai Manchester City Essentials', 1),
+(1, 1, 'Nike Pegasus 41', N'Giày chạy bộ Nike Pegasus 41', 1),
+(1, 2, 'Adidas Runfalcon 3.0', N'Giày chạy bộ Adidas Runfalcon 3.0', 1),
+(2, 3, 'Puma Street Rider', N'Giày sneaker Puma Street Rider', 1),
+(3, 1, 'Nike Dri-FIT Tee', N'Áo thun Nike Dri-FIT nam', 1),
+(3, 2, 'Adidas Essentials Tee', N'Áo thun Adidas Essentials', 1),
+(4, 1, 'Nike Windrunner Jacket', N'Áo khoác gió Nike Windrunner', 1),
+(4, 2, 'Adidas 3-Stripes Jacket', N'Áo khoác Adidas 3-Stripes', 1),
+(7, 3, 'Puma Training Shorts', N'Quần short tập luyện Puma', 1),
+(8, 2, 'Adidas Tiro Track Pants', N'Quần dài thể thao Adidas Tiro', 1),
+(10, 1, 'Nike Training Backpack', N'Ba lô tập luyện Nike', 1),
+(6, 2, 'Adidas Adilette Slides', N'Dép Adidas Adilette', 1),
+(6, 3, 'Puma Comfort Sandals', N'Dép Puma Comfort', 1),
+(9, 1, 'Nike Swim Trunks', N'Quần bơi Nike nam', 1),
+(9, 2, 'Adidas 3-Stripes Swim Shorts', N'Quần bơi Adidas 3-Stripes', 1),
+(3, 3, 'Puma Graphic Tee', N'Áo thun Puma Graphic', 1);
 
 -- ========================
 -- Thêm dữ liệu cho ProductVariant
@@ -288,6 +303,89 @@ INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Im
 (14, 3, 2, 15, 1200000, 'ManchesterCityHome.png', '2025-10-20 11:30:00'),
 (14, 2, 3, 15, 1200000, 'ManchesterCityAway.png', '2025-10-20 11:30:00'),
 (15, 1, 2, 10, 1100000, 'ManchesterCityHat.png', '2025-10-21 14:00:00');
+-- ========================
+-- Thêm thêm dữ liệu cho ProductVariant cho các sản phẩm mới
+-- ========================
+-- Nike Pegasus 41 (giả sử ProductID = 16)
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image, NgayNhap) VALUES
+(16, 1, 2, 20, 2600000, 'Pegasus41_blue.png',   '2025-11-01 09:00:00'),
+(16, 2, 1, 15, 2600000, 'Pegasus41_red.png',    '2025-11-01 09:00:00'),
+(16, 3, 3, 10, 2700000, 'Pegasus41_black.png',  '2025-11-01 09:00:00');
+
+-- Adidas Runfalcon 3.0 (ProductID = 17)
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image, NgayNhap) VALUES
+(17, 1, 4, 18, 1900000, 'Runfalcon_white.png',  '2025-11-02 10:30:00'),
+(17, 2, 2, 20, 1950000, 'Runfalcon_blue.png',   '2025-11-02 10:30:00'),
+(17, 3, 3, 12, 1950000, 'Runfalcon_black.png',  '2025-11-02 10:30:00');
+
+-- Puma Street Rider (ProductID = 18)
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image, NgayNhap) VALUES
+(18, 1, 7, 25, 2100000, 'StreetRider_grey.png', '2025-11-03 14:20:00'),
+(18, 2, 3, 20, 2200000, 'StreetRider_black.png','2025-11-03 14:20:00');
+
+-- Nike Dri-FIT Tee (ProductID = 19)
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image, NgayNhap) VALUES
+(19, 1, 4, 40, 550000,  'Nike_DriFit_white.png','2025-11-04 09:10:00'),
+(19, 2, 3, 35, 550000,  'Nike_DriFit_black.png','2025-11-04 09:10:00'),
+(19, 3, 5, 30, 580000,  'Nike_DriFit_yellow.png','2025-11-04 09:10:00');
+
+-- Adidas Essentials Tee (ProductID = 20)
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image, NgayNhap) VALUES
+(20, 1, 4, 30, 500000,  'Adidas_Essentials_white.png','2025-11-05 11:00:00'),
+(20, 2, 2, 25, 520000,  'Adidas_Essentials_blue.png', '2025-11-05 11:00:00'),
+(20, 3, 3, 20, 520000,  'Adidas_Essentials_black.png','2025-11-05 11:00:00');
+
+-- Nike Windrunner Jacket (ProductID = 21)
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image, NgayNhap) VALUES
+(21, 2, 3, 15, 2100000, 'Windrunner_black.png', '2025-11-06 08:45:00'),
+(21, 3, 2, 10, 2150000, 'Windrunner_blue.png',  '2025-11-06 08:45:00');
+
+-- Adidas 3-Stripes Jacket (ProductID = 22)
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image, NgayNhap) VALUES
+(22, 2, 3, 18, 2000000, 'Adidas3S_black.png',   '2025-11-07 13:25:00'),
+(22, 3, 4, 12, 2050000, 'Adidas3S_white.png',   '2025-11-07 13:25:00');
+
+-- Puma Training Shorts (ProductID = 23)
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image, NgayNhap) VALUES
+(23, 1, 3, 30, 450000,  'PumaShorts_black.png', '2025-11-08 09:40:00'),
+(23, 2, 7, 25, 450000,  'PumaShorts_grey.png',  '2025-11-08 09:40:00');
+
+-- Adidas Tiro Track Pants (ProductID = 24)
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image, NgayNhap) VALUES
+(24, 2, 3, 20, 900000,  'TiroPants_black.png',  '2025-11-09 15:00:00'),
+(24, 3, 2, 15, 950000,  'TiroPants_blue.png',   '2025-11-09 15:00:00');
+
+-- Nike Training Backpack (ProductID = 25)
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image, NgayNhap) VALUES
+(25, 2, 3, 40, 1100000, 'NikeBackpack_black.png', '2025-11-10 10:20:00'),
+(25, 2, 2, 35, 1150000, 'NikeBackpack_blue.png',  '2025-11-10 10:20:00');
+
+-- Adidas Adilette Slides (ProductID = 26)
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image, NgayNhap) VALUES
+(26, 1, 4, 50, 400000,  'Adilette_white.png',   '2025-11-11 16:00:00'),
+(26, 2, 3, 45, 420000,  'Adilette_black.png',   '2025-11-11 16:00:00'),
+(26, 3, 2, 30, 420000,  'Adilette_blue.png',    '2025-11-11 16:00:00');
+
+-- Puma Comfort Sandals (ProductID = 27)
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image, NgayNhap) VALUES
+(27, 1, 5, 40, 380000,  'PumaSandal_yellow.png','2025-11-12 09:15:00'),
+(27, 2, 3, 35, 380000,  'PumaSandal_black.png', '2025-11-12 09:15:00');
+
+-- Nike Swim Trunks (ProductID = 28)
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image, NgayNhap) VALUES
+(28, 1, 2, 25, 550000,  'NikeSwim_blue.png',    '2025-11-13 11:30:00'),
+(28, 2, 3, 20, 550000,  'NikeSwim_black.png',   '2025-11-13 11:30:00');
+
+-- Adidas 3-Stripes Swim Shorts (ProductID = 29)
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image, NgayNhap) VALUES
+(29, 1, 4, 22, 500000,  'AdidasSwim_white.png', '2025-11-14 14:10:00'),
+(29, 2, 2, 18, 520000,  'AdidasSwim_blue.png',  '2025-11-14 14:10:00');
+
+-- Puma Graphic Tee (ProductID = 30)
+INSERT INTO ProductVariant (ProductID, SizeID, ColorID, StockQuantity, Price, Image, NgayNhap) VALUES
+(30, 1, 4, 35, 480000,  'PumaGraphic_white.png','2025-11-15 09:50:00'),
+(30, 2, 1, 30, 480000,  'PumaGraphic_red.png',  '2025-11-15 09:50:00'),
+(30, 3, 3, 25, 500000,  'PumaGraphic_black.png','2025-11-15 09:50:00');
 
 -- ========================
 -- Thêm dữ liệu cho User
@@ -427,3 +525,147 @@ where pv.ProductID = 1
 
 select * from Color
 select * from [User]
+GO
+
+--Đây là thủ tục để lấy Top 3 sản phẩm bán chạy
+IF OBJECT_ID('dbo.sp_GetTop3ProductVariants', 'P') IS NOT NULL
+    DROP PROC dbo.sp_GetTop3ProductVariants;
+GO
+CREATE PROC dbo.sp_GetTop3ProductVariants
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT TOP 3
+        pv.ID                  AS ProductVariantID,
+        p.ID                   AS ProductID,
+        p.Name                 AS ProductName,
+        c.ID                   AS ColorID,
+        c.Name                 AS ColorName,
+        s.ID                   AS SizeID,
+        s.Name                 AS SizeName,
+        pv.Price,
+        pv.Image,
+        SUM(od.Quantity)       AS TotalSold,
+        SUM(od.Quantity * od.UnitPrice) AS TotalRevenue
+    FROM OrderDetail od
+    JOIN [Order] o
+        ON od.OrderID = o.ID
+    JOIN ProductVariant pv
+        ON od.ProductVariantID = pv.ID
+    JOIN Product p
+        ON pv.ProductID = p.ID
+    JOIN Color c
+        ON pv.ColorID = c.ID
+    JOIN Size s
+        ON pv.SizeID = s.ID
+    LEFT JOIN Payment pay
+        ON pay.OrderID = o.ID
+    WHERE 
+        -- Chỉ tính đơn đã thanh toán hoặc đã hoàn tất
+        (o.Status = 'Completed' OR pay.Status = 'Paid')
+    GROUP BY 
+        pv.ID, p.ID, p.Name,
+        c.ID, c.Name,
+        s.ID, s.Name,
+        pv.Price, pv.Image
+    ORDER BY 
+        TotalSold DESC,
+        TotalRevenue DESC;
+END;
+GO
+EXEC dbo.sp_GetTop3ProductVariants;
+
+
+--Đây là thủ tục để lọc sản phẩm
+GO
+IF OBJECT_ID('dbo.sp_FilterProductVariants', 'P') IS NOT NULL
+    DROP PROC dbo.sp_FilterProductVariants;
+GO
+CREATE PROC dbo.sp_FilterProductVariants
+    @BrandIds   NVARCHAR(MAX) = NULL,   -- ví dụ: '1,2,3'
+    @SizeIds    NVARCHAR(MAX) = NULL,   -- ví dụ: '1,3'
+    @ColorIds   NVARCHAR(MAX) = NULL,   -- ví dụ: '2,5,6'
+    @MinPrice   DECIMAL(18,2) = NULL,   -- ví dụ: 500000
+    @MaxPrice   DECIMAL(18,2) = NULL,   -- ví dụ: 1500000
+    @Keyword    NVARCHAR(100) = NULL    -- ví dụ: 'nike'
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Tách chuỗi ID thành bảng tạm dùng STRING_SPLIT
+    ;WITH BrandFilter AS (
+        SELECT CAST(value AS INT) AS BrandId
+        FROM STRING_SPLIT(@BrandIds, ',')
+        WHERE @BrandIds IS NOT NULL AND value <> ''
+    ),
+    SizeFilter AS (
+        SELECT CAST(value AS INT) AS SizeId
+        FROM STRING_SPLIT(@SizeIds, ',')
+        WHERE @SizeIds IS NOT NULL AND value <> ''
+    ),
+    ColorFilter AS (
+        SELECT CAST(value AS INT) AS ColorId
+        FROM STRING_SPLIT(@ColorIds, ',')
+        WHERE @ColorIds IS NOT NULL AND value <> ''
+    )
+    SELECT
+        pv.ID          AS ProductVariantID,
+        p.ID           AS ProductID,
+        p.Name         AS ProductName,
+        b.ID           AS BrandID,
+        b.Name         AS BrandName,
+        s.ID           AS SizeID,
+        s.Name         AS SizeName,
+        c.ID           AS ColorID,
+        c.Name         AS ColorName,
+        pv.Price,
+        pv.Image,
+        pv.StockQuantity,
+        pv.NgayNhap
+    FROM ProductVariant pv
+        JOIN Product p ON pv.ProductID = p.ID
+        JOIN Brand   b ON p.BrandID   = b.ID
+        JOIN Size    s ON pv.SizeID   = s.ID
+        JOIN Color   c ON pv.ColorID  = c.ID
+    WHERE
+        -- Brand filter (nếu không truyền @BrandIds thì bỏ qua)
+        (
+            @BrandIds IS NULL
+            OR p.BrandID IN (SELECT BrandId FROM BrandFilter)
+        )
+        -- Size filter
+        AND (
+            @SizeIds IS NULL
+            OR pv.SizeID IN (SELECT SizeId FROM SizeFilter)
+        )
+        -- Color filter
+        AND (
+            @ColorIds IS NULL
+            OR pv.ColorID IN (SELECT ColorId FROM ColorFilter)
+        )
+        -- Price filter
+        AND (
+            @MinPrice IS NULL OR pv.Price >= @MinPrice
+        )
+        AND (
+            @MaxPrice IS NULL OR pv.Price <= @MaxPrice
+        )
+        -- Keyword filter theo tên sản phẩm / brand
+        AND (
+            @Keyword IS NULL
+            OR p.Name  LIKE N'%' + @Keyword + N'%'
+            OR b.Name  LIKE N'%' + @Keyword + N'%'
+        )
+    ORDER BY
+        p.Name, pv.Price;
+END;
+GO
+EXEC sp_FilterProductVariants
+    @BrandIds = '1,2',
+    @SizeIds  = '1,2',
+    @ColorIds = '2,5',
+    @MinPrice = 500000,
+    @MaxPrice = 1500000,
+    @Keyword  = 'Nike';
+

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using WEB_SHOPTHETHAO_API.DTO.Response;
 
 namespace WEB_SHOPTHETHAO_API.Models;
 
@@ -47,12 +48,24 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<VoucherUser> VoucherUsers { get; set; }
 
+    //Thêm mơi
+    public DbSet<TopProductVariantResponse> TopProductVariantDtos { get; set; }
+
+    public DbSet<FilterProductVariantResponse> FilterProductVariantDtos { get; set; }
+
+
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=localhost;Database=dbQuanLyShopTheThao;User Id=sa;Password=12345;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //Thêm mơis
+        modelBuilder.Entity<TopProductVariantResponse>().HasNoKey();
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<FilterProductVariantResponse>().HasNoKey();
+
         modelBuilder.Entity<Brand>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Brand__3214EC2773B25785");
