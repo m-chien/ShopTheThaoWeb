@@ -218,7 +218,7 @@ export default function CartPage() {
         isOpen={showModal}
         onClose={() => {
           setShowModal(false);
-          navigate("/");
+          navigate("/login");
         }}
         status="error"
         title="Phiên đăng nhập hết hạn"

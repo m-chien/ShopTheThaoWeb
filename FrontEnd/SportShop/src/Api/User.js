@@ -5,8 +5,8 @@ export const User = () => {
   const login = async (username, password) => {
     try {
       const response = await api.post("/User/login", {
-        userName: username,
-        password: password,
+        UserName: username,
+        Password: password,
       });
 
       sessionStorage.setItem("accessToken", response.data.data.accessToken);

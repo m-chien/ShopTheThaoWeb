@@ -9,7 +9,7 @@ const useFetchAll = (path, config = {}) => {
     const fetchAPI = async () => {
       try {
         const res = await api.get(path, config);
-        setData(res.data);
+        setData(res.data.data);
       } catch (e) {
         console.error("Fetch ALL error:", e);
       } finally {

@@ -15,7 +15,7 @@ export default function ProductListPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       const res = await getAllProduct();
-      setProducts(res.data);
+      setProducts(res.data.data);
     };
 
     fetchProducts();
@@ -24,7 +24,7 @@ export default function ProductListPage() {
     <>
       <div className={styles.pageContainer}>
         <Header />
-        <Breadcrumb items={[{label: "Sản Phẩm", link: "/product" }]} />
+        <Breadcrumb items={[{ label: "Sản Phẩm", link: "/product" }]} />
         <div className={styles.mainContent}>
           {/* Filter Component */}
           <Filter

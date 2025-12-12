@@ -9,6 +9,7 @@ import ProductListPage from "./Page/ProductListPage";
 import Profile from "./Page/Profile";
 import PaymentPage from "./Page/Payment/PaymentPage";
 import InformationPage from "./Page/Payment/InformationPage";
+import BillDetail from "./Page/BillDetail";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/transportation" element={<TransportationPage />} />
           <Route path="/information" element={<InformationPage />} />
+          <Route path="/bill-detail/:id" element={<BillDetail />} />
         </Routes>
       </BrowserRouter>
     </>
