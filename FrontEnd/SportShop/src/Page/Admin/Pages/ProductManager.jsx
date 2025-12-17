@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Space, Tag, message, Image, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
-// Đảm bảo đường dẫn import đúng file api của bạn
-import { getAllProduct } from "../../../Api/Product"; // Hoặc đường dẫn file api của bạn
 
 import "../Css/ProductManager.css";
+import { getAllProduct, deleteProduct } from "../../../Api/Product";
+import { getAllCategory } from "../../../Api/Category";
+import { getAllBrand } from "../../../Api/Brand";
 
 const ProductManager = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // --- 1. SỬA HÀM FETCH DATA ---
+  const [categoryFilters, setCategoryFilters] = useState([]);
+  const [brandFilters, setBrandFilters] = useState([]);
+
   const fetchProducts = async () => {
     setLoading(true);
     try {
@@ -37,24 +40,66 @@ const ProductManager = () => {
     }
   };
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  const fetchFilters = async () => {
+    try {
+      // Gọi song song cả 2 API cho nhanh
+      const [resCate, resBrand] = await Promise.all([
+        getAllCategory(),
+        getAllBrand(),
+      ]);
 
-  const handleDelete = (id) => {
-    message.info("Chức năng xóa đang phát triển");
+      // Xử lý Danh mục
+      if (resCate.data) {
+        const cateList = Array.isArray(resCate.data)
+          ? resCate.data
+          : resCate.data.data || [];
+
+        const formattedCate = cateList.map((item) => ({
+          text: item.name,
+          value: item.name,
+        }));
+        setCategoryFilters(formattedCate);
+      }
+
+      // Xử lý Thương hiệu
+      if (resBrand.data) {
+        const brandList = Array.isArray(resBrand.data)
+          ? resBrand.data
+          : resBrand.data.data || [];
+        const formattedBrand = brandList.map((item) => ({
+          text: item.name,
+          value: item.name,
+        }));
+        setBrandFilters(formattedBrand);
+      }
+    } catch (error) {
+      console.error("Lỗi lấy filter:", error);
+    }
   };
 
-  // --- 2. CẬP NHẬT CỘT CHO KHỚP API GetGroupedProducts ---
-  // API trả về: { productID, name, description, colors: [], images: [], prices: [] }
+  useEffect(() => {
+    fetchProducts();
+    fetchFilters();
+  }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteProduct(id);
+      message.success("Đã xóa sản phẩm thành công!");
+      fetchProducts();
+    } catch (error) {
+      message.error("Xóa thất bại! Có thể sản phẩm đang có đơn hàng.");
+    }
+  };
+
   const columns = [
     { title: "ID", dataIndex: "productID", key: "productID", width: 60 },
     {
       title: "Hình ảnh",
-      dataIndex: "images", // API trả về mảng images
+      dataIndex: "images",
       key: "images",
+      width: 100,
       render: (images) => {
-        // Lấy ảnh đầu tiên trong mảng để hiển thị
         const firstImage = images && images.length > 0 ? images[0] : null;
         return (
           <Image
@@ -84,13 +129,42 @@ const ProductManager = () => {
       ellipsis: true,
     },
 
-    { title: "Danh Mục", dataIndex: "categoryName", key: "categoryName" },
-    { title: "Thương Hiệu", dataIndex: "brandName", key: "brandName" },
-
+    {
+      title: "Danh Mục",
+      dataIndex: "categoryName",
+      key: "categoryName",
+      filters: categoryFilters,
+      onFilter: (value, record) => record.categoryName === value,
+    },
+    {
+      title: "Thương Hiệu",
+      dataIndex: "brandName",
+      key: "brandName",
+      width: 140,
+      filters: brandFilters,
+      onFilter: (value, record) => record.brandName === value,
+    },
+    {
+      title: "Size",
+      dataIndex: "sizes",
+      key: "sizes",
+      width: 60, // <--- 1. Gán chiều rộng cố định (số nhỏ thôi)
+      render: (sizes) => (
+        // <--- 2. wrap: true giúp tự xuống dòng
+        <Space size={[0, 4]} wrap style={{ width: "100%" }}>
+          {sizes?.map((s, index) => (
+            <Tag key={index} color="purple">
+              {s.sizeName}
+            </Tag>
+          ))}
+        </Space>
+      ),
+    },
     {
       title: "Màu sắc",
       dataIndex: "colors",
       key: "colors",
+      width: 110,
       render: (colors) => (
         <Space size={[0, 8]} wrap>
           {colors?.map((c, index) => (
@@ -105,8 +179,8 @@ const ProductManager = () => {
       title: "Giá",
       dataIndex: "prices",
       key: "prices",
+      width: 110,
       render: (prices) => {
-        // Tìm giá nhỏ nhất và lớn nhất để hiển thị khoảng giá
         if (!prices || prices.length === 0) return "Liên hệ";
         const min = Math.min(...prices);
         const max = Math.max(...prices);
