@@ -8,3 +8,7 @@ export const getAllProductDummy = () => {
   console.log(apiDummy.get("/products"));
   return apiDummy.get("/products");
 };
+
+export const filterProducts = (filterData) => {
+  return api.post("/ProductVariant/filter-sp", filterData);
+};

@@ -1,13 +1,16 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/Filter.css";
+import useFetchAll from "../hooks/useFetchAll";
 
-export default function Filter({
-  selectedCategory,
-  setSelectedCategory,
-  priceRange,
-  setPriceRange,
-}) {
+export default function Filter({ onFilterChange }) {
+  const [selectedBrandIds, setSelectedBrandIds] = useState([]);
+  const [selectedSizeIds, setSelectedSizeIds] = useState([]);
+  const [selectedColorIds, setSelectedColorIds] = useState([]);
+  
+  const [selectedPriceRange, setSelectedPriceRange] = useState({ min: 0, max: 0 });
+  const [selectedPriceLabel, setSelectedPriceLabel] = useState(null); 
+
   const [expandedSections, setExpandedSections] = useState({
     brand: true,
     size: true,
@@ -15,10 +18,26 @@ export default function Filter({
     price: true,
   });
 
-  const [selectedBrands, setSelectedBrands] = useState([]);
-  const [selectedSizes, setSelectedSizes] = useState([]);
-  const [selectedColors, setSelectedColors] = useState([]);
-  const [selectedPrice, setSelectedPrice] = useState(null);
+  const Brands = useFetchAll("/Brand");
+  const Sizes = useFetchAll("/Size");
+  const Colors = useFetchAll("/Color");
+
+  useEffect(() => {
+    const filterData = {
+      brandIds: selectedBrandIds.length > 0 ? selectedBrandIds.join(",") : "",
+      sizeIds: selectedSizeIds.length > 0 ? selectedSizeIds.join(",") : "",
+      colorIds: selectedColorIds.length > 0 ? selectedColorIds.join(",") : "",
+      minPrice: selectedPriceRange.min,
+      maxPrice: selectedPriceRange.max,
+      keyword: ""
+    };
+
+    // Gọi hàm callback để Component cha thực hiện gọi API
+    if (onFilterChange) {
+      onFilterChange(filterData);
+    }
+  }, [selectedBrandIds, selectedSizeIds, selectedColorIds, selectedPriceRange, onFilterChange]);
+
   const toggleSection = (section) => {
     setExpandedSections((prev) => ({
       ...prev,
@@ -26,53 +45,55 @@ export default function Filter({
     }));
   };
 
-  const handleBrandChange = (brandName) => {
-    setSelectedBrands((prev) =>
-      prev.includes(brandName)
-        ? prev.filter((b) => b !== brandName)
-        : [...prev, brandName],
+  // --- HANDLERS (Sử dụng ID) ---
+
+  const handleBrandChange = (brandId) => {
+    setSelectedBrandIds((prev) =>
+      prev.includes(brandId)
+        ? prev.filter((id) => id !== brandId)
+        : [...prev, brandId]
     );
   };
 
-  const handleSizeChange = (sizeName) => {
-    setSelectedSizes((prev) =>
-      prev.includes(sizeName)
-        ? prev.filter((s) => s !== sizeName)
-        : [...prev, sizeName],
+  const handleSizeChange = (sizeId) => {
+    setSelectedSizeIds((prev) =>
+      prev.includes(sizeId)
+        ? prev.filter((id) => id !== sizeId)
+        : [...prev, sizeId]
     );
   };
 
-  const handleColorChange = (colorName) => {
-    setSelectedColors((prev) =>
-      prev.includes(colorName)
-        ? prev.filter((c) => c !== colorName)
-        : [...prev, colorName],
+  const handleColorChange = (colorId) => {
+    setSelectedColorIds((prev) =>
+      prev.includes(colorId)
+        ? prev.filter((id) => id !== colorId)
+        : [...prev, colorId]
     );
   };
 
-  const brands = [
-    { name: "ADIDAS", count: 0 },
-    { name: "NIKE", count: 0 },
-    { name: "PUMA", count: 0 },
-  ];
+  const handlePriceChange = (label, min, max, isChecked) => {
+    if (isChecked) {
+      setSelectedPriceRange({ min, max });
+      setSelectedPriceLabel(label);
+    } else {
+      if (selectedPriceLabel === label) {
+         setSelectedPriceRange({ min: 0, max: 0 });
+         setSelectedPriceLabel(null);
+      }
+    }
+  };
 
-  const sizes = [
-    { name: "S", count: 0 },
-    { name: "M", count: 0 },
-    { name: "L", count: 0 },
-    { name: "XL", count: 0 },
-    { name: "XS", count: 0 },
-    { name: "XXL", count: 0 },
-  ];
+  const clearAll = () => {
+    setSelectedBrandIds([]);
+    setSelectedSizeIds([]);
+    setSelectedColorIds([]);
+    setSelectedPriceRange({ min: 0, max: 0 });
+    setSelectedPriceLabel(null);
+  };
 
-  const colors = [
-    { name: "ĐEN", color: "#000000", count: 0 },
-    { name: "XANH DƯƠNG", color: "#0000FF", count: 0 },
-    { name: "HỒNG", color: "#FFB6C1", count: 0 },
-    { name: "TRẮNG", color: "#FFFFFF", count: 0 },
-    { name: "ĐỎ", color: "#FF0000", count: 0 },
-    { name: "XANH LÁ", color: "#008000", count: 0 },
-  ];
+  const getBrandName = (id) => Brands.data.find(b => b.id === id)?.name || id;
+  const getSizeName = (id) => Sizes.data.find(s => s.id === id)?.name || id;
+  const getColorName = (id) => Colors.data.find(c => c.id === id)?.name || id;
 
   return (
     <aside className="filter-sidebar">
@@ -80,77 +101,49 @@ export default function Filter({
       <div className="filter-group">
         <div className="filter-header-top">
           <span className="filter-title">LỌC THEO</span>
-          <button
-            className="clear-all-btn"
-            onClick={() => {
-              setSelectedBrands([]);
-              setSelectedSizes([]);
-              setSelectedColors([]);
-              setSelectedPrice(null);
-            }}
-          >
+          <button className="clear-all-btn" onClick={clearAll}>
             XÓA TẤT CẢ
           </button>
         </div>
 
-        {/* Display selected items */}
         <div className="filter-selected-items">
-          {selectedBrands.map((brand) => (
-            <div key={`brand-${brand}`} className="selected-item">
-              <span>
-                <strong>NHÃN HIỆU:</strong> {brand}
-              </span>
+          {selectedBrandIds.map((id) => (
+            <div key={`brand-${id}`} className="selected-item">
+              <span><strong>NHÃN HIỆU:</strong> {getBrandName(id)}</span>
               <button
                 className="remove-item-btn"
-                onClick={() =>
-                  setSelectedBrands(selectedBrands.filter((b) => b !== brand))
-                }
-              >
-                ✕
-              </button>
+                onClick={() => handleBrandChange(id)}
+              >✕</button>
             </div>
           ))}
-          {selectedSizes.map((size) => (
-            <div key={`size-${size}`} className="selected-item">
-              <span>
-                <strong>KÍCH THƯỚC:</strong> {size}
-              </span>
+          {selectedSizeIds.map((id) => (
+            <div key={`size-${id}`} className="selected-item">
+              <span><strong>KÍCH THƯỚC:</strong> {getSizeName(id)}</span>
               <button
                 className="remove-item-btn"
-                onClick={() =>
-                  setSelectedSizes(selectedSizes.filter((s) => s !== size))
-                }
-              >
-                ✕
-              </button>
+                onClick={() => handleSizeChange(id)}
+              >✕</button>
             </div>
           ))}
-          {selectedColors.map((color) => (
-            <div key={`color-${color}`} className="selected-item">
-              <span>
-                <strong>MÀU SẮC:</strong> {color}
-              </span>
+          {selectedColorIds.map((id) => (
+            <div key={`color-${id}`} className="selected-item">
+              <span><strong>MÀU SẮC:</strong> {getColorName(id)}</span>
               <button
                 className="remove-item-btn"
-                onClick={() =>
-                  setSelectedColors(selectedColors.filter((c) => c !== color))
-                }
-              >
-                ✕
-              </button>
+                onClick={() => handleColorChange(id)}
+              >✕</button>
             </div>
           ))}
-          {selectedPrice && (
+          {selectedPriceLabel && (
             <div className="selected-item">
-              <span>
-                <strong>GIÁ:</strong> {selectedPrice}
-              </span>
+              <span><strong>GIÁ:</strong> {selectedPriceLabel}</span>
               <button
                 className="remove-item-btn"
-                onClick={() => setSelectedPrice(null)}
-              >
-                ✕
-              </button>
+                onClick={() => {
+                    setSelectedPriceRange({ min: 0, max: 0 });
+                    setSelectedPriceLabel(null);
+                }}
+              >✕</button>
             </div>
           )}
         </div>
@@ -158,39 +151,25 @@ export default function Filter({
 
       {/* Brand Filter */}
       <div className="filter-group">
-        <button
-          className="filter-header"
-          onClick={() => toggleSection("brand")}
-        >
+        <button className="filter-header" onClick={() => toggleSection("brand")}>
           <span className="filter-title">THƯƠNG HIỆU</span>
-          <span
-            className={`filter-arrow ${expandedSections.brand ? "open" : ""}`}
-          >
-            ▼
-          </span>
+          <span className={`filter-arrow ${expandedSections.brand ? "open" : ""}`}>▼</span>
         </button>
         {expandedSections.brand && (
           <div className="filter-content">
-            <div className="search-box">
-              <input
-                type="text"
-                placeholder="Tìm chọn tìm kiếm."
-                className="filter-search"
-              />
-            </div>
             <ul className="filter-options">
-              {brands.map((brand) => (
-                <li key={brand.name} className="filter-item">
+              {Brands.data.map((brand) => (
+                <li key={brand.id} className="filter-item">
                   <label className="filter-label">
                     <input
                       type="checkbox"
                       className="filter-checkbox"
-                      checked={selectedBrands.includes(brand.name)}
-                      onChange={() => handleBrandChange(brand.name)}
+                      checked={selectedBrandIds.includes(brand.id)}
+                      onChange={() => handleBrandChange(brand.id)}
                     />
                     <span className="filter-name">{brand.name}</span>
                   </label>
-                  <span className="filter-count">{`(${brand.count})`}</span>
+                  <span className="filter-count">{`(${brand.id})`}</span>
                 </li>
               ))}
             </ul>
@@ -202,27 +181,23 @@ export default function Filter({
       <div className="filter-group">
         <button className="filter-header" onClick={() => toggleSection("size")}>
           <span className="filter-title">KÍCH THƯỚC</span>
-          <span
-            className={`filter-arrow ${expandedSections.size ? "open" : ""}`}
-          >
-            ▼
-          </span>
+          <span className={`filter-arrow ${expandedSections.size ? "open" : ""}`}>▼</span>
         </button>
         {expandedSections.size && (
           <div className="filter-content">
             <ul className="filter-options">
-              {sizes.map((size) => (
-                <li key={size.name} className="filter-item">
+              {Sizes.data.map((size) => (
+                <li key={size.id} className="filter-item">
                   <label className="filter-label">
                     <input
                       type="checkbox"
                       className="filter-checkbox"
-                      checked={selectedSizes.includes(size.name)}
-                      onChange={() => handleSizeChange(size.name)}
+                      checked={selectedSizeIds.includes(size.id)}
+                      onChange={() => handleSizeChange(size.id)}
                     />
                     <span className="filter-name">{size.name}</span>
                   </label>
-                  <span className="filter-count">{`(${size.count})`}</span>
+                  <span className="filter-count">{`(${size.id})`}</span>
                 </li>
               ))}
             </ul>
@@ -232,38 +207,28 @@ export default function Filter({
 
       {/* Color Filter */}
       <div className="filter-group">
-        <button
-          className="filter-header"
-          onClick={() => toggleSection("color")}
-        >
+        <button className="filter-header" onClick={() => toggleSection("color")}>
           <span className="filter-title">MÀU SẮC</span>
-          <span
-            className={`filter-arrow ${expandedSections.color ? "open" : ""}`}
-          >
-            ▼
-          </span>
+          <span className={`filter-arrow ${expandedSections.color ? "open" : ""}`}>▼</span>
         </button>
         {expandedSections.color && (
           <div className="filter-content">
-            <ul className="filter-options color-options">
-              {colors.map((colorItem) => (
-                <li key={colorItem.name} className="filter-item color-item">
+            <ul className="filter-options filter-color-options">
+              {Colors.data.map((colorItem) => (
+                <li key={colorItem.id} className="filter-item color-item">
                   <label className="filter-label color-label">
                     <input
                       type="checkbox"
                       className="filter-checkbox"
-                      checked={selectedColors.includes(colorItem.name)}
-                      onChange={() => handleColorChange(colorItem.name)}
+                      checked={selectedColorIds.includes(colorItem.id)}
+                      onChange={() => handleColorChange(colorItem.id)}
                     />
                     <span
                       className="color-swatch"
-                      style={{
-                        background: colorItem.color,
-                      }}
+                      style={{ background: colorItem.colorCode }}
                     ></span>
                     <span className="filter-name">{colorItem.name}</span>
                   </label>
-                  <span className="filter-count">{`(${colorItem.count})`}</span>
                 </li>
               ))}
             </ul>
@@ -273,16 +238,9 @@ export default function Filter({
 
       {/* Price Filter */}
       <div className="filter-group">
-        <button
-          className="filter-header"
-          onClick={() => toggleSection("price")}
-        >
+        <button className="filter-header" onClick={() => toggleSection("price")}>
           <span className="filter-title">GIÁ</span>
-          <span
-            className={`filter-arrow ${expandedSections.price ? "open" : ""}`}
-          >
-            ▼
-          </span>
+          <span className={`filter-arrow ${expandedSections.price ? "open" : ""}`}>▼</span>
         </button>
         {expandedSections.price && (
           <div className="filter-content">
@@ -290,34 +248,26 @@ export default function Filter({
               <label className="price-option">
                 <input
                   type="checkbox"
-                  onChange={(e) => {
-                    if (e.target.checked) setPriceRange([0, 500000]);
-                    if (e.target.checked) setSelectedPrice("Dưới 500.000đ");
-                    else setSelectedPrice(null);
-                  }}
+                  // Kiểm tra xem label hiện tại có khớp không để check
+                  checked={selectedPriceLabel === "Dưới 500.000đ"}
+                  onChange={(e) => handlePriceChange("Dưới 500.000đ", 0, 500000, e.target.checked)}
                 />
                 <span>Dưới 500.000đ</span>
               </label>
               <label className="price-option">
                 <input
                   type="checkbox"
-                  onChange={(e) => {
-                    if (e.target.checked) setPriceRange([500000, 1000000]);
-                    if (e.target.checked)
-                      setSelectedPrice("500.000đ - 1.000.000đ");
-                    else setSelectedPrice(null);
-                  }}
+                  checked={selectedPriceLabel === "500.000đ - 1.000.000đ"}
+                  onChange={(e) => handlePriceChange("500.000đ - 1.000.000đ", 500000, 1000000, e.target.checked)}
                 />
                 <span>500.000đ - 1.000.000đ</span>
               </label>
               <label className="price-option">
                 <input
                   type="checkbox"
-                  onChange={(e) => {
-                    if (e.target.checked) setPriceRange([1000000, 5000000]);
-                    if (e.target.checked) setSelectedPrice("Trên 1.000.000đ");
-                    else setSelectedPrice(null);
-                  }}
+                  checked={selectedPriceLabel === "Trên 1.000.000đ"}
+                  // maxPrice để số thật lớn
+                  onChange={(e) => handlePriceChange("Trên 1.000.000đ", 1000000, 999999999, e.target.checked)}
                 />
                 <span>Trên 1.000.000đ</span>
               </label>
@@ -330,8 +280,5 @@ export default function Filter({
 }
 
 Filter.propTypes = {
-  selectedCategory: PropTypes.string.isRequired,
-  setSelectedCategory: PropTypes.func.isRequired,
-  priceRange: PropTypes.array.isRequired,
-  setPriceRange: PropTypes.func.isRequired,
+  onFilterChange: PropTypes.func, // Thay thế các props cũ bằng hàm callback này
 };

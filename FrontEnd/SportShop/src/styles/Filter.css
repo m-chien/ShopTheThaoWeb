@@ -227,8 +227,10 @@
 }
 
 /* Color Filter Special Styling */
-.color-options {
+.filter-color-options {
   padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .color-item {

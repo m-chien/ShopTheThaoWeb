@@ -161,44 +161,6 @@ export default function DetailProduct() {
                 {product.discount}%
               </div>
             </div>
-            <div className={styles["thumbnail-images"]}>
-              <img
-                src={product.image}
-                alt="Thumbnail 1"
-                className={styles.thumbnail}
-                onClick={() => setMainImage(product.image)}
-              />
-              <img
-                src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=150&h=150&fit=crop&q=80"
-                alt="Thumbnail 2"
-                className={styles.thumbnail}
-                onClick={() =>
-                  setMainImage(
-                    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=150&h=150&fit=crop&q=80",
-                  )
-                }
-              />
-              <img
-                src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=150&h=150&fit=crop&q=80"
-                alt="Thumbnail 3"
-                className={styles.thumbnail}
-                onClick={() =>
-                  setMainImage(
-                    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=150&h=150&fit=crop&q=80",
-                  )
-                }
-              />
-              <img
-                src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=150&h=150&fit=crop&q=80"
-                alt="Thumbnail 4"
-                className={styles.thumbnail}
-                onClick={() =>
-                  setMainImage(
-                    "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=150&h=150&fit=crop&q=80",
-                  )
-                }
-              />
-            </div>
           </div>
 
           {/* Right: Product Info */}
@@ -272,22 +234,6 @@ export default function DetailProduct() {
                     onClick={() => setSelectedSize(size)}
                   >
                     {size}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Width Selection */}
-            <div className={styles["option-group"]}>
-              <label className={styles["option-label"]}>Fit (Độ rộng)</label>
-              <div className={styles["width-selector"]}>
-                {product.widths.map((width) => (
-                  <button
-                    key={width.value}
-                    className={`${styles["width-option"]} ${selectedWidth === width.value ? styles.selected : ""}`}
-                    onClick={() => setSelectedWidth(width.value)}
-                  >
-                    {width.name}
                   </button>
                 ))}
               </div>
