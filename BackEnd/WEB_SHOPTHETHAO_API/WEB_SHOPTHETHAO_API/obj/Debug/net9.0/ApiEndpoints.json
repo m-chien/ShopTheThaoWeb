@@ -105,6 +105,85 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "ColorController",
+    "Method": "GetAll",
+    "RelativePath": "api/Color",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ColorController",
+    "Method": "Create",
+    "RelativePath": "api/Color",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "WEB_SHOPTHETHAO_API.Models.Color",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ColorController",
+    "Method": "Get",
+    "RelativePath": "api/Color/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ColorController",
+    "Method": "Update",
+    "RelativePath": "api/Color/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "model",
+        "Type": "WEB_SHOPTHETHAO_API.Models.Color",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ColorController",
+    "Method": "Delete",
+    "RelativePath": "api/Color/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ProductController",
     "Method": "GetAll",
     "RelativePath": "api/Product",
@@ -116,15 +195,15 @@
   },
   {
     "ContainingType": "ProductController",
-    "Method": "Create",
+    "Method": "CreateProduct",
     "RelativePath": "api/Product",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "model",
-        "Type": "WEB_SHOPTHETHAO_API.Models.Product",
+        "Name": "req",
+        "Type": "WEB_SHOPTHETHAO_API.DTO.Request.ProductRequest",
         "IsRequired": true
       }
     ],
@@ -135,6 +214,22 @@
     "Method": "Get",
     "RelativePath": "api/Product/{id}",
     "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProductController",
+    "Method": "DeleteProduct",
+    "RelativePath": "api/Product/{id}",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -232,6 +327,85 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SizeController",
+    "Method": "GetAll",
+    "RelativePath": "api/Size",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SizeController",
+    "Method": "Create",
+    "RelativePath": "api/Size",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "WEB_SHOPTHETHAO_API.Models.Size",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SizeController",
+    "Method": "Get",
+    "RelativePath": "api/Size/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SizeController",
+    "Method": "Update",
+    "RelativePath": "api/Size/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "model",
+        "Type": "WEB_SHOPTHETHAO_API.Models.Size",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "SizeController",
+    "Method": "Delete",
+    "RelativePath": "api/Size/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {

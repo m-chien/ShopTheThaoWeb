@@ -171,6 +171,131 @@
         }
       }
     },
+    "/api/Color": {
+      "get": {
+        "tags": [
+          "Color"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Color"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Color"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Color"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Color"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Color/{id}": {
+      "get": {
+        "tags": [
+          "Color"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Color"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Color"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Color"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Color"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Color"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Product": {
       "get": {
         "tags": [
@@ -190,17 +315,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Product"
+                "$ref": "#/components/schemas/ProductRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Product"
+                "$ref": "#/components/schemas/ProductRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Product"
+                "$ref": "#/components/schemas/ProductRequest"
               }
             }
           }
@@ -214,6 +339,27 @@
     },
     "/api/Product/{id}": {
       "get": {
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
         "tags": [
           "Product"
         ],
@@ -360,6 +506,131 @@
       "get": {
         "tags": [
           "Profile"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Size": {
+      "get": {
+        "tags": [
+          "Size"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Size"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Size"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Size"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Size"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Size/{id}": {
+      "get": {
+        "tags": [
+          "Size"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Size"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Size"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Size"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Size"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Size"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -738,6 +1009,48 @@
             "nullable": true
           },
           "keyword": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "categoryID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "brandID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sizeID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "colorID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "price": {
+            "type": "number",
+            "format": "double"
+          },
+          "stockQuantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "image": {
             "type": "string",
             "nullable": true
           }

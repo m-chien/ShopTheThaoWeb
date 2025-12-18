@@ -45,31 +45,50 @@ public class ProductVariantController : ControllerBase
     {
         var rawResults = await _context.ProductVariants
             .Include(pv => pv.Product)
+                .ThenInclude(p => p.Category)
+            .Include(pv => pv.Product)
+                .ThenInclude(p => p.Brand)
             .Include(pv => pv.Color)
+            .Include(pv => pv.Size)
             .Select(pv => new
             {
                 pv.ProductId,
                 ProductName = pv.Product.Name,
                 ProductDescription = pv.Product.Description,
+
+                CategoryId = pv.Product.CategoryId,
+                BrandId = pv.Product.BrandId,
+
+                CategoryName = pv.Product.Category.Name,
+                BrandName = pv.Product.Brand.Name,
+
                 pv.ColorId,
                 ColorName = pv.Color.Name,
+
+                pv.SizeId,
+                SizeName = pv.Size.Name,
+
                 pv.Image,
                 pv.Price
             })
             .ToListAsync();
 
         var groupedProducts = rawResults
-            .GroupBy(pv => new { pv.ProductId, pv.ProductName, pv.ProductDescription })
+            .GroupBy(pv => new { pv.ProductId, pv.ProductName, pv.ProductDescription, pv.CategoryName, pv.BrandName })
             .Select(g => new
             {
                 ProductID = g.Key.ProductId,
                 Name = g.Key.ProductName,
                 Description = g.Key.ProductDescription,
+                CategoryName = g.Key.CategoryName,
+                BrandName = g.Key.BrandName,
+
                 Colors = g.Select(x => new
                 {
                     ColorID = x.ColorId,
                     ColorName = x.ColorName
                 }).Distinct().ToList(),
+                Sizes = g.Select(x => new { SizeID = x.SizeId, SizeName = x.SizeName }).Distinct().ToList(),
                 Images = g.Select(x => x.Image).Distinct().ToList(),
                 Prices = g.Select(x => x.Price).Distinct().ToList()
             })
