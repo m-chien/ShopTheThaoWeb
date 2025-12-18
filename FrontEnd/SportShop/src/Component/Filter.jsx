@@ -18,9 +18,9 @@ export default function Filter({ onFilterChange }) {
     price: true,
   });
 
-  const Brands = useFetchAll("/Brand");
-  const Sizes = useFetchAll("/Size");
-  const Colors = useFetchAll("/Color");
+  const Brands = useFetchAll("/Brand", []);
+  const Sizes = useFetchAll("/Size", []);
+  const Colors = useFetchAll("/Color", []);
 
   useEffect(() => {
     const filterData = {

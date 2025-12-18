@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Breadcrumb from "../../Component/Breadcrumb";
 import Footer from "../../Component/Footer";
 import Header from "../../Component/Header";
@@ -6,7 +6,6 @@ import NotificationModal from "../../Component/NotificationModal";
 import PaymentForm from "../../Component/PaymentForm";
 import styles from "../../styles/Transaction.module.css";
 import OrderSummary from "./OrderSummary";
-import { useState } from "react";
 
 export default function PaymentPage() {
   const [modal, setModal] = useState({
@@ -16,14 +15,34 @@ export default function PaymentPage() {
     message: "",
   });
 
-  const handleFormSubmit = (data) => {
-    console.log("Payment submitted:", data);
-    setModal({
-      isOpen: true,
-      status: "success",
-      title: "Thanh toán thành công",
-      message: "Đơn hàng của bạn đã được đặt thành công.",
-    });
+  const handleFormSubmit = async (data) => {
+    try {
+      const res = await fetch("https://localhost:7299/api/checkout/vnpay", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: 1,
+          voucherId: 1,
+          amount: 10000,
+          deliveryAddress: "string",
+          phone: "0969827284",
+        }),
+      });
+
+      const result = await res.json();
+
+      // Redirect sang VNPAY
+      window.location.href = result.data.paymentUrl;
+    } catch (error) {
+      setModal({
+        isOpen: true,
+        status: "error",
+        title: "Lỗi thanh toán",
+        message: "Không thể kết nối tới cổng thanh toán.",
+      });
+    }
   };
 
   return (

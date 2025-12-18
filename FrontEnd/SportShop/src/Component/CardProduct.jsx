@@ -24,8 +24,8 @@ export default function CardProduct({ product }) {
     }
   };
 
-  const handleCardClick = (e) => {
-    // Không navigate nếu click vào button hoặc color selector hoặc thumbnails
+  const handleCardClick = (e, productId) => {
+    // Chặn navigate nếu click vào các thành phần con
     if (
       e.target.tagName === "BUTTON" ||
       e.target.closest(".color-selector") ||
@@ -33,12 +33,13 @@ export default function CardProduct({ product }) {
     ) {
       return;
     }
-    navigate("/detail-product");
+
+    navigate(`/detail-product/${productId}`);
   };
 
   return (
     <div
-      onClick={handleCardClick}
+      onClick={(e) => handleCardClick(e, product.id)}
       ref={ref}
       className={`product-card ${inView ? "fade-in" : "hidden"}`}
     >
@@ -60,7 +61,7 @@ export default function CardProduct({ product }) {
               <img
                 loading="lazy"
                 key={idx}
-                src={`/public/Product/${img}`}
+                src={`/Product/${img}`}
                 alt=""
                 className={selectedImage === img ? "active" : ""}
                 onClick={(e) => {
@@ -104,7 +105,7 @@ export default function CardProduct({ product }) {
                     e.stopPropagation();
                     handleColorChange(idx);
                   }}
-                  title={color.colorName} // vẫn giữ tooltip nếu muốn
+                  title={color.colorName}
                 >
                   <span
                     className="color-dot"

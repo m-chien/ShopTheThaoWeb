@@ -1,12 +1,20 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Breadcrumb from "../Component/Breadcrumb";
 import CardProduct from "../Component/CardProduct";
 import Footer from "../Component/Footer";
 import Header from "../Component/Header";
+import useFetchAll from "../hooks/useFetchAll";
 import styles from "../styles/DetailProduct.module.css";
 
 export default function DetailProduct() {
+  const { id } = useParams();
+
+  const { data: products, loading } = useFetchAll(
+    `/ProductVariant/detail/${id}`,
+    null,
+  );
+  console.log("🚀 ~ DetailProduct ~ products:", products);
   const navigate = useNavigate();
   // Sample product data
   const product = {
@@ -63,12 +71,34 @@ export default function DetailProduct() {
       endDate: "14.11",
     },
   };
+  useEffect(() => {
+    if (products?.variants?.length > 0) {
+      const firstVariant = products.variants[0];
+
+      setSelectedColor(firstVariant.colorID);
+      setSelectedSize(firstVariant.sizeID);
+      setSelectedVariant(firstVariant);
+
+      if (firstVariant.image) {
+        setMainImage(firstVariant.image);
+      } else if (products.images?.length > 0) {
+        setMainImage(products.images[0]);
+      }
+    }
+  }, [products]);
 
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState("UK 8.5");
+  const [selectedSize, setSelectedSize] = useState(null);
   const [selectedWidth, setSelectedWidth] = useState("regular");
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedVariant, setSelectedVariant] = useState(null);
   const [activeTab, setActiveTab] = useState("description");
-  const [mainImage, setMainImage] = useState(product.image);
+  const [mainImage, setMainImage] = useState(null);
+  const availableSizes = selectedColor
+    ? products?.variants
+        ?.filter((v) => v.colorID === selectedColor)
+        .map((v) => v.sizeID)
+    : products?.sizes?.map((s) => s.sizeID);
 
   // Related products
   const relatedProducts = [
@@ -142,7 +172,7 @@ export default function DetailProduct() {
         {/* Breadcrumb */}
         <Breadcrumb
           items={[
-            { label: "Sản Phẩm", link: "/product" },
+            { label: "Sản Phẩm", link: "/productList" },
             { label: "Giày nike", link: "/nike" },
           ]}
         />
@@ -152,14 +182,26 @@ export default function DetailProduct() {
           {/* Left: Images */}
           <div className={styles["product-images"]}>
             <div className={styles["main-image-container"]}>
-              <img
-                src={mainImage}
-                alt={product.name}
-                className={styles["main-image"]}
-              />
-              <div className={styles["discount-badge"]}>
-                {product.discount}%
-              </div>
+              {mainImage && (
+                <img
+                  src={`/Product/${mainImage}`}
+                  alt={products?.name}
+                  className={styles["main-image"]}
+                />
+              )}
+            </div>
+            <div className={styles["thumbnail-images"]}>
+              {products?.images?.map((item, index) => (
+                <img
+                  key={index}
+                  src={`/Product/${item}`}
+                  alt={`Thumbnail ${index}`}
+                  className={`${styles.thumbnail} ${
+                    mainImage === item ? styles.active : ""
+                  }`}
+                  onClick={() => setMainImage(item)}
+                />
+              ))}
             </div>
           </div>
 
@@ -167,19 +209,19 @@ export default function DetailProduct() {
           <div className={styles["product-info"]}>
             {/* Brand & Title */}
             <div className={styles["product-header"]}>
-              <span className={styles.brand}>{product.brand}</span>
-              <h1 className={styles["product-title"]}>{product.name}</h1>
+              <span className={styles.brand}>{products?.brand}</span>
+              <h1 className={styles["product-title"]}>{products?.description}</h1>
             </div>
 
             {/* SKU & Price */}
             <div className={styles["product-meta"]}>
               <div className={styles.sku}>
                 <label>Loại Sản Phẩm:</label>
-                <span>{product.category}</span>
+                <span>{products?.category}</span>
               </div>
               <div className={styles.sku}>
-                <label>SKU:</label>
-                <span>{product.sku}</span>
+                <label>Mã Sản Phẩm:</label>
+                <span>{products?.productID}</span>
               </div>
             </div>
 
@@ -196,13 +238,7 @@ export default function DetailProduct() {
               </div>
               <div className={styles["price-display"]}>
                 <span className={styles["current-price"]}>
-                  {product.price.toLocaleString("vi-VN")}₫
-                </span>
-                <span className={styles["original-price"]}>
-                  {product.originalPrice.toLocaleString("vi-VN")}₫
-                </span>
-                <span className={styles["discount-percent"]}>
-                  -{product.discount}%
+                  {selectedVariant?.price?.toLocaleString("vi-VN")}₫
                 </span>
               </div>
             </div>
@@ -213,13 +249,33 @@ export default function DetailProduct() {
                 Màu Sắc: {product.color}
               </label>
               <div className={styles["color-selector"]}>
-                <div className={`${styles["color-option"]} ${styles.selected}`}>
+                {products?.colors?.map((color) => (
                   <div
-                    className={styles["color-preview"]}
-                    style={{ backgroundColor: product.colorHex }}
-                  ></div>
-                  <span className={styles["color-name"]}>{product.color}</span>
-                </div>
+                    key={color.colorID}
+                    className={`${styles["color-option"]} ${
+                      selectedColor === color.colorID ? styles.selected : ""
+                    }`}
+                    onClick={() => {
+                      setSelectedColor(color.colorID);
+
+                      const variant = products.variants.find(
+                        (v) => v.colorID === color.colorID,
+                      );
+
+                      if (!variant) return;
+
+                      setSelectedVariant(variant);
+                      setSelectedSize(variant.sizeID);
+                      setMainImage(variant.image);
+                    }}
+                  >
+                    <div
+                      className={styles["color-preview"]}
+                      style={{ backgroundColor: color.colorCode }}
+                    />
+                    <span>{color.colorName}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -227,15 +283,34 @@ export default function DetailProduct() {
             <div className={styles["option-group"]}>
               <label className={styles["option-label"]}>Kích Thước</label>
               <div className={styles["size-grid"]}>
-                {product.sizes.map((size) => (
-                  <button
-                    key={size}
-                    className={`${styles["size-option"]} ${selectedSize === size ? styles.selected : ""}`}
-                    onClick={() => setSelectedSize(size)}
-                  >
-                    {size}
-                  </button>
-                ))}
+                {products?.sizes?.map((size) => {
+                  const isAvailable = availableSizes?.includes(size.sizeID);
+
+                  return (
+                    <button
+                      key={size.sizeID}
+                      disabled={!isAvailable}
+                      className={`${styles["size-option"]} ${
+                        selectedSize === size.sizeID ? styles.selected : ""
+                      }`}
+                      onClick={() => {
+                        const variant = products.variants.find(
+                          (v) =>
+                            v.colorID === selectedColor &&
+                            v.sizeID === size.sizeID,
+                        );
+
+                        if (!variant) return;
+
+                        setSelectedSize(size.sizeID);
+                        setSelectedVariant(variant);
+                        setMainImage(variant.image);
+                      }}
+                    >
+                      {size.sizeName}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -293,7 +368,7 @@ export default function DetailProduct() {
               </div>
               <div className={styles["guarantee-item"]}>
                 <span className={styles["guarantee-icon"]}>📦</span>
-                <span>Còn {product.stock} sản phẩm</span>
+                <span>Còn {selectedVariant?.stock} sản phẩm</span>
               </div>
             </div>
           </div>

@@ -17,7 +17,7 @@ import useFetchAll from "../hooks/useFetchAll.js";
 function HomePage() {
   const [searchTerm, setSearchTerm] = useState("");
   const { data: products, loading } = useFetchAll(
-    "/ProductVariant/grouped-products",
+    "/ProductVariant/grouped-products", []
   );
 
   if (loading) {
@@ -142,7 +142,7 @@ function HomePage() {
         })}
       </div>
       <div className="view-more-button">
-        <a href="/product">Xem tất cả</a>
+        <a href="/productList">Xem tất cả</a>
       </div>
 
       <Category title="Thương hiệu nổi bật" path="/Brand"/>

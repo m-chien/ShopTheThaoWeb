@@ -10,6 +10,7 @@ import Profile from "./Page/Profile";
 import PaymentPage from "./Page/Payment/PaymentPage";
 import InformationPage from "./Page/Payment/InformationPage";
 import BillDetail from "./Page/BillDetail";
+import PaymentResult from "./Page/PaymentResult";
 
 function App() {
   return (
@@ -21,12 +22,13 @@ function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/Login" element={<LoginPage />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/detail-product" element={<DetailProduct />} />
+          <Route path="/detail-product/:id" element={<DetailProduct />} />
           <Route path="/productList" element={<ProductListPage />} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/transportation" element={<TransportationPage />} />
           <Route path="/information" element={<InformationPage />} />
           <Route path="/bill-detail/:id" element={<BillDetail />} />
+          <Route path="/payment-result" element={<PaymentResult />} />
         </Routes>
       </BrowserRouter>
     </>

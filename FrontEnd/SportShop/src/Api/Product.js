@@ -12,3 +12,7 @@ export const getAllProductDummy = () => {
 export const filterProducts = (filterData) => {
   return api.post("/ProductVariant/filter-sp", filterData);
 };
+
+export const detailproduct = (idProduct) => {
+  return api.get(`ProductVariant/detail/${idProduct}`);
+}

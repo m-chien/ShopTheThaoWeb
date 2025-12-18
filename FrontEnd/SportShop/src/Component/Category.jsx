@@ -1,10 +1,9 @@
 import { use, useEffect, useState } from "react";
-import { getAllCategory } from "../Api/Category.js";
 import useFetchAll from "../hooks/useFetchAll.js";
 import styles from "../styles/Category.module.css";
 
 export default function Category({ title, path }) {
-  const { data: Categories, loading } = useFetchAll(path);
+  const { data: Categories, loading } = useFetchAll(path, []);
   console.log("🚀 ~ Category ~ Categories:", Categories);
 
   if (loading) {
@@ -20,14 +19,14 @@ export default function Category({ title, path }) {
             <div key={category.id} className={styles.categoryItem}>
               <div className={styles.card}>
                 <img
-                  src={`../../public/${path}/${category.logo || category.image}`}
+                  src={`../${path}/${category.logo || category.image}`}
                   alt={category.name}
                 />
-                {path === "/Category" ? (
+                {path === "/Category" && (
                   <a className={styles.nameproduct} href="#">
                     <p>{category.name}</p>
                   </a>
-                ) : null}
+                )}
               </div>
             </div>
           ))}

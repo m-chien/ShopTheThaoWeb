@@ -2,8 +2,11 @@ import { useState } from "react";
 import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import "../styles/AuthPage.css";
+import { useNavigate } from "react-router-dom";
+import { User } from "../Api/User";
 
 export function RegisterPage({ setCurrentPage }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -23,7 +26,27 @@ export function RegisterPage({ setCurrentPage }) {
   };
 
   const handleSubmit = () => {
-    console.log("Register:", formData);
+    console.log(formData);
+    if (formData.password != formData.confirmPassword) return;
+    User()
+      .register(
+        formData.phone,
+        formData.password,
+        formData.email,
+        formData.fullName,
+      )
+      .then((data) => {
+        alert("đăng ký thành công!!");
+        navigate("/");
+        // const token = data.accessToken;
+        // if (token) {
+        //   const decoded = jwt_decode(token);
+        //   navigate(decoded.role == "Admin" ? "/admin" : "/");
+        // }
+      })
+      .catch((error) => {
+        console.error("Login failed:", error.message);
+      });
   };
 
   return (
@@ -33,7 +56,6 @@ export function RegisterPage({ setCurrentPage }) {
 
       <div className="auth-main">
         <div className="auth-content-wrapper">
-
           <div className="form-section">
             <div className="form-container">
               <div className="form-header">
