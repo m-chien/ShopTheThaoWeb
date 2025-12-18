@@ -105,6 +105,11 @@ public partial class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__Color__3214EC275F4701C1");
         });
 
+        modelBuilder.Entity<Size>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Size__3214EC27DE69C28C");
+        });
+
         modelBuilder.Entity<Order>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Order__3214EC27739E563E");

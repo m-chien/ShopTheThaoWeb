@@ -108,10 +108,26 @@ namespace WEB_SHOPTHETHAO_API.Middlewares
 
 
         /// Xử lý exception và trả về response lỗi
+        /// <summary>
+        /// Xử lý exception và trả về response lỗi
+        /// </summary>
         private async Task HandleExceptionAsync(HttpContext context, Exception exception, Stream originalStream)
         {
-            context.Response.Body = originalStream;
+            // Log lỗi trước
             _logger.LogError(exception, "Exception occurred: {Message}", exception.Message);
+
+            // KIỂM TRA QUAN TRỌNG: Nếu response đã bắt đầu gửi thì không thể sửa Status Code hay ghi lại Body được nữa
+            if (context.Response.HasStarted)
+            {
+                _logger.LogWarning("The response has already started, the error middleware will not be executed.");
+                return;
+            }
+
+            // Khôi phục lại stream gốc để ghi lỗi
+            if (context.Response.Body != originalStream)
+            {
+                context.Response.Body = originalStream;
+            }
 
             var (statusCode, message, errors) = GetErrorDetails(exception);
             context.Response.StatusCode = statusCode;
