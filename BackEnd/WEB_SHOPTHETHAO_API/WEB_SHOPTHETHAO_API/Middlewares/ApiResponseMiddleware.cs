@@ -114,18 +114,27 @@ namespace WEB_SHOPTHETHAO_API.Middlewares
             _logger.LogError(exception, "Exception occurred: {Message}", exception.Message);
 
             var (statusCode, message, errors) = GetErrorDetails(exception);
-            context.Response.StatusCode = statusCode;
-
-            var apiResponse = new ApiResponse<object>
+            if (!context.Response.HasStarted)
             {
-                StatusCode = statusCode,
-                Message = message,
-                Data = null,
-                Errors = errors
-            };
+                context.Response.StatusCode = statusCode;
+                context.Response.ContentType = "application/json";
 
-            var jsonResponse = JsonSerializer.Serialize(apiResponse, JsonOptions);
-            await WriteJsonResponse(context, jsonResponse);
+                var apiResponse = new ApiResponse<object>
+                {
+                    StatusCode = statusCode,
+                    Message = message,
+                    Data = null,
+                    Errors = errors
+                };
+
+                var jsonResponse = JsonSerializer.Serialize(apiResponse, JsonOptions); // (Lưu ý tên biến JsonOptions của bạn)
+                await context.Response.WriteAsync(jsonResponse);
+            }
+            else
+            {
+                // Nếu Response đã chạy rồi thì chỉ log lỗi, TUYỆT ĐỐI KHÔNG sửa Response nữa
+                _logger.LogError(exception, "Lỗi xảy ra sau khi Response đã bắt đầu gửi. Không thể trả về JSON lỗi.");
+            }
         }
 
         /// Tạo ApiResponse dựa trên status code
