@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import Breadcrumb from "../../Component/Breadcrumb";
 import Footer from "../../Component/Footer";
 import Header from "../../Component/Header";
@@ -8,6 +9,7 @@ import styles from "../../styles/Transaction.module.css";
 import OrderSummary from "./OrderSummary";
 
 export default function PaymentPage() {
+  const checkout = useSelector((state) => state.checkout);
   const [modal, setModal] = useState({
     isOpen: false,
     status: "",
@@ -23,11 +25,13 @@ export default function PaymentPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: 1,
-          voucherId: 1,
-          amount: 10000,
-          deliveryAddress: "string",
-          phone: "0969827284",
+          userId: checkout.userInfo,
+          shippingInfo: checkout.shippingInfo,
+          items: checkout.cartItems,
+          amount: checkout.cartItems.reduce(
+            (sum, i) => sum + i.price * i.quantity,
+            0,
+          ),
         }),
       });
 

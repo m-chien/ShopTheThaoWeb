@@ -6,10 +6,15 @@ import styles from "../../styles/Transaction.module.css";
 import Breadcrumb from "../../Component/Breadcrumb";
 import OrderSummary from "./OrderSummary";
 import { Navigate, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUserInfo } from "../../redux/slices/checkoutSlice";
 
 export default function InformationPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
   const handleFormSubmit = (data) => {
+    dispatch(setUserInfo(data));
     console.log("Information submitted:", data);
     navigate("/transportation");
   };

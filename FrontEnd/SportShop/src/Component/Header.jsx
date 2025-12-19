@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { selectTotalQty } from "../Redux/Slices/CartSlice.js";
 import styles from "../styles/Header.module.css";
 import NotificationModal from "./NotificationModal.jsx";
 
 export default function Header({ searchTerm, setSearchTerm }) {
-  const totalQuantity = useSelector(selectTotalQty);
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const totalProducts = cartItems.length;
   const [bell, setbell] = useState(false);
   const navigate = useNavigate();
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -178,7 +178,7 @@ export default function Header({ searchTerm, setSearchTerm }) {
             onClick={() => navigate("/cart")}
           >
             <i class="fa-solid fa-cart-shopping"></i>
-            <span className={styles.cartBadge}>{totalQuantity || 0}</span>
+            <span className={styles.cartBadge}>{totalProducts || 0}</span>
           </button>
           <button className={styles.iconBtn} title="Vị trí">
             <i class="fas fa-location-dot"></i>

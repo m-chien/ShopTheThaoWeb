@@ -6,10 +6,15 @@ import TransportationForm from "../../Component/TransportationForm";
 import styles from "../../styles/Transaction.module.css";
 import OrderSummary from "./OrderSummary";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setShippingInfo } from "../../redux/slices/checkoutSlice";
 
 export default function TransportationPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const handleFormSubmit = (data) => {
+    dispatch(setShippingInfo(data));
     console.log("Transportation submitted:", data);
     navigate("/payment");
   };

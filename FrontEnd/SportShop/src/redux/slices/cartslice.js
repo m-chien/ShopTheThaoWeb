@@ -1,87 +1,129 @@
+// redux/slices/cartslice.js
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState  = {
+const initialState = {
   cartItems: [],
-  cartTotalQuantity: 0,
-  cartTotalAmount: 0,
+  cartTotalQuantity: 0, // tổng số lượng (sum quantity)
+  cartTotalAmount: 0, // tổng tiền (sum price * qty)
 };
 
-const calcTotals = (cartItems) => {
-  let totalAmount = 0;
-  let totalQuantity = 0;
-  Object.values(cartItems).forEach((item) => {
-    totalAmount += item.selectedPrice * item.cartQuantity;
-    totalQuantity += item.cartQuantity;
+const recalcTotals = (state) => {
+  let quantity = 0;
+  let amount = 0;
+
+  state.cartItems.forEach((item) => {
+    quantity += item.quantity;
+    amount += (item.price || 0) * item.quantity;
   });
-  return { totalAmount, totalQuantity };
+
+  state.cartTotalQuantity = quantity;
+  state.cartTotalAmount = amount;
 };
 
 const cartSlice = createSlice({
   name: "cart",
-  initialState ,
+  initialState,
   reducers: {
     addToCart(state, action) {
-      const p = action.payload;
-      const id = p.id;
+      const item = action.payload;
+      const exist = state.cartItems.find((i) => i.variantId === item.variantId);
 
-      if (state.items[id]) {
-        state.items[id].qty += 1;
+      if (exist) {
+        exist.quantity += item.quantity || 1;
       } else {
-        state.items[id] = { product: p, qty: 1 };
+        // đảm bảo có trường isSelected (mặc định false nếu undefined)
+        state.cartItems.push({
+          ...item,
+          quantity: item.quantity || 1,
+          isSelected: item.isSelected ?? false,
+        });
       }
 
-      const t = calcTotals(state.items);
-      state.totalQuantity = t.quantity;
-      state.totalPrice = t.price;
+      recalcTotals(state);
     },
 
-    removeFromCart(state, action) {
-      const id = action.payload;
-      delete state.items[id];
-
-      const t = calcTotals(state.items);
-      state.totalQuantity = t.quantity;
-      state.totalPrice = t.price;
+    toggleSelect(state, action) {
+      const variantId = action.payload;
+      const item = state.cartItems.find((i) => i.variantId === variantId);
+      if (item) item.isSelected = !item.isSelected;
+      // totals không cần cập nhật (subtotal selected sẽ tính bằng selector)
     },
 
     incrementQty(state, action) {
-      const id = action.payload;
-      if (state.items[id]) state.items[id].qty++;
-      const t = calcTotals(state.items);
-      state.totalQuantity = t.quantity;
-      state.totalPrice = t.price;
+      const variantId = action.payload;
+      const item = state.cartItems.find((i) => i.variantId === variantId);
+      if (item) item.quantity += 1;
+      recalcTotals(state);
     },
 
     decrementQty(state, action) {
-      const id = action.payload;
-      if (!state.items[id]) return;
+      const variantId = action.payload;
+      const item = state.cartItems.find((i) => i.variantId === variantId);
+      if (!item) return;
+      item.quantity -= 1;
+      if (item.quantity <= 0) {
+        state.cartItems = state.cartItems.filter(
+          (i) => i.variantId !== variantId,
+        );
+      }
+      recalcTotals(state);
+    },
 
-      state.items[id].qty--;
-      if (state.items[id].qty <= 0) delete state.items[id];
-
-      const t = calcTotals(state.items);
-      state.totalQuantity = t.quantity;
-      state.totalPrice = t.price;
+    removeFromCart(state, action) {
+      const variantId = action.payload;
+      state.cartItems = state.cartItems.filter(
+        (i) => i.variantId !== variantId,
+      );
+      recalcTotals(state);
     },
 
     clearCart(state) {
-      state.items = {};
-      state.totalQuantity = 0;
-      state.totalPrice = 0;
+      state.cartItems = [];
+      state.cartTotalQuantity = 0;
+      state.cartTotalAmount = 0;
     },
   },
 });
 
 export const {
   addToCart,
-  removeFromCart,
+  toggleSelect,
   incrementQty,
   decrementQty,
+  removeFromCart,
   clearCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
 
-export const selectCartItems = (state) => state.cart.items;
-export const selectTotalQty = (state) => state.cart.totalQuantity;
-export const selectTotalPrice = (state) => state.cart.totalPrice;
+/* ===== Selectors ===== */
+
+// tất cả items
+export const selectCartItems = (state) => state.cart.cartItems || [];
+
+// số dòng sản phẩm (distinct items)
+export const selectCartDistinctCount = (state) =>
+  (state.cart.cartItems || []).length;
+
+// tổng quantity (sum qty)
+export const selectCartTotalQuantity = (state) =>
+  state.cart.cartTotalQuantity || 0;
+
+// tổng tiền toàn giỏ
+export const selectCartTotalAmount = (state) => state.cart.cartTotalAmount || 0;
+
+// items được chọn (isSelected === true)
+export const selectSelectedItems = (state) =>
+  (state.cart.cartItems || []).filter((i) => i.isSelected);
+
+// tổng số lượng của items đã chọn
+export const selectSelectedTotalQty = (state) =>
+  (state.cart.cartItems || [])
+    .filter((i) => i.isSelected)
+    .reduce((s, i) => s + i.quantity, 0);
+
+// tổng tiền của items đã chọn
+export const selectSelectedTotalAmount = (state) =>
+  (state.cart.cartItems || [])
+    .filter((i) => i.isSelected)
+    .reduce((s, i) => s + (i.price || 0) * i.quantity, 0);
