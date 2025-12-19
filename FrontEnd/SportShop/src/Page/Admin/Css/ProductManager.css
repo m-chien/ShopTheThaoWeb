@@ -1,3 +1,4 @@
+/* --- HEADER CỦA TRANG --- */
 .product-page-header {
   display: flex;
   justify-content: space-between;
@@ -13,7 +14,7 @@
   font-size: 22px;
 }
 
-/* Màu riêng cho nút hành động */
+/* --- MÀU SẮC NÚT HÀNH ĐỘNG --- */
 .action-btn-edit {
   color: #1890ff;
   border-color: #1890ff;
@@ -22,4 +23,61 @@
 .action-btn-delete {
   color: #ff4d4f;
   border-color: #ff4d4f;
+}
+
+/* --- CÁC CLASS TIỆN ÍCH CHO FORM (MODAL) --- */
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-item-flex {
+  flex: 1;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+/* --- TEXT TIÊU ĐỀ SECTION TRONG MODAL --- */
+.section-title {
+  font-weight: bold;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+  margin-top: 20px;
+  color: #1677ff;
+}
+
+.section-subtitle {
+  font-weight: bold;
+  color: #1677ff;
+  margin-bottom: 10px;
+}
+
+/* --- CONTAINER CỦA BẢNG BIẾN THỂ (NESTED TABLE) --- */
+.variant-table-container {
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+/* --- ĐỊNH DẠNG CỘT TRONG BẢNG --- */
+.text-red {
+  color: red;
+}
+
+.price-display {
+  color: #d4380d;
+  font-weight: bold;
+}
+
+.description-cell {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-height: 100px;
+  overflow-y: auto;
 }
