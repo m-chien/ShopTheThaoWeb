@@ -7,6 +7,7 @@ import {
   SkinOutlined,
   TagsOutlined,
   AppstoreOutlined,
+  SketchOutlined,
 } from "@ant-design/icons";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
@@ -21,7 +22,8 @@ function getItem(label, key, icon, children) {
 // Menu cấu hình
 const items = [
   getItem("Dashboard", "/admin", <PieChartOutlined />),
-  getItem("Danh Mục", "/admin/category", <AppstoreOutlined />),
+  getItem("Danh Mục", "/admin/categories", <AppstoreOutlined />),
+  getItem("Thương Hiệu", "/admin/brands", <SketchOutlined />),
   getItem("Sản Phẩm", "/admin/products", <SkinOutlined />),
   getItem("Đơn Hàng", "/admin/orders", <ShoppingOutlined />),
   getItem("Khách Hàng", "/admin/users", <UserOutlined />),

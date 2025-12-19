@@ -14,6 +14,7 @@ import Dashboard from "./Page/Admin/Pages/Dashboard";
 import ProductManager from "./Page/Admin/Pages/ProductManager";
 import OrderManager from "./Page/Admin/Pages/OrderManager";
 import CategoryManager from "./Page/Admin/Pages/CategoryManager";
+import BrandManager from "./Page/Admin/Pages/BrandManager";
 function App() {
   return (
     <>
@@ -37,7 +38,8 @@ function App() {
             {/* /admin/products: Quản lý sản phẩm */}
             <Route path="products" element={<ProductManager />} />
             <Route path="orders" element={<OrderManager />} />
-            <Route path="category" element={<CategoryManager />} />
+            <Route path="categories" element={<CategoryManager />} />
+            <Route path="brands" element={<BrandManager />} />
             <Route
               path="users"
               element={<div>Quản lý khách hàng (Đang phát triển)</div>}
