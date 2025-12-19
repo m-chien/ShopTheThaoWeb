@@ -127,7 +127,7 @@ namespace WEB_SHOPTHETHAO_API.Middlewares
                     Errors = errors
                 };
 
-                var jsonResponse = JsonSerializer.Serialize(apiResponse, JsonOptions); // (Lưu ý tên biến JsonOptions của bạn)
+                var jsonResponse = JsonSerializer.Serialize(apiResponse, JsonOptions);
                 await context.Response.WriteAsync(jsonResponse);
             }
             else
