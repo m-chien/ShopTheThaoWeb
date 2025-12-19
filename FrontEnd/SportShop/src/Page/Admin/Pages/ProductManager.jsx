@@ -366,7 +366,6 @@ const ProductManager = () => {
       title: "Thương Hiệu",
       dataIndex: "brandName",
       key: "brandName",
-      width: 120,
       filters: brands.map((b) => ({ text: b.name, value: b.name })),
       onFilter: (value, record) => record.brandName === value,
     },
@@ -374,7 +373,6 @@ const ProductManager = () => {
       title: "Size",
       dataIndex: "sizes",
       key: "sizes",
-      width: 80,
       render: (sizes) => (
         <Space size={[0, 4]} wrap className="w-100">
           {sizes?.map((s, index) => (
@@ -401,7 +399,7 @@ const ProductManager = () => {
       ),
     },
     {
-      title: "Giá",
+      title: "Giá (VNĐ)",
       dataIndex: "prices",
       key: "prices",
       width: 120,
@@ -410,10 +408,10 @@ const ProductManager = () => {
         const min = Math.min(...prices);
         const max = Math.max(...prices);
         return min === max ? (
-          <span className="price-display">{min.toLocaleString()} đ</span>
+          <span className="price-display">{min.toLocaleString()}</span>
         ) : (
           <span className="price-display">
-            {min.toLocaleString()} - {max.toLocaleString()} đ
+            {min.toLocaleString()} - {max.toLocaleString()}
           </span>
         );
       },

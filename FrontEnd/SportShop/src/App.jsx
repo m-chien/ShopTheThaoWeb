@@ -13,6 +13,7 @@ import AdminLayout from "./Page/Admin/Layout/AdminLayout";
 import Dashboard from "./Page/Admin/Pages/Dashboard";
 import ProductManager from "./Page/Admin/Pages/ProductManager";
 import OrderManager from "./Page/Admin/Pages/OrderManager";
+import CategoryManager from "./Page/Admin/Pages/CategoryManager";
 function App() {
   return (
     <>
@@ -36,6 +37,7 @@ function App() {
             {/* /admin/products: Quản lý sản phẩm */}
             <Route path="products" element={<ProductManager />} />
             <Route path="orders" element={<OrderManager />} />
+            <Route path="category" element={<CategoryManager />} />
             <Route
               path="users"
               element={<div>Quản lý khách hàng (Đang phát triển)</div>}

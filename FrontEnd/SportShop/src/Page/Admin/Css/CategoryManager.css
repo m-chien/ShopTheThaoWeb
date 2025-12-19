@@ -1,0 +1,36 @@
+/* Header của trang */
+.category-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.category-page-header h2 {
+  margin: 0;
+  color: #262626;
+  font-size: 22px;
+}
+
+/* Form trong Modal */
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-item-flex {
+  flex: 1;
+}
+
+/* Nút hành động */
+.action-btn-edit {
+  color: #1890ff;
+  border-color: #1890ff;
+}
+
+.action-btn-delete {
+  color: #ff4d4f;
+  border-color: #ff4d4f;
+}
