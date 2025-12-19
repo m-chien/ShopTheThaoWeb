@@ -62,6 +62,23 @@ public class ProductController : ControllerBase
     //    return Ok(new { message = "Cập nhật thành công!" });
     //}
 
+    // [PUT] Cập nhật thông tin chung sản phẩm
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateProduct(int id, [FromBody] UpdateProductDto req)
+    {
+        var product = await _context.Products.FindAsync(id);
+        if (product == null) return NotFound(new { message = "Không tìm thấy sản phẩm" });
+
+        // Cập nhật dữ liệu
+        product.Name = req.Name;
+        product.Description = req.Description;
+        product.CategoryId = req.CategoryID;
+        product.BrandId = req.BrandID;
+
+        await _context.SaveChangesAsync();
+        return Ok(new { message = "Cập nhật thành công!" });
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProduct(int id)
     {
@@ -98,6 +115,7 @@ public class ProductController : ControllerBase
         }
     }
 
+    //Tạo dữ liệu cho Product
     [HttpPost]
     public async Task<IActionResult> CreateProduct([FromBody] ProductRequest req)
     {

@@ -669,3 +669,28 @@ EXEC sp_FilterProductVariants
     @MaxPrice = 1500000,
     @Keyword  = 'Nike';
 
+go
+SELECT 
+    -- Thông tin sản phẩm cha
+    p.ID AS ProductID,
+    p.Name AS TenSanPham,
+    cat.Name AS DanhMuc,
+    b.Name AS ThuongHieu,
+
+    -- Thông tin biến thể con
+    pv.ID AS VariantID,
+    s.Name AS Size,
+    c.Name AS MauSac,
+    FORMAT(pv.Price, '#,###') AS GiaTien, -- Format số cho dễ nhìn
+    pv.StockQuantity AS TonKho,
+    pv.Image AS AnhBienThe
+
+FROM ProductVariant pv
+JOIN Product p ON pv.ProductID = p.ID
+LEFT JOIN Category cat ON p.CategoryID = cat.ID
+LEFT JOIN Brand b ON p.BrandID = b.ID
+LEFT JOIN Size s ON pv.SizeID = s.ID
+LEFT JOIN Color c ON pv.ColorID = c.ID
+
+-- Sắp xếp: Sản phẩm mới nhất lên đầu, sau đó gom nhóm theo Size
+ORDER BY p.ID ASC, s.Name ASC;
