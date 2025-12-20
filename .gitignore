@@ -9,6 +9,13 @@ BackEnd/WEB_SHOPTHETHAO_API/WEB_SHOPTHETHAO_API/bin/
 BackEnd/WEB_SHOPTHETHAO_API/WEB_SHOPTHETHAO_API/obj/
 
 
+.vs/
+bin/
+obj/
+*.dll
+*.pdb
+*.exe
+
 # dotenv files
 .env
 
