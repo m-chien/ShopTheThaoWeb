@@ -22,38 +22,37 @@ namespace WEB_SHOPTHETHAO_API.Service
             string baseUrl = _config["VNPAY:BaseUrl"] ?? "";
             string returnUrl = _config["VNPAY:ReturnUrl"] ?? "";
 
-            // VN time
             var vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var vnNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
 
-            // NOTE: VNPAY yêu cầu sort theo key
+            // ✅ TxnRef UNIQUE (không trùng trong ngày)
+            var txnRef = $"{payment.Id}_{vnNow:yyyyMMddHHmmss}";
+
             var vnp = new SortedDictionary<string, string>
             {
                 ["vnp_Version"] = "2.1.0",
                 ["vnp_Command"] = "pay",
                 ["vnp_TmnCode"] = tmnCode,
-                ["vnp_Amount"] = ((long)((payment.Amount ?? 0) * 100)).ToString(), // VND * 100
+                ["vnp_Amount"] = ((long)((payment.Amount ?? 0m) * 100)).ToString(), // VND * 100
                 ["vnp_CurrCode"] = "VND",
-                ["vnp_TxnRef"] = payment.Id.ToString(),
+                ["vnp_TxnRef"] = txnRef,
                 ["vnp_OrderInfo"] = $"Thanh toan don hang #{payment.OrderId}",
                 ["vnp_OrderType"] = "other",
                 ["vnp_ReturnUrl"] = returnUrl,
                 ["vnp_IpAddr"] = ipAddress,
                 ["vnp_Locale"] = "vn",
-                ["vnp_CreateDate"] = vnNow.ToString("yyyyMMddHHmmss")
+                ["vnp_CreateDate"] = vnNow.ToString("yyyyMMddHHmmss"),
+
+                // ✅ thêm ExpireDate (15 phút)
+                ["vnp_ExpireDate"] = vnNow.AddMinutes(15).ToString("yyyyMMddHHmmss")
             };
 
-            // ✅ QUAN TRỌNG:
-            // Chuỗi ký = key=value với VALUE đã UrlEncode (giống hệt query gửi đi)
             string hashData = BuildQuery(vnp, encodeValue: true);
             string secureHash = VnpayHelper.HmacSHA512(hashSecret, hashData);
 
-            // Query gửi đi
-            string query = hashData;
-
-            // thường nên gửi kèm HashType
-            return $"{baseUrl}?{query}&vnp_SecureHashType=HmacSHA512&vnp_SecureHash={secureHash}";
+            return $"{baseUrl}?{hashData}&vnp_SecureHashType=HmacSHA512&vnp_SecureHash={secureHash}";
         }
+
 
         public bool ValidateSignature(IQueryCollection queryParams)
         {

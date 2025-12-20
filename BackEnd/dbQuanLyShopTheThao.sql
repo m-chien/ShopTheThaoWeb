@@ -181,7 +181,6 @@ CREATE TABLE OrderDetail (
     ProductVariantID INT NOT NULL,               -- FK tới ProductVariant(ID)
     Quantity INT NOT NULL DEFAULT 1,             -- Số lượng
     UnitPrice DECIMAL(18,2),                     -- Giá đơn vị tại thời điểm mua
-    Status NVARCHAR(50) DEFAULT 'Pending',       -- Trạng thái sản phẩm trong đơn
     CONSTRAINT FK_OrderDetail_Order FOREIGN KEY (OrderID) REFERENCES [Order](ID) ON DELETE CASCADE,
     CONSTRAINT FK_OrderDetail_ProductVariant FOREIGN KEY (ProductVariantID) REFERENCES ProductVariant(ID)
 );

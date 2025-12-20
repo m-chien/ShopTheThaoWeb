@@ -23,16 +23,20 @@ namespace WEB_SHOPTHETHAO_API.Controllers
         {
             var query = Request.Query;
 
-            // 1. Check chữ ký
+            // 1) Check chữ ký
             if (!_vnpayService.ValidateSignature(query))
                 return BadRequest("Invalid signature");
 
-            string responseCode = query["vnp_ResponseCode"];
-            string txnRef = query["vnp_TxnRef"];
-            string vnpTransNo = query["vnp_TransactionNo"];
+            string responseCode = query["vnp_ResponseCode"].ToString();
+            string tranStatus = query["vnp_TransactionStatus"].ToString();
+            string txnRef = query["vnp_TxnRef"].ToString();
+            string vnpTransNo = query["vnp_TransactionNo"].ToString();
 
-            if (!int.TryParse(txnRef, out int paymentId))
-                return BadRequest("Invalid payment id");
+            // ✅ Parse paymentId từ txnRef (có thể là "3" hoặc "3_2025...")
+            string paymentIdStr = txnRef.Contains("_") ? txnRef.Split('_')[0] : txnRef;
+
+            if (!int.TryParse(paymentIdStr, out int paymentId))
+                return BadRequest($"Invalid payment id from txnRef: {txnRef}");
 
             var payment = _db.Payments.Find(paymentId);
             if (payment == null)
@@ -40,12 +44,14 @@ namespace WEB_SHOPTHETHAO_API.Controllers
 
             var order = _db.Orders.Find(payment.OrderId);
 
-            // 2. Update DB
-            if (responseCode == "00")
+            // ✅ Success khi cả 2 = "00"
+            bool isSuccess = responseCode == "00" && tranStatus == "00";
+
+            if (isSuccess)
             {
                 payment.Status = "Paid";
                 payment.PaymentDate = DateTime.Now;
-                if (order != null) order.Status = "Paid";
+                if (order != null) order.Status = "Paid"; // hoặc "Completed"
             }
             else
             {
@@ -56,11 +62,11 @@ namespace WEB_SHOPTHETHAO_API.Controllers
 
             _db.SaveChanges();
 
-            // 3. Redirect về frontend
             return Redirect(
                 $"http://localhost:3000/payment-result" +
                 $"?paymentId={paymentId}&code={responseCode}&transNo={vnpTransNo}"
             );
         }
+
     }
 }

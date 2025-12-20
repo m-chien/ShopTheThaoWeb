@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WEB_SHOPTHETHAO_API.DTO.Request;
 using WEB_SHOPTHETHAO_API.Models;
 using WEB_SHOPTHETHAO_API.Service;
@@ -18,53 +19,123 @@ namespace WEB_SHOPTHETHAO_API.Controllers
             _db = db;
         }
 
-        // FE gọi API này -> trả về paymentUrl để redirect qua VNPAY
         [HttpPost("vnpay")]
         public IActionResult CreateVnpayPayment([FromBody] CreatePaymentRequest request)
         {
-            // 1) Tạo Order (đúng field trong model)
-            var order = new Order
+            if (request.Items == null || request.Items.Count == 0)
+                return BadRequest("Items is empty.");
+
+            if (request.Items.Any(i => i.Quantity <= 0))
+                return BadRequest("Quantity must be > 0.");
+
+            var variantIds = request.Items.Select(i => i.ProductVariantId).Distinct().ToList();
+
+            // Load biến thể
+            var variants = _db.ProductVariants
+                .Where(v => variantIds.Contains(v.Id))
+                .Select(v => new { v.Id, v.Price, v.StockQuantity })
+                .ToList();
+
+            if (variants.Count != variantIds.Count)
             {
-                UserId = request.UserId,                 // bắt buộc bạn phải truyền
-                VoucherId = request.VoucherId,           // optional
-                Status = "Pending",
-                TotalAmount = request.Amount,            // dùng TotalAmount
-                DeliveryAddress = request.DeliveryAddress,
-                Phone = request.Phone,
-                OrderDate = DateTime.Now
-            };
+                var foundIds = variants.Select(v => v.Id).ToHashSet();
+                var missing = variantIds.Where(id => !foundIds.Contains(id)).ToList();
+                return BadRequest(new { message = "Some ProductVariantId not found.", missing });
+            }
 
-            _db.Orders.Add(order);
-            _db.SaveChanges(); // để có order.Id
+            // Map nhanh
+            var variantMap = variants.ToDictionary(x => x.Id);
 
-            // 2) (Tuỳ bạn) tạo OrderDetail nếu request có items
-            // Nếu bạn chưa làm giỏ hàng/chi tiết đơn, có thể bỏ qua phần này.
-
-            // 3) Tạo Payment (đúng model)
-            var payment = new Payment
+            // Check tồn kho
+            foreach (var item in request.Items)
             {
-                OrderId = order.Id,
-                Method = "VNPAY",
-                Amount = order.TotalAmount,              // decimal?
-                Status = "Pending",
-                PaymentDate = null
-            };
+                var v = variantMap[item.ProductVariantId];
+                if (v.StockQuantity < item.Quantity)
+                    return BadRequest($"Insufficient stock for variantId={item.ProductVariantId}");
+            }
 
-            _db.Payments.Add(payment);
-            _db.SaveChanges(); // để có payment.Id -> làm vnp_TxnRef
-
-            // 4) Tạo URL VNPAY
-            string clientIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1";
-            if (clientIp == "::1") clientIp = "127.0.0.1";
-
-            string paymentUrl = _vnpayService.CreatePaymentUrl(payment, clientIp);
-
-            return Ok(new
+            // Tính tổng tiền từ DB
+            decimal totalAmount = 0m;
+            foreach (var item in request.Items)
             {
-                orderId = order.Id,
-                paymentId = payment.Id,
-                paymentUrl
-            });
+                var v = variantMap[item.ProductVariantId];
+
+                // Nếu Price là decimal (không nullable)
+                totalAmount += v.Price * item.Quantity;
+
+                // Nếu Price là decimal? thì dùng dòng này thay cho dòng trên:
+                // totalAmount += (v.Price ?? 0m) * item.Quantity;
+            }
+
+            using var tx = _db.Database.BeginTransaction();
+            try
+            {
+                // 1) Order
+                var order = new Order
+                {
+                    UserId = request.UserId,
+                    VoucherId = request.VoucherId,
+                    Status = "Pending",
+                    TotalAmount = totalAmount,
+                    DeliveryAddress = request.DeliveryAddress,
+                    Phone = request.Phone,
+                    OrderDate = DateTime.Now
+                };
+
+                _db.Orders.Add(order);
+                _db.SaveChanges();
+
+                // 2) OrderDetail: mỗi item -> 1 detail
+                var orderDetails = request.Items.Select(item =>
+                {
+                    var v = variantMap[item.ProductVariantId];
+                    return new OrderDetail
+                    {
+                        OrderId = order.Id,
+                        ProductVariantId = item.ProductVariantId,
+                        Quantity = item.Quantity,
+                        UnitPrice = v.Price
+                    };
+                }).ToList();
+
+                _db.OrderDetails.AddRange(orderDetails);
+                _db.SaveChanges();
+
+                // 3) Payment
+                var payment = new Payment
+                {
+                    OrderId = order.Id,
+                    Method = "VNPAY",
+                    Amount = order.TotalAmount,
+                    Status = "Pending",
+                    PaymentDate = null
+                };
+
+                _db.Payments.Add(payment);
+                _db.SaveChanges();
+
+                tx.Commit();
+
+                // 4) URL VNPAY
+                string clientIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1";
+                if (clientIp == "::1") clientIp = "127.0.0.1";
+
+                string paymentUrl = _vnpayService.CreatePaymentUrl(payment, clientIp);
+
+                return Ok(new
+                {
+                    orderId = order.Id,
+                    paymentId = payment.Id,
+                    totalAmount = order.TotalAmount,
+                    paymentUrl
+                });
+            }
+            catch (Exception ex)
+            {
+                tx.Rollback();
+                return BadRequest(ex.Message);
+            }
         }
-    }
+
+       }
 }

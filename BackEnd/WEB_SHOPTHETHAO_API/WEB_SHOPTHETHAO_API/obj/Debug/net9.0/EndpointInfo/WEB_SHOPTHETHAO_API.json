@@ -1135,6 +1135,20 @@
         },
         "additionalProperties": false
       },
+      "CreateOrderItemRequest": {
+        "type": "object",
+        "properties": {
+          "productVariantId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "CreatePaymentRequest": {
         "type": "object",
         "properties": {
@@ -1157,6 +1171,13 @@
           },
           "phone": {
             "type": "string",
+            "nullable": true
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateOrderItemRequest"
+            },
             "nullable": true
           }
         },

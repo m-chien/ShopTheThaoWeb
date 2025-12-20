@@ -24,8 +24,7 @@ public partial class OrderDetail
     [Column(TypeName = "decimal(18, 2)")]
     public decimal? UnitPrice { get; set; }
 
-    [StringLength(50)]
-    public string? Status { get; set; }
+
 
     [ForeignKey("OrderId")]
     [InverseProperty("OrderDetails")]

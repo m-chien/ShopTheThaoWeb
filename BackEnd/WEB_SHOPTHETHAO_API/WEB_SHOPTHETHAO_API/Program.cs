@@ -103,6 +103,9 @@ builder.Services.AddScoped<IPasswordService, PasswordService>(); // Service hash
 //builder.Services.AddScoped<CategoryService>();
 //builder.Services.AddScoped<IProductRepository, ProductRepository>();
 //builder.Services.AddScoped<ProductService>();
+
+builder.Services.AddScoped<VnpayService>();
+
 builder.Services.AddAutoMapper(typeof(Program));
 
 

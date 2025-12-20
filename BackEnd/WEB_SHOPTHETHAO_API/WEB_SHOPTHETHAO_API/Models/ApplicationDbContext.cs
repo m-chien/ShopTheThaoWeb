@@ -129,7 +129,6 @@ public partial class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__OrderDet__3214EC27C2058F74");
 
             entity.Property(e => e.Quantity).HasDefaultValue(1);
-            entity.Property(e => e.Status).HasDefaultValue("Pending");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails).HasConstraintName("FK_OrderDetail_Order");
 
