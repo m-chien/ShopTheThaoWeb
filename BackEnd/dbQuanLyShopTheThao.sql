@@ -164,7 +164,7 @@ CREATE TABLE [Order] (
     ID INT IDENTITY(1,1) PRIMARY KEY,          -- Khóa chính
     UserID INT NOT NULL,                        -- FK tới User(ID)
     VoucherID INT NULL,                          -- FK tới Voucher(ID) nếu có
-    Status NVARCHAR(50) DEFAULT 'Pending',      -- Trạng thái đơn hàng
+    Status NVARCHAR(50) DEFAULT N'Đang xử lý',      -- Trạng thái đơn hàng
     TotalAmount DECIMAL(18,2),                  -- Tổng tiền
     DeliveryAddress NVARCHAR(200),              -- Địa chỉ nhận hàng
     Phone NVARCHAR(20),                          -- Số điện thoại liên hệ
@@ -446,8 +446,8 @@ INSERT INTO Voucher_User (UserID, VoucherID) VALUES
 -- Thêm dữ liệu cho Order
 -- ========================
 INSERT INTO [Order] (UserID, VoucherID, Status, TotalAmount, DeliveryAddress, Phone) VALUES
-(1, 1, 'Pending', 5000000, 'Hà Nội', '0912345678'),
-(2, 2, 'Pending', 2800000, 'Hồ Chí Minh', '0987654321');
+(1, 1, N'Đang xử lý', 5000000, N'Hà Nội', '0912345678'),
+(2, 2, N'Đang xử lý', 2800000, N'Hồ Chí Minh', '0987654321');
 
 -- ========================
 -- Thêm dữ liệu cho OrderDetail
@@ -461,8 +461,8 @@ INSERT INTO OrderDetail (OrderID, ProductVariantID, Quantity, UnitPrice) VALUES
 -- Thêm dữ liệu cho Payment
 -- ========================
 INSERT INTO Payment (OrderID, Method, Amount, Status) VALUES
-(1, 'Credit Card', 5000000, 'Paid'),
-(2, 'Cash', 2800000, 'Pending');
+(1, 'Credit Card', 5000000, N'Đã thanh toán'),
+(2, 'Cash', 2800000, N'Đang chờ thanh toán');
 
 GO
 -- 1. Category

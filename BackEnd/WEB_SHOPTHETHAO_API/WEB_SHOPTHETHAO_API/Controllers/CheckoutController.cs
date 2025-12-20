@@ -1,141 +1,173 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WEB_SHOPTHETHAO_API.DTO.Request;
 using WEB_SHOPTHETHAO_API.Models;
-using WEB_SHOPTHETHAO_API.Service;
 
 namespace WEB_SHOPTHETHAO_API.Controllers
 {
     [ApiController]
-    [Route("api/checkout")]
-    public class CheckoutController : ControllerBase
+    [Route("api/voucher-users")]
+    public class VoucherUsersController : ControllerBase
     {
-        private readonly VnpayService _vnpayService;
-        private readonly ApplicationDbContext _db;
+        private readonly ApplicationDbContext _context;
 
-        public CheckoutController(VnpayService vnpayService, ApplicationDbContext db)
+        public VoucherUsersController(ApplicationDbContext context)
         {
-            _vnpayService = vnpayService;
-            _db = db;
+            _context = context;
         }
 
-        [HttpPost("vnpay")]
-        public IActionResult CreateVnpayPayment([FromBody] CreatePaymentRequest request)
+        // GET: api/voucher-users
+        // (Admin xem tất cả bản ghi Voucher_User)
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAll()
         {
-            if (request.Items == null || request.Items.Count == 0)
-                return BadRequest("Items is empty.");
-
-            if (request.Items.Any(i => i.Quantity <= 0))
-                return BadRequest("Quantity must be > 0.");
-
-            var variantIds = request.Items.Select(i => i.ProductVariantId).Distinct().ToList();
-
-            // Load biến thể
-            var variants = _db.ProductVariants
-                .Where(v => variantIds.Contains(v.Id))
-                .Select(v => new { v.Id, v.Price, v.StockQuantity })
-                .ToList();
-
-            if (variants.Count != variantIds.Count)
-            {
-                var foundIds = variants.Select(v => v.Id).ToHashSet();
-                var missing = variantIds.Where(id => !foundIds.Contains(id)).ToList();
-                return BadRequest(new { message = "Some ProductVariantId not found.", missing });
-            }
-
-            // Map nhanh
-            var variantMap = variants.ToDictionary(x => x.Id);
-
-            // Check tồn kho
-            foreach (var item in request.Items)
-            {
-                var v = variantMap[item.ProductVariantId];
-                if (v.StockQuantity < item.Quantity)
-                    return BadRequest($"Insufficient stock for variantId={item.ProductVariantId}");
-            }
-
-            // Tính tổng tiền từ DB
-            decimal totalAmount = 0m;
-            foreach (var item in request.Items)
-            {
-                var v = variantMap[item.ProductVariantId];
-
-                // Nếu Price là decimal (không nullable)
-                totalAmount += v.Price * item.Quantity;
-
-                // Nếu Price là decimal? thì dùng dòng này thay cho dòng trên:
-                // totalAmount += (v.Price ?? 0m) * item.Quantity;
-            }
-
-            using var tx = _db.Database.BeginTransaction();
-            try
-            {
-                // 1) Order
-                var order = new Order
+            var data = await _context.VoucherUsers
+                .AsNoTracking()
+                .Include(x => x.User)
+                .Include(x => x.Voucher)
+                .OrderByDescending(x => x.Id)
+                .Select(x => new
                 {
-                    UserId = request.UserId,
-                    VoucherId = request.VoucherId,
-                    Status = "Pending",
-                    TotalAmount = totalAmount,
-                    DeliveryAddress = request.DeliveryAddress,
-                    Phone = request.Phone,
-                    OrderDate = DateTime.Now
-                };
+                    x.Id,
+                    x.UserId,
+                    UserName = x.User.UserName,
+                    x.VoucherId,
+                    VoucherName = x.Voucher.Name,
+                    x.ReceivedDate
+                })
+                .ToListAsync();
 
-                _db.Orders.Add(order);
-                _db.SaveChanges();
-
-                // 2) OrderDetail: mỗi item -> 1 detail
-                var orderDetails = request.Items.Select(item =>
-                {
-                    var v = variantMap[item.ProductVariantId];
-                    return new OrderDetail
-                    {
-                        OrderId = order.Id,
-                        ProductVariantId = item.ProductVariantId,
-                        Quantity = item.Quantity,
-                        UnitPrice = v.Price
-                    };
-                }).ToList();
-
-                _db.OrderDetails.AddRange(orderDetails);
-                _db.SaveChanges();
-
-                // 3) Payment
-                var payment = new Payment
-                {
-                    OrderId = order.Id,
-                    Method = "VNPAY",
-                    Amount = order.TotalAmount,
-                    Status = "Pending",
-                    PaymentDate = null
-                };
-
-                _db.Payments.Add(payment);
-                _db.SaveChanges();
-
-                tx.Commit();
-
-                // 4) URL VNPAY
-                string clientIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1";
-                if (clientIp == "::1") clientIp = "127.0.0.1";
-
-                string paymentUrl = _vnpayService.CreatePaymentUrl(payment, clientIp);
-
-                return Ok(new
-                {
-                    orderId = order.Id,
-                    paymentId = payment.Id,
-                    totalAmount = order.TotalAmount,
-                    paymentUrl
-                });
-            }
-            catch (Exception ex)
-            {
-                tx.Rollback();
-                return BadRequest(ex.Message);
-            }
+            return Ok(data);
         }
 
-       }
+        // GET: api/voucher-users/5
+        [HttpGet("{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var data = await _context.VoucherUsers
+                .AsNoTracking()
+                .Include(x => x.User)
+                .Include(x => x.Voucher)
+                .Where(x => x.Id == id)
+                .Select(x => new
+                {
+                    x.Id,
+                    x.UserId,
+                    UserName = x.User.UserName,
+                    x.VoucherId,
+                    VoucherName = x.Voucher.Name,
+                    x.ReceivedDate
+                })
+                .FirstOrDefaultAsync();
+
+            if (data == null) return NotFound("Voucher_User not found");
+            return Ok(data);
+        }
+
+        // GET: api/voucher-users/by-user/1
+        // (User/FE lấy danh sách voucher mà user đã nhận)
+        [HttpGet("by-user/{userId:int}")]
+        [AllowAnonymous] // tuỳ bạn, nếu muốn bắt đăng nhập thì đổi [Authorize]
+        public async Task<IActionResult> GetByUser(int userId)
+        {
+            var data = await _context.VoucherUsers
+                .AsNoTracking()
+                .Where(x => x.UserId == userId)
+                .Include(x => x.Voucher)
+                .OrderByDescending(x => x.ReceivedDate)
+                .Select(x => new
+                {
+                    x.Id,
+                    x.UserId,
+                    x.VoucherId,
+                    VoucherName = x.Voucher.Name,
+                    x.Voucher.DiscountPercent,
+                    x.Voucher.Description,
+                    x.Voucher.StartDate,
+                    x.Voucher.EndDate,
+                    x.Voucher.Type,
+                    x.ReceivedDate
+                })
+                .ToListAsync();
+
+            return Ok(data);
+        }
+
+        // POST: api/voucher-users/assign
+        // Gán voucher cho user (tạo bản ghi Voucher_User)
+        [HttpPost("assign")]
+        [Authorize(Roles = "Admin")] // hoặc AllowAnonymous nếu bạn muốn ai cũng gán (không nên)
+        public async Task<IActionResult> AssignVoucher([FromBody] AssignVoucherUserRequest request)
+        {
+            // check user tồn tại
+            bool userExists = await _context.Users.AnyAsync(u => u.UserId == request.UserId);
+            if (!userExists) return BadRequest("User not found");
+
+            // check voucher tồn tại
+            bool voucherExists = await _context.Vouchers.AnyAsync(v => v.Id == request.VoucherId);
+            if (!voucherExists) return BadRequest("Voucher not found");
+
+            // check đã gán chưa (tránh trùng)
+            bool duplicated = await _context.VoucherUsers
+                .AnyAsync(x => x.UserId == request.UserId && x.VoucherId == request.VoucherId);
+
+            if (duplicated) return BadRequest("Voucher already assigned to this user");
+
+            var vu = new VoucherUser
+            {
+                UserId = request.UserId,
+                VoucherId = request.VoucherId,
+                ReceivedDate = DateOnly.FromDateTime(DateTime.Now) // ✅ đúng kiểu DateOnly
+            };
+
+            _context.VoucherUsers.Add(vu);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Assigned", id = vu.Id });
+        }
+
+        // PUT: api/voucher-users/5
+        // (Admin sửa lại ReceivedDate nếu muốn)
+        [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateVoucherUserRequest request)
+        {
+            var vu = await _context.VoucherUsers.FirstOrDefaultAsync(x => x.Id == id);
+            if (vu == null) return NotFound("Voucher_User not found");
+
+            // chỉ cho sửa ngày nhận (thường không cho sửa UserId/VoucherId để tránh loạn dữ liệu)
+            if (request.ReceivedDate.HasValue)
+                vu.ReceivedDate = request.ReceivedDate.Value;
+
+            await _context.SaveChangesAsync();
+            return Ok(new { message = "Updated" });
+        }
+
+        // DELETE: api/voucher-users/5
+        [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var vu = await _context.VoucherUsers.FirstOrDefaultAsync(x => x.Id == id);
+            if (vu == null) return NotFound("Voucher_User not found");
+
+            _context.VoucherUsers.Remove(vu);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Deleted" });
+        }
+    }
+
+    public class AssignVoucherUserRequest
+    {
+        public int UserId { get; set; }
+        public int VoucherId { get; set; }
+    }
+
+    public class UpdateVoucherUserRequest
+    {
+        public DateOnly? ReceivedDate { get; set; }
+    }
 }

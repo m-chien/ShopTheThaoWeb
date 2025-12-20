@@ -49,15 +49,12 @@ namespace WEB_SHOPTHETHAO_API.Controllers
 
             if (isSuccess)
             {
-                payment.Status = "Paid";
+                payment.Status = "Thanh toán thành công";
                 payment.PaymentDate = DateTime.Now;
-                if (order != null) order.Status = "Paid"; // hoặc "Completed"
             }
             else
             {
-                payment.Status = "Failed";
-                if (order != null && order.Status != "Paid")
-                    order.Status = "Payment Failed";
+                payment.Status = "Thanh toán thất bại";
             }
 
             _db.SaveChanges();
