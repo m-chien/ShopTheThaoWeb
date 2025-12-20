@@ -635,7 +635,7 @@ const ProductManager = () => {
                     },
                   },
                   {
-                    title: "Giá tiền",
+                    title: "Giá tiền (VNĐ)",
                     dataIndex: "price",
                     key: "price",
                     render: (price) => (

@@ -1,0 +1,54 @@
+.user-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.user-page-header h2 {
+  margin: 0;
+  color: #262626;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* Style cho thanh tìm kiếm */
+.search-input {
+  width: 300px;
+}
+
+/* Màu sắc cho trạng thái */
+.status-tag-active {
+  color: #389e0d;
+  background: #f6ffed;
+  border-color: #b7eb8f;
+}
+
+.status-tag-blocked {
+  color: #cf1322;
+  background: #fff1f0;
+  border-color: #ffa39e;
+}
+
+/* Nút Khóa / Mở khóa */
+.btn-lock {
+  color: #ff4d4f;
+  border-color: #ff4d4f;
+}
+.btn-lock:hover {
+  background-color: #fff1f0;
+  color: #ff4d4f;
+  border-color: #ff4d4f;
+}
+
+.btn-unlock {
+  color: #52c41a;
+  border-color: #52c41a;
+}
+.btn-unlock:hover {
+  background-color: #f6ffed;
+  color: #52c41a;
+  border-color: #52c41a;
+}

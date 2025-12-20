@@ -1,0 +1,69 @@
+/* --- HEADER CỦA TRANG (Giống Brand) --- */
+.voucher-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.voucher-page-header h2 {
+  margin: 0;
+  color: #262626;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* --- NÚT SỬA (MÀU XANH) --- */
+.action-btn-edit {
+  color: #1677ff;
+  border-color: #1677ff;
+  background-color: transparent; /* Nền trong suốt */
+  transition: all 0.3s; /* Hiệu ứng chuyển màu mượt */
+}
+
+.action-btn-edit:hover {
+  /* QUAN TRỌNG: Giữ nguyên nền trong suốt, không đổi màu nền */
+  background-color: transparent !important;
+
+  /* Làm màu chữ và viền sáng hơn (nhạt hơn tý) */
+  color: #1890ff !important;
+  border-color: #1890ff !important;
+}
+
+/* --- NÚT XÓA (MÀU ĐỎ) --- */
+.action-btn-delete {
+  color: #ff4d4f;
+  border-color: #ff4d4f;
+  background-color: transparent;
+  transition: all 0.3s;
+}
+
+.action-btn-delete:hover {
+  /* QUAN TRỌNG: Giữ nguyên nền trong suốt */
+  background-color: transparent !important;
+
+  /* Làm màu chữ và viền đỏ sáng hơn */
+  color: #ff7875 !important;
+  border-color: #ff7875 !important;
+}
+
+/* --- MÀU TRẠNG THÁI (Riêng của Voucher) --- */
+.status-upcoming {
+  color: #faad14; /* Màu vàng cam */
+  background: #fffbe6;
+  border-color: #ffe58f;
+}
+
+.status-active {
+  color: #52c41a; /* Màu xanh lá */
+  background: #f6ffed;
+  border-color: #b7eb8f;
+}
+
+.status-expired {
+  color: #ff4d4f; /* Màu đỏ */
+  background: #fff1f0;
+  border-color: #ffa39e;
+}

@@ -15,6 +15,8 @@ import ProductManager from "./Page/Admin/Pages/ProductManager";
 import OrderManager from "./Page/Admin/Pages/OrderManager";
 import CategoryManager from "./Page/Admin/Pages/CategoryManager";
 import BrandManager from "./Page/Admin/Pages/BrandManager";
+import UserManager from "./Page/Admin/Pages/UserManager";
+import VoucherManager from "./Page/Admin/Pages/VoucherManager";
 function App() {
   return (
     <>
@@ -40,14 +42,8 @@ function App() {
             <Route path="orders" element={<OrderManager />} />
             <Route path="categories" element={<CategoryManager />} />
             <Route path="brands" element={<BrandManager />} />
-            <Route
-              path="users"
-              element={<div>Quản lý khách hàng (Đang phát triển)</div>}
-            />
-            <Route
-              path="vouchers"
-              element={<div>Quản lý voucher (Đang phát triển)</div>}
-            />
+            <Route path="users" element={<UserManager />} />
+            <Route path="vouchers" element={<VoucherManager />} />
           </Route>
         </Routes>
       </BrowserRouter>
