@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WEB_SHOPTHETHAO_API.Models;
+using Microsoft.EntityFrameworkCore;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -56,3 +56,4 @@ public class SizeController : ControllerBase
         return NoContent();
     }
 }
+

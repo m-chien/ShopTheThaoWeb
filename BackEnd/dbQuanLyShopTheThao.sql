@@ -218,7 +218,14 @@ INSERT INTO Category (Name, Description, image) VALUES
 INSERT INTO Brand (Name, Logo) VALUES
 ('Nike', 'nike_logo.png'),
 ('Adidas', 'adidas_logo.png'),
-('Puma', 'puma_logo.png');
+('Puma', 'puma_logo.png'),
+('Asics', 'asics_logo.png'),
+('Columbia', 'columbia_logo.png'),
+('Crocs', 'crocs_logo.png'),
+('Hoka', 'hoka_logo.png'),
+('On', 'on_logo.png'),
+('Speedo', 'speedo_logo.png'),
+('Teva', 'teva_logo.png');
 
 -- ========================
 -- Thêm dữ liệu cho Size
@@ -579,81 +586,90 @@ EXEC dbo.sp_GetTop3ProductVariants;
 
 --Đây là thủ tục để lọc sản phẩm
 GO
+-- 1. Xóa thủ tục cũ nếu tồn tại
 IF OBJECT_ID('dbo.sp_FilterProductVariants', 'P') IS NOT NULL
     DROP PROC dbo.sp_FilterProductVariants;
 GO
+
+-- 2. Tạo thủ tục mới
 CREATE PROC dbo.sp_FilterProductVariants
-    @BrandIds   NVARCHAR(MAX) = NULL,   -- ví dụ: '1,2,3'
-    @SizeIds    NVARCHAR(MAX) = NULL,   -- ví dụ: '1,3'
-    @ColorIds   NVARCHAR(MAX) = NULL,   -- ví dụ: '2,5,6'
-    @MinPrice   DECIMAL(18,2) = NULL,   -- ví dụ: 500000
-    @MaxPrice   DECIMAL(18,2) = NULL,   -- ví dụ: 1500000
-    @Keyword    NVARCHAR(100) = NULL    -- ví dụ: 'nike'
+    @BrandIds   NVARCHAR(MAX) = NULL,
+    @SizeIds    NVARCHAR(MAX) = NULL,
+    @ColorIds   NVARCHAR(MAX) = NULL,
+    @MinPrice   DECIMAL(18,2) = 0,    -- Mặc định Min là 0
+    @MaxPrice   DECIMAL(18,2) = NULL, -- Mặc định Max là NULL (vô cực)
+    @Keyword    NVARCHAR(100) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    -- Tách chuỗi ID thành bảng tạm dùng STRING_SPLIT
+    -- CTE: Tách chuỗi ID thành bảng tạm (Chỉ tách khi có dữ liệu)
     ;WITH BrandFilter AS (
-        SELECT CAST(value AS INT) AS BrandId
-        FROM STRING_SPLIT(@BrandIds, ',')
-        WHERE @BrandIds IS NOT NULL AND value <> ''
+        SELECT CAST(value AS INT) AS BrandId 
+        FROM STRING_SPLIT(@BrandIds, ',') 
+        WHERE ISNULL(@BrandIds, '') <> '' AND value <> ''
     ),
     SizeFilter AS (
-        SELECT CAST(value AS INT) AS SizeId
-        FROM STRING_SPLIT(@SizeIds, ',')
-        WHERE @SizeIds IS NOT NULL AND value <> ''
+        SELECT CAST(value AS INT) AS SizeId 
+        FROM STRING_SPLIT(@SizeIds, ',') 
+        WHERE ISNULL(@SizeIds, '') <> '' AND value <> ''
     ),
     ColorFilter AS (
-        SELECT CAST(value AS INT) AS ColorId
-        FROM STRING_SPLIT(@ColorIds, ',')
-        WHERE @ColorIds IS NOT NULL AND value <> ''
+        SELECT CAST(value AS INT) AS ColorId 
+        FROM STRING_SPLIT(@ColorIds, ',') 
+        WHERE ISNULL(@ColorIds, '') <> '' AND value <> ''
     )
+
+    -- SELECT CHÍNH: Lấy đầy đủ cột cho Backend Group
     SELECT
         pv.ID          AS ProductVariantID,
         p.ID           AS ProductID,
         p.Name         AS ProductName,
+        p.Description  AS ProductDescription, -- [MỚI] Để hiển thị mô tả
         b.ID           AS BrandID,
         b.Name         AS BrandName,
         s.ID           AS SizeID,
         s.Name         AS SizeName,
         c.ID           AS ColorID,
         c.Name         AS ColorName,
+        c.ColorCode    AS ColorCode,          -- [MỚI] Để hiển thị màu sắc
         pv.Price,
         pv.Image,
         pv.StockQuantity,
         pv.NgayNhap
     FROM ProductVariant pv
         JOIN Product p ON pv.ProductID = p.ID
-        JOIN Brand   b ON p.BrandID   = b.ID
-        JOIN Size    s ON pv.SizeID   = s.ID
-        JOIN Color   c ON pv.ColorID  = c.ID
+        JOIN Brand   b ON p.BrandID    = b.ID
+        JOIN Size    s ON pv.SizeID    = s.ID
+        JOIN Color   c ON pv.ColorID   = c.ID
     WHERE
-        -- Brand filter (nếu không truyền @BrandIds thì bỏ qua)
+        -- 1. Brand Filter (Nếu rỗng hoặc null thì bỏ qua)
         (
-            @BrandIds IS NULL
+            ISNULL(@BrandIds, '') = '' 
             OR p.BrandID IN (SELECT BrandId FROM BrandFilter)
         )
-        -- Size filter
+        -- 2. Size Filter
         AND (
-            @SizeIds IS NULL
+            ISNULL(@SizeIds, '') = '' 
             OR pv.SizeID IN (SELECT SizeId FROM SizeFilter)
         )
-        -- Color filter
+        -- 3. Color Filter
         AND (
-            @ColorIds IS NULL
+            ISNULL(@ColorIds, '') = '' 
             OR pv.ColorID IN (SELECT ColorId FROM ColorFilter)
         )
-        -- Price filter
+        -- 4. Price Filter
         AND (
-            @MinPrice IS NULL OR pv.Price >= @MinPrice
+            pv.Price >= @MinPrice
         )
         AND (
-            @MaxPrice IS NULL OR pv.Price <= @MaxPrice
+            @MaxPrice IS NULL 
+            OR @MaxPrice = 0 
+            OR pv.Price <= @MaxPrice
         )
-        -- Keyword filter theo tên sản phẩm / brand
+        -- 5. Keyword Filter (Tìm theo tên SP hoặc tên Brand)
         AND (
-            @Keyword IS NULL
+            ISNULL(@Keyword, '') = '' 
             OR p.Name  LIKE N'%' + @Keyword + N'%'
             OR b.Name  LIKE N'%' + @Keyword + N'%'
         )
@@ -694,3 +710,4 @@ LEFT JOIN Color c ON pv.ColorID = c.ID
 
 -- Sắp xếp: Sản phẩm mới nhất lên đầu, sau đó gom nhóm theo Size
 ORDER BY p.ID ASC, s.Name ASC;
+

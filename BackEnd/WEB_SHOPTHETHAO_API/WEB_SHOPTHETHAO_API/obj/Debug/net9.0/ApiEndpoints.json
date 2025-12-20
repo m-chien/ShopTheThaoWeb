@@ -121,6 +121,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "WEB_SHOPTHETHAO_API.Controllers.CheckoutController",
+    "Method": "CreateVnpayPayment",
+    "RelativePath": "api/checkout/vnpay",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "WEB_SHOPTHETHAO_API.DTO.Request.CreatePaymentRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ColorController",
     "Method": "GetAll",
     "RelativePath": "api/Color",
@@ -341,6 +357,22 @@
     "Parameters": [
       {
         "Name": "productId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProductVariantController",
+    "Method": "GetProductDetail",
+    "RelativePath": "api/ProductVariant/detail/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -580,6 +612,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WEB_SHOPTHETHAO_API.Controllers.VnpayController",
+    "Method": "VnpayReturn",
+    "RelativePath": "api/vnpay/return",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

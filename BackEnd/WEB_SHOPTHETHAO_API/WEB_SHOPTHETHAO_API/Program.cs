@@ -243,10 +243,3 @@ app.Run();
 // 3. [Authorize(Roles = "Admin,Manager")] - User có 1 trong 2 role Admin hoặc Manager
 // 4. [Authorize(Policy = "RequireAdmin")] - Sử dụng policy đã định nghĩa
 // 5. [AllowAnonymous] - Cho phép truy cập không cần đăng nhập (override [Authorize] ở class level)
-
-
-
-
-
-
-
