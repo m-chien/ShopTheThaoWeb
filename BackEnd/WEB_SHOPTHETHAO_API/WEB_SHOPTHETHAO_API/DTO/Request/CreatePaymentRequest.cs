@@ -2,7 +2,6 @@
 {
     public class CreatePaymentRequest
     {
-        public int UserId { get; set; }
         public int? VoucherId { get; set; }
         public decimal Amount { get; set; }
         public string DeliveryAddress { get; set; } = "";
