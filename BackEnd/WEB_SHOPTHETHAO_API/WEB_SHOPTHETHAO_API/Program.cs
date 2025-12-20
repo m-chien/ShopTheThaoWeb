@@ -80,9 +80,13 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
 
+// Ví dụ kết nối database
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
+    options.AddPolicy("AllowReactApp", policy =>
     {
         policy.WithOrigins("http://localhost:5173")
               .AllowAnyHeader()
@@ -90,12 +94,6 @@ builder.Services.AddCors(options =>
               .AllowCredentials();
     });
 });
-
-// Ví dụ kết nối database
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-
 
 // Custom Services
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
@@ -107,8 +105,6 @@ builder.Services.AddScoped<IPasswordService, PasswordService>(); // Service hash
 //builder.Services.AddScoped<ProductService>();
 builder.Services.AddAutoMapper(typeof(Program));
 
-//  THÊM DÒNG NÀY
-builder.Services.AddScoped<VnpayService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(jwtOptions =>
@@ -156,6 +152,8 @@ builder.Services.AddAuthorization(options =>
         policy.RequireAuthenticatedUser());
 });
 var app = builder.Build();
+app.UseCors("AllowReactApp");
+
 
 
 
@@ -173,7 +171,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 //app.UseSession();
@@ -246,10 +243,3 @@ app.Run();
 // 3. [Authorize(Roles = "Admin,Manager")] - User có 1 trong 2 role Admin hoặc Manager
 // 4. [Authorize(Policy = "RequireAdmin")] - Sử dụng policy đã định nghĩa
 // 5. [AllowAnonymous] - Cho phép truy cập không cần đăng nhập (override [Authorize] ở class level)
-
-
-
-
-
-
-

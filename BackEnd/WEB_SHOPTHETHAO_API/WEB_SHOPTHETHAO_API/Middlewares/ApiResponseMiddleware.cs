@@ -77,9 +77,9 @@ namespace WEB_SHOPTHETHAO_API.Middlewares
                     context.Request.Method != "GET");
         }
 
-  
+
         /// Format lại response thành chuẩn ApiResponse
-  
+
         private async Task FormatResponse(HttpContext context, string responseContent, Stream originalStream)
         {
             context.Response.Body = originalStream;
@@ -108,9 +108,6 @@ namespace WEB_SHOPTHETHAO_API.Middlewares
 
 
         /// Xử lý exception và trả về response lỗi
-        /// <summary>
-        /// Xử lý exception và trả về response lỗi
-        /// </summary>
         private async Task HandleExceptionAsync(HttpContext context, Exception exception, Stream originalStream)
         {
             // Log lỗi trước
@@ -168,9 +165,9 @@ namespace WEB_SHOPTHETHAO_API.Middlewares
             };
         }
 
-   
+
         /// Lấy chi tiết lỗi từ exception
-     
+
         private static (int statusCode, string message, List<string> errors) GetErrorDetails(Exception exception)
         {
             return exception switch
@@ -187,7 +184,7 @@ namespace WEB_SHOPTHETHAO_API.Middlewares
         }
 
         /// Kiểm tra xem response đã có format ApiResponse chưa
-     
+
         private static bool IsApiResponseFormat(string content)
         {
             if (string.IsNullOrEmpty(content)) return false;

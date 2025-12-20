@@ -40,38 +40,65 @@ public class ProductVariantController : ControllerBase
 
         return Ok(list);
     }
+
+    // Hàm lấy dữ liệu của Product
     [HttpGet("grouped-products")]
     public async Task<IActionResult> GetGroupedProducts()
     {
         var rawResults = await _context.ProductVariants
             .Include(pv => pv.Product)
+                .ThenInclude(p => p.Category)
+            .Include(pv => pv.Product)
+                .ThenInclude(p => p.Brand)
             .Include(pv => pv.Color)
+            .Include(pv => pv.Size)
             .Select(pv => new
             {
                 pv.ProductId,
                 ProductName = pv.Product.Name,
                 ProductDescription = pv.Product.Description,
+
+                CategoryId = pv.Product.CategoryId,
+                BrandId = pv.Product.BrandId,
+
+                CategoryName = pv.Product.Category.Name,
+                BrandName = pv.Product.Brand.Name,
+
                 pv.ColorId,
                 ColorName = pv.Color.Name,
+
                 ColorCode = pv.Color.ColorCode,
+
+                pv.SizeId,
+                SizeName = pv.Size.Name,
+
                 pv.Image,
                 pv.Price
             })
             .ToListAsync();
 
         var groupedProducts = rawResults
-            .GroupBy(pv => new { pv.ProductId, pv.ProductName, pv.ProductDescription })
+            .GroupBy(pv => new { pv.ProductId, pv.ProductName, pv.ProductDescription, pv.CategoryName, pv.BrandName,
+                pv.CategoryId,
+                pv.BrandId,
+            })
             .Select(g => new
             {
                 ProductID = g.Key.ProductId,
                 Name = g.Key.ProductName,
                 Description = g.Key.ProductDescription,
+                CategoryID = g.Key.CategoryId,
+                BrandID = g.Key.BrandId,
+                CategoryName = g.Key.CategoryName,
+                BrandName = g.Key.BrandName,
+
                 Colors = g.Select(x => new
                 {
                     ColorID = x.ColorId,
                     ColorName = x.ColorName,
                     ColorCode = x.ColorCode
                 }).Distinct().ToList(),
+                Sizes = g.Select(x => new { SizeID = x.SizeId, SizeName = x.SizeName }).Distinct().ToList(),
                 Images = g.Select(x => x.Image).Distinct().ToList(),
                 Prices = g.Select(x => x.Price).Distinct().ToList()
             })
@@ -79,6 +106,7 @@ public class ProductVariantController : ControllerBase
 
         return Ok(groupedProducts);
     }
+
     [HttpGet("detail/{id}")]
     public async Task<IActionResult> GetProductDetail(int id)
     {
@@ -161,13 +189,13 @@ public class ProductVariantController : ControllerBase
 
         return Ok(productDetail);
     }
-    [HttpPost]
-    public async Task<IActionResult> Create(ProductVariant model)
-    {
-        _context.ProductVariants.Add(model);
-        await _context.SaveChangesAsync();
-        return Ok(model);
-    }
+    //[HttpPost]
+    //public async Task<IActionResult> Create(ProductVariant model)
+    //{
+    //    _context.ProductVariants.Add(model);
+    //    await _context.SaveChangesAsync();
+    //    return Ok(model);
+    //}
 
     [HttpGet("top-variants")]
     public async Task<IActionResult> GetTopVariants()
@@ -240,5 +268,97 @@ public class ProductVariantController : ControllerBase
 
         // 4. Trả về kết quả chuẩn format
         return Ok(groupedProducts); // Data bây giờ đã có cấu trúc cây);
+    }
+
+    // Hàm lấy danh sách Product theo các sản phẩm hiện có của Product
+    [HttpGet("by-product/{productId}")]
+    public async Task<IActionResult> GetVariantsByProduct(int productId)
+    {
+        var variants = await _context.ProductVariants
+            // --- QUAN TRỌNG: PHẢI CÓ 2 DÒNG NÀY ---
+            .Include(pv => pv.Size)   // Câu lệnh bắt buộc để lấy thông tin bảng Size
+            .Include(pv => pv.Color)  // Câu lệnh bắt buộc để lấy thông tin bảng Color
+            // -------------------------------------
+            
+            .Where(pv => pv.ProductId == productId)
+            .Select(pv => new
+            {
+                pv.Id,
+                pv.SizeId,
+                // Kiểm tra null để tránh lỗi 500 nếu dữ liệu bị sai
+                SizeName = pv.Size != null ? pv.Size.Name : "Không tìm thấy Size", 
+                
+                pv.ColorId,
+                ColorName = pv.Color != null ? pv.Color.Name : "Không tìm thấy Màu",
+
+                pv.Price,
+                pv.StockQuantity,
+                pv.Image
+            })
+            .ToListAsync();
+
+        return Ok(variants);
+    }
+
+    // [PUT] Cập nhật giá và tồn kho của 1 biến thể cụ thể
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateVariant(int id, [FromBody] UpdateVariantDto req)
+    {
+        var variant = await _context.ProductVariants.FindAsync(id);
+        if (variant == null) return NotFound(new { message = "Không tìm thấy biến thể!" });
+
+        // Chỉ cập nhật Giá và Tồn kho
+        variant.Price = req.Price;
+        variant.StockQuantity = req.StockQuantity;
+
+        await _context.SaveChangesAsync();
+        return Ok(new { message = "Cập nhật biến thể thành công!" });
+    }
+
+    // [DELETE] Xóa 1 biến thể cụ thể
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteVariant(int id)
+    {
+        var variant = await _context.ProductVariants.FindAsync(id);
+        if (variant == null) return NotFound();
+
+        _context.ProductVariants.Remove(variant);
+        await _context.SaveChangesAsync();
+        return Ok(new { message = "Đã xóa biến thể!" });
+    }
+
+    // [POST] Thêm một biến thể mới (Có kiểm tra trùng lặp)
+    [HttpPost]
+    public async Task<IActionResult> CreateVariant([FromBody] CreateProductVariantDto req)
+    {
+        // 1. Kiểm tra: Sản phẩm này đã có cặp Size + Màu này chưa?
+        var exists = await _context.ProductVariants.AnyAsync(x =>
+            x.ProductId == req.ProductId &&
+            x.SizeId == req.SizeId &&
+            x.ColorId == req.ColorId);
+
+        if (exists)
+        {
+            return BadRequest(new { message = "Sản phẩm này đã có Size và Màu đó rồi!" });
+        }
+
+        // 2. Map từ DTO sang Entity (Thủ công)
+        var newVariant = new ProductVariant
+        {
+            ProductId = req.ProductId,
+            SizeId = req.SizeId,
+            ColorId = req.ColorId,
+            Price = req.Price,
+            StockQuantity = req.StockQuantity,
+            Image = req.Image,
+            // Các trường ngày tháng có thể gán mặc định
+            NgayNhap = DateTime.Now
+        };
+
+        // 3. Thêm mới
+        _context.ProductVariants.Add(newVariant);
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "Thêm biến thể mới thành công!" });
     }
 }
