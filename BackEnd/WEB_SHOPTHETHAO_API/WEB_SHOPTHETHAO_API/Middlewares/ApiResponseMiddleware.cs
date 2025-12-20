@@ -110,31 +110,35 @@ namespace WEB_SHOPTHETHAO_API.Middlewares
         /// Xử lý exception và trả về response lỗi
         private async Task HandleExceptionAsync(HttpContext context, Exception exception, Stream originalStream)
         {
-            context.Response.Body = originalStream;
+            // Log lỗi trước
             _logger.LogError(exception, "Exception occurred: {Message}", exception.Message);
 
+            // KIỂM TRA QUAN TRỌNG: Nếu response đã bắt đầu gửi thì không thể sửa Status Code hay ghi lại Body được nữa
+            if (context.Response.HasStarted)
+            {
+                _logger.LogWarning("The response has already started, the error middleware will not be executed.");
+                return;
+            }
+
+            // Khôi phục lại stream gốc để ghi lỗi
+            if (context.Response.Body != originalStream)
+            {
+                context.Response.Body = originalStream;
+            }
+
             var (statusCode, message, errors) = GetErrorDetails(exception);
-            if (!context.Response.HasStarted)
-            {
-                context.Response.StatusCode = statusCode;
-                context.Response.ContentType = "application/json";
+            context.Response.StatusCode = statusCode;
 
-                var apiResponse = new ApiResponse<object>
-                {
-                    StatusCode = statusCode,
-                    Message = message,
-                    Data = null,
-                    Errors = errors
-                };
-
-                var jsonResponse = JsonSerializer.Serialize(apiResponse, JsonOptions);
-                await context.Response.WriteAsync(jsonResponse);
-            }
-            else
+            var apiResponse = new ApiResponse<object>
             {
-                // Nếu Response đã chạy rồi thì chỉ log lỗi, TUYỆT ĐỐI KHÔNG sửa Response nữa
-                _logger.LogError(exception, "Lỗi xảy ra sau khi Response đã bắt đầu gửi. Không thể trả về JSON lỗi.");
-            }
+                StatusCode = statusCode,
+                Message = message,
+                Data = null,
+                Errors = errors
+            };
+
+            var jsonResponse = JsonSerializer.Serialize(apiResponse, JsonOptions);
+            await WriteJsonResponse(context, jsonResponse);
         }
 
         /// Tạo ApiResponse dựa trên status code
