@@ -32,6 +32,7 @@ namespace WEB_SHOPTHETHAO_API.Service
             // Tạo Claims đơn giản - chỉ những thông tin cần thiết
             var claims = new List<Claim>
             {
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim("FullName", user.FullName)

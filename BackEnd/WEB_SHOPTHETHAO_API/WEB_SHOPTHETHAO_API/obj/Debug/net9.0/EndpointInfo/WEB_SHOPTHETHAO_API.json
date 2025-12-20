@@ -1402,10 +1402,6 @@
       "CreatePaymentRequest": {
         "type": "object",
         "properties": {
-          "userId": {
-            "type": "integer",
-            "format": "int32"
-          },
           "voucherId": {
             "type": "integer",
             "format": "int32",

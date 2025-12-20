@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WEB_SHOPTHETHAO_API.DTO.Request;
 using WEB_SHOPTHETHAO_API.Models;
@@ -20,6 +23,7 @@ namespace WEB_SHOPTHETHAO_API.Controllers
         }
 
         [HttpPost("vnpay")]
+        [Authorize]
         public IActionResult CreateVnpayPayment([FromBody] CreatePaymentRequest request)
         {
             if (request.Items == null || request.Items.Count == 0)
@@ -73,12 +77,14 @@ namespace WEB_SHOPTHETHAO_API.Controllers
             // Dùng transaction để đảm bảo tạo Order + Detail + Payment đồng bộ
             using var tx = _db.Database.BeginTransaction();
 
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
             try
             {
                 // 1) Tạo Order
                 var order = new Order
                 {
-                    UserId = request.UserId,
+                    UserId = userId,
                     VoucherId = request.VoucherId,
                     Status = "Đang xử lý",
                     TotalAmount = totalAmount,
