@@ -121,6 +121,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "WEB_SHOPTHETHAO_API.Controllers.CheckoutController",
+    "Method": "CreateVnpayPayment",
+    "RelativePath": "api/checkout/vnpay",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "WEB_SHOPTHETHAO_API.DTO.Request.CreatePaymentRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ColorController",
     "Method": "GetAll",
     "RelativePath": "api/Color",
@@ -187,6 +203,85 @@
     "ContainingType": "ColorController",
     "Method": "Delete",
     "RelativePath": "api/Color/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OrderController",
+    "Method": "GetAll",
+    "RelativePath": "api/Order",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OrderController",
+    "Method": "Create",
+    "RelativePath": "api/Order",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "WEB_SHOPTHETHAO_API.Models.Order",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OrderController",
+    "Method": "Get",
+    "RelativePath": "api/Order/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OrderController",
+    "Method": "Update",
+    "RelativePath": "api/Order/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "model",
+        "Type": "WEB_SHOPTHETHAO_API.Models.Order",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OrderController",
+    "Method": "Delete",
+    "RelativePath": "api/Order/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -606,101 +701,6 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "WEB_SHOPTHETHAO_API.Controllers.VoucherUsersController",
-    "Method": "GetAll",
-    "RelativePath": "api/voucher-users",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "WEB_SHOPTHETHAO_API.Controllers.VoucherUsersController",
-    "Method": "GetById",
-    "RelativePath": "api/voucher-users/{id}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "WEB_SHOPTHETHAO_API.Controllers.VoucherUsersController",
-    "Method": "Update",
-    "RelativePath": "api/voucher-users/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "request",
-        "Type": "WEB_SHOPTHETHAO_API.Controllers.UpdateVoucherUserRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "WEB_SHOPTHETHAO_API.Controllers.VoucherUsersController",
-    "Method": "Delete",
-    "RelativePath": "api/voucher-users/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "WEB_SHOPTHETHAO_API.Controllers.VoucherUsersController",
-    "Method": "AssignVoucher",
-    "RelativePath": "api/voucher-users/assign",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "WEB_SHOPTHETHAO_API.Controllers.AssignVoucherUserRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "WEB_SHOPTHETHAO_API.Controllers.VoucherUsersController",
-    "Method": "GetByUser",
-    "RelativePath": "api/voucher-users/by-user/{userId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
     "ReturnTypes": []
   },
   {

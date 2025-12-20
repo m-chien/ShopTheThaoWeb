@@ -49,7 +49,7 @@ namespace WEB_SHOPTHETHAO_API.Controllers
 
             if (isSuccess)
             {
-                payment.Status = "Thanh toán thành công";
+                payment.Status = "Đã thanh toán";
                 payment.PaymentDate = DateTime.Now;
             }
             else

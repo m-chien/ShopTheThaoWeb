@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WEB_SHOPTHETHAO_API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+69e7c9c240e9e40db2e0c2dd09fb0dccccb4885f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e39c7484b37d07dcc3ba22c2b0e9ed22a1acee5e")]
 [assembly: System.Reflection.AssemblyProductAttribute("WEB_SHOPTHETHAO_API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WEB_SHOPTHETHAO_API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
