@@ -55,12 +55,34 @@ public class VouchersController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var item = await _context.Vouchers.FindAsync(id);
-        if (item == null) return NotFound();
+        // --- BẮT LỖI (TRY-CATCH) ---
+        try
+        {
+            var item = await _context.Vouchers.FindAsync(id);
+            if (item == null) return NotFound(new { message = "Không tìm thấy voucher!" });
 
-        _context.Vouchers.Remove(item);
-        await _context.SaveChangesAsync();
+            var relatedUsers = _context.VoucherUsers.Where(v => v.VoucherId == id).ToList();
+            if (relatedUsers.Any())
+            {
+                _context.VoucherUsers.RemoveRange(relatedUsers);
+            }
 
-        return NoContent();
+            // Nếu có đơn hàng đã dùng rồi 
+            var relatedOrders = _context.Orders.Where(o => o.VoucherId == id).ToList();
+            if (relatedOrders.Any())
+            {
+                return BadRequest(new { message = "Không thể xóa! Voucher này đã có người dùng trong đơn hàng." });
+            }
+
+            // --- BƯỚC 2: Xóa Voucher chính ---
+            _context.Vouchers.Remove(item);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Lỗi hệ thống: " + ex.Message });
+        }
     }
 }

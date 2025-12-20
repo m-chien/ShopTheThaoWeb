@@ -611,12 +611,34 @@
   },
   {
     "ContainingType": "WEB_SHOPTHETHAO_API.Controllers.UserController",
+    "Method": "ToggleUserStatus",
+    "RelativePath": "api/User/{id}/toggle-status",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WEB_SHOPTHETHAO_API.Controllers.UserController",
     "Method": "GetAllUsers",
     "RelativePath": "api/User/all",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "keyword",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {

@@ -3,6 +3,12 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+
+BackEnd/WEB_SHOPTHETHAO_API/.vs/
+BackEnd/WEB_SHOPTHETHAO_API/WEB_SHOPTHETHAO_API/bin/
+BackEnd/WEB_SHOPTHETHAO_API/WEB_SHOPTHETHAO_API/obj/
+
+
 # dotenv files
 .env
 
