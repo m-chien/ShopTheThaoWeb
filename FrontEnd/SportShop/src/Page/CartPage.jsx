@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../Component/Breadcrumb";
 import NotificationModal from "../Component/NotificationModal";
-
 import {
   decrementQty,
   incrementQty,
@@ -76,10 +75,9 @@ export default function CartPage() {
   };
 
   const discount = appliedVoucher ? appliedVoucher.discount : 0;
-  const shippingFee = 0;
   // dùng subtotal dựa trên selected items (nếu muốn tính theo các item được tick)
   const subtotal = selectedSubtotal; // đổi thành totalAmount nếu muốn toàn giỏ
-  const total = subtotal - discount + shippingFee;
+  const total = subtotal - discount;
 
   const handleCheckoutClick = () => {
     if (!selectedItems || selectedItems.length === 0) {
@@ -93,6 +91,7 @@ export default function CartPage() {
       });
       return;
     }
+    // }
     // tạo order với selectedItems -> gọi BE hoặc navigate đến thông tin (ghi order tạm)
     navigate("/information");
   };

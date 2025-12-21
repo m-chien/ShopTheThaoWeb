@@ -164,11 +164,7 @@ export default function Header({ searchTerm, setSearchTerm }) {
           <button
             className={styles.iconBtn}
             title="Tài khoản"
-            onClick={() =>
-              navigate(
-                sessionStorage.getItem("accessToken") ? "/profile" : "/login",
-              )
-            }
+            onClick={() => navigate("/profile")}
           >
             <i class="fa-regular fa-user"></i>
           </button>

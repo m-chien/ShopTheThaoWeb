@@ -1,56 +1,117 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { api } from "../Api/Api";
+import { User } from "../Api/User";
 import Breadcrumb from "../Component/Breadcrumb";
 import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import styles from "../styles/BillDetail.module.css";
 
 export default function BillDetail() {
-  const [billData] = useState({
-    orderId: "#DH-2025-001234",
-    orderDate: "05/12/2025",
-    orderStatus: "Đã giao",
-    deliveryDate: "07/12/2025",
-    paymentMethod: "Thanh toán khi nhận hàng",
-    paymentStatus: "Đã thanh toán",
-    contact: {
-      email: "chientranminh355@gmail.com",
-      phone: "0969827284",
-    },
-    shippingAddress: {
-      name: "Trần Minh Chiến",
-      address: "88 Nguyễn Giản Thanh",
-      ward: "Phường An Khê",
-      district: "Quận Thanh Khé",
-      city: "Đà Nẵng",
-      postalCode: "550000",
-    },
-    shippingMethod: "Minh Chiến Logistics (NTL) - Miễn phí",
-    items: [
-      {
-        id: 1,
-        name: "Áo Đá Bóng Nam Puma Manchester City Fc Replica Sân Nhà 25/26",
-        price: 2200000,
-        quantity: 1,
-        image: "/public/Product/ManchesterCityHome.png",
-      },
-      {
-        id: 2,
-        name: "Áo Đá Bóng Nam Puma Manchester City Fc Replica Sân Khách 25/26",
-        price: 2200000,
-        quantity: 1,
-        image: "/public/Product/ManchesterCityAway.png",
-      },
-    ],
-    subtotal: 4400000,
-    shipping: 0,
-    total: 4400000,
-  });
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [billData, setBillData] = useState(null);
+
+  useEffect(() => {
+    const fetchBill = async () => {
+      try {
+        const [orderRes, userRes] = await Promise.all([
+          api.get("/Order/my-orders"),
+          User().getUserInfo(),
+        ]);
+
+        const orderData = orderRes.data.data;
+        const user = userRes.data;
+        console.log("🚀 ~ fetchBill ~ user:", user)
+
+        // 1. Tìm đơn hàng hiện tại
+        const order = orderData.orders.find((o) => o.id === Number(id));
+
+        // 2. Lấy danh sách chi tiết đơn hàng (để lấy quantity)
+        const currentOrderDetails = orderData.orderDetails.filter(
+          (d) => d.orderId === Number(id),
+        );
+
+        // 3. Lấy danh sách thông tin sản phẩm
+        const products = orderData.products.filter(
+          (p) => p.OrderID === Number(id),
+        );
+
+        const payment = orderData.payments.find(
+          (p) => p.orderId === Number(id),
+        );
+
+        setBillData({
+          orderId: order.id,
+          orderDate: order.orderDate,
+          orderStatus: order.status,
+
+          paymentMethod: payment?.method,
+          paymentStatus: payment?.status,
+
+          contact: {
+            email: user.email,
+            phone: user.phone,
+          },
+
+          shippingAddress: {
+            name: user.fullName,
+            address: order.deliveryAddress,
+            // Nếu API không trả về ward/district/city ở đây thì bạn cần xử lý chuỗi address hoặc lấy từ user info nếu có
+            ward: "",
+            district: "",
+            city: "",
+            postalCode: "",
+          },
+
+          // --- ĐÂY LÀ PHẦN QUAN TRỌNG ĐÃ SỬA ---
+          items: products.map((p) => {
+            // Tìm detail tương ứng với product này qua ProductVariantID
+            const detail = currentOrderDetails.find(
+              (d) => d.productVariantId === p.ProductVariantID,
+            );
+
+            return {
+              id: p.ProductVariantID, // Thêm key id để React render list không bị lỗi
+              name: p.ProductName,
+              image: `/public/Product/${p.Image}`, // Lưu ý đường dẫn ảnh
+              price: p.Price,
+              // Lấy quantity từ detail tìm được, nếu không thấy thì mặc định là 1
+              quantity: detail ? detail.quantity : 1,
+              size: p.SizeName,
+              color: p.ColorName,
+            };
+          }),
+          // -------------------------------------
+
+          subtotal: order.totalAmount,
+          total: order.totalAmount,
+        });
+      } catch (err) {
+        console.log("Fetch bill error:", err);
+        navigate("/login");
+      }
+    };
+
+    fetchBill();
+  }, [id]);
+
+  if (!billData) return <div>Đang tải đơn hàng...</div>;
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
       currency: "VND",
     }).format(price);
+  };
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("vi-VN");
+  };
+  const getDeliveryDate = (dateString) => {
+    const date = new Date(dateString);
+    date.setDate(date.getDate() + 2);
+    return date.toLocaleDateString("vi-VN");
   };
 
   return (
@@ -82,12 +143,22 @@ export default function BillDetail() {
               <div className={styles.statusBox}>
                 <div className={styles.statusRow}>
                   <span className={styles.label}>Ngày đặt hàng:</span>
-                  <span className={styles.value}>{billData.orderDate}</span>
+                  <span className={styles.value}>
+                    {formatDate(billData.orderDate)}
+                  </span>
                 </div>
+
                 <div className={styles.statusRow}>
-                  <span className={styles.label}>Ngày giao:</span>
-                  <span className={styles.value}>{billData.deliveryDate}</span>
+                  <span className={styles.label}>
+                    {billData.orderStatus == "Đã hoàn thành"
+                      ? "Ngày Giao:"
+                      : "Ngày giao dự kiến:"}
+                  </span>
+                  <span className={styles.value}>
+                    {getDeliveryDate(billData.orderDate)}
+                  </span>
                 </div>
+
                 <div className={styles.statusRow}>
                   <span className={styles.label}>Hình thức thanh toán:</span>
                   <span className={styles.value}>{billData.paymentMethod}</span>
@@ -122,13 +193,7 @@ export default function BillDetail() {
                   <strong>{billData.shippingAddress.name}</strong>
                 </p>
                 <p className={styles.infoItem}>
-                  {billData.shippingAddress.address},{" "}
-                  {billData.shippingAddress.ward}
-                </p>
-                <p className={styles.infoItem}>
-                  {billData.shippingAddress.district},{" "}
-                  {billData.shippingAddress.city}{" "}
-                  {billData.shippingAddress.postalCode}
+                  {billData.shippingAddress.address}
                 </p>
               </div>
             </div>
@@ -137,7 +202,7 @@ export default function BillDetail() {
             <div className={styles.section}>
               <h2 className={styles.sectionTitle}>Phương thức vận chuyển</h2>
               <div className={styles.infoBox}>
-                <p className={styles.infoItem}>{billData.shippingMethod}</p>
+                <p className={styles.infoItem}>Vận Chuyển bởi chienShip</p>
               </div>
             </div>
           </div>
@@ -193,7 +258,7 @@ export default function BillDetail() {
               <a href="/cart" className={styles.backBtn}>
                 ‹ Quay trở lại
               </a>
-              <button className={styles.continueBtn}>Mua hàng tiếp »</button>
+              <button className={styles.continueBtn} onClick={() => navigate("/ProductList")}>Mua hàng tiếp »</button>
             </div>
           </div>
         </div>

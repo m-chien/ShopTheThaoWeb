@@ -18,29 +18,20 @@ export default function InformationForm({ onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!email) {
-      alert("Vui lòng nhập email");
-      return;
-    }
+
     if (!phone) {
       alert("Vui lòng nhập số điện thoại");
       return;
     }
+    if (!address) {
+      alert("Vui lòng nhập địa chỉ nhận hàng");
+      return;
+    }
 
+    // CHỈ gửi phone và address như yêu cầu
     const data = {
-      email,
-      subscribe,
-      country,
-      province,
-      district,
-      ward,
-      firstName,
-      lastName,
-      address,
-      city,
-      postalCode,
-      phone,
-      saveAddress,
+      phone: phone.trim(),
+      address: address.trim(),
     };
 
     if (onSubmit) onSubmit(data);

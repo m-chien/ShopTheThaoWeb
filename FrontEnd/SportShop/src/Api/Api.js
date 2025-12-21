@@ -32,10 +32,11 @@ api.interceptors.response.use(
         // Gọi API refresh token (lưu trong HttpOnly cookie)
         const res = await axios.post(
           "https://localhost:7299/api/User/refresh-token",
-          {},
+          null,
           { withCredentials: true },
         );
-        const newAccessToken = res.data.accessToken;
+        const newAccessToken = res.data.data.accessToken;
+        console.log("🚀 ~ newAccessToken:", newAccessToken)
 
         // Lưu access token mới
         sessionStorage.setItem("accessToken", newAccessToken);
@@ -44,8 +45,7 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        // Nếu refresh token cũng hết hạn, redirect login
-        window.location.href = "/login";
+        sessionStorage.removeItem("accessToken");
         return Promise.reject(refreshError);
       }
     }

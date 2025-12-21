@@ -1,8 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  userInfo: {},
-  shippingInfo: {},
+  userInfo: {
+    phone: "",
+    address: "",
+  },
+  shippingInfo: {}, // giữ nếu cần sau này
   paymentInfo: {},
 };
 
@@ -11,6 +14,7 @@ const checkoutSlice = createSlice({
   initialState,
   reducers: {
     setUserInfo(state, action) {
+      // action.payload should be { phone, address }
       state.userInfo = action.payload;
     },
     setShippingInfo(state, action) {
@@ -31,5 +35,8 @@ export const {
   setPaymentInfo,
   clearCheckout,
 } = checkoutSlice.actions;
+
+// selector đơn giản
+export const selectUserInfo = (state) => state.checkout.userInfo;
 
 export default checkoutSlice.reducer;

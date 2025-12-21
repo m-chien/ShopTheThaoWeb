@@ -9,8 +9,8 @@ export const User = () => {
         email: email,
         fullName: fullname,
       });
+      console.log("🚀 ~ register ~ response:", response)
       sessionStorage.setItem("accessToken", response.data.data.accessToken);
-      document.cookie = `refreshToken=${response.data.data.refreshToken}; path=/; secure; samesite=strict`;
       return response.data;
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
@@ -24,9 +24,9 @@ export const User = () => {
         UserName: username,
         Password: password,
       });
+      console.log("🚀 ~ login ~ response:", response)
 
       sessionStorage.setItem("accessToken", response.data.data.accessToken);
-      document.cookie = `refreshToken=${response.data.data.refreshToken}; path=/; secure; samesite=strict`;
       return response.data;
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);

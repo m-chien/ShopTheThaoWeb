@@ -3,14 +3,15 @@ import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import "../styles/Profile.css";
 import { useNavigate } from "react-router-dom";
+import { api } from "../Api/Api";
 import { User } from "../Api/User";
 import avatar from "../assets/IMG_6162.JPG";
 import Breadcrumb from "../Component/Breadcrumb";
 import NotificationModal from "../Component/NotificationModal";
-import Setting from "../Component/Profile/Setting";
 import Addresses from "../Component/Profile/Addresses";
 import Info from "../Component/Profile/Info";
 import { Orders } from "../Component/Profile/Orders";
+import Setting from "../Component/Profile/Setting";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -46,29 +47,39 @@ export default function Profile() {
     fetchUser();
   }, []);
 
-  const [orders] = useState([
-    {
-      id: "ORD001",
-      date: "2025-11-10",
-      total: 2200000,
-      status: "Đã giao",
-      items: ["Áo Đá Bóng Nam Puma Manchester City"],
-    },
-    {
-      id: "ORD002",
-      date: "2025-11-08",
-      total: 1500000,
-      status: "Đang xử lý",
-      items: ["Giày chạy bộ Nike", "Túi xách thể thao"],
-    },
-    {
-      id: "ORD003",
-      date: "2025-11-05",
-      total: 850000,
-      status: "Đã giao",
-      items: ["Quần shorts thể thao"],
-    },
-  ]);
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const res = await api.get("/Order/my-orders");
+        const data = res.data.data;
+
+        const mappedOrders = data.orders.map((order) => {
+          const productsOfOrder = data.products.filter(
+            (p) => p.OrderID === order.id,
+          );
+
+          return {
+            id: order.id,
+            date: order.orderDate,
+            total: order.totalAmount,
+            status: order.status,
+            items: productsOfOrder.map(
+              (p) => `${p.ProductName} (${p.SizeName} - ${p.ColorName})`,
+            ),
+          };
+        });
+
+        setOrders(mappedOrders);
+      } catch (err) {
+        console.log("Fetch orders error:", err);
+        navigate("/login");
+      }
+    };
+
+    fetchOrders();
+  }, []);
 
   const [editForm, setEditForm] = useState(userInfo);
 
@@ -100,15 +111,14 @@ export default function Profile() {
     }
   };
 
-  // useEffect(() => {
-  //   if (!sessionStorage.getItem("accessToken")) {
-  //     setShowModal(true);
-  //     const timer = setTimeout(() => {
-  //       navigate("/login");
-  //     }, 5000);
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [navigate]);
+  useEffect(() => {
+    api
+      .get("/Order/my-orders") // hoặc /profile
+      .catch((err) => {
+        console.log("Auth failed", err);
+        navigate("/login");
+      });
+  }, []);
 
   return (
     <div className="profile-page">

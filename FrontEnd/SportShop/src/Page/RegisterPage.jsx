@@ -10,7 +10,7 @@ export function RegisterPage({ setCurrentPage }) {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    phone: "",
+    username: "",
     password: "",
     confirmPassword: "",
     receiveNews: true,
@@ -30,7 +30,7 @@ export function RegisterPage({ setCurrentPage }) {
     if (formData.password != formData.confirmPassword) return;
     User()
       .register(
-        formData.phone,
+        formData.username,
         formData.password,
         formData.email,
         formData.fullName,
@@ -92,13 +92,13 @@ export function RegisterPage({ setCurrentPage }) {
                   </div>
 
                   <div className="input-group">
-                    <label className="input-label">Số điện thoại</label>
+                    <label className="input-label">Tên đăng nhập</label>
                     <input
-                      type="tel"
+                      type="text"
                       name="phone"
-                      value={formData.phone}
+                      value={formData.username}
                       onChange={handleChange}
-                      placeholder="0123456789"
+                      placeholder="Nguyen Van A"
                       className="input-field"
                     />
                   </div>
