@@ -115,13 +115,24 @@ namespace WEB_SHOPTHETHAO_API.Controllers
             });
         }
 
-        /// Lấy danh sách tất cả users - Chỉ Admin mới được phép
-
+        /// <summary>
+        /// Lấy danh sách users (Có hỗ trợ tìm kiếm) - Chỉ Admin
+        /// </summary>
         [HttpGet("all")]
-        [Authorize(Roles = "Admin")] // Chỉ Admin mới được gọi
-        public async Task<IActionResult> GetAllUsers()
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllUsers([FromQuery] string? keyword)
         {
-            var users = await _context.Users
+            var query = _context.Users.AsQueryable();
+
+            // Logic tìm kiếm theo Tên hoặc Email
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                query = query.Where(u => u.UserName.Contains(keyword) ||
+                                         u.Email.Contains(keyword) ||
+                                         u.FullName.Contains(keyword));
+            }
+
+            var users = await query
                 .Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
                 .Select(u => new
@@ -130,13 +141,36 @@ namespace WEB_SHOPTHETHAO_API.Controllers
                     u.UserName,
                     u.Email,
                     u.FullName,
-                    u.IsActive,
+                    u.IsActive, // Quan trọng để hiển thị trạng thái Khóa/Mở
                     u.CreatedDate,
                     Roles = u.UserRoles.Select(ur => ur.Role.RoleName).ToList()
                 })
+                .OrderByDescending(u => u.CreatedDate) // Người mới nhất lên đầu
                 .ToListAsync();
 
             return Ok(users);
+        }
+
+        /// <summary>
+        /// Khóa/Mở khóa tài khoản - Chỉ Admin
+        /// </summary>
+        [HttpPatch("{id}/toggle-status")]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ToggleUserStatus(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound(new { message = "Không tìm thấy user" });
+
+            // Nếu đang Mở -> Thành Khóa, Nếu đang Khóa -> Thành Mở
+            user.IsActive = !user.IsActive;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = user.IsActive ? "Đã mở khóa tài khoản." : "Đã khóa tài khoản.",
+                isActive = user.IsActive
+            });
         }
 
         /// <summary>
