@@ -709,4 +709,97 @@ LEFT JOIN Color c ON pv.ColorID = c.ID
 
 -- Sắp xếp: Sản phẩm mới nhất lên đầu, sau đó gom nhóm theo Size
 ORDER BY p.ID ASC, s.Name ASC;
+GO
 
+CREATE PROC dbo.sp_GetOrdersByUserId
+    @UserId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF OBJECT_ID('tempdb..#Orders') IS NOT NULL DROP TABLE #Orders;
+
+    -- #Orders: danh sách hóa đơn theo user
+    SELECT
+        o.ID           AS OrderID,
+        o.UserID,
+        o.Status,
+        o.TotalAmount,
+        o.DeliveryAddress,
+        o.Phone,
+        o.OrderDate,
+        o.VoucherID
+    INTO #Orders
+    FROM [Order] o
+    WHERE o.UserID = @UserId;
+
+    /* =========================
+       RS1: Orders
+       ========================= */
+    SELECT *
+    FROM #Orders
+    ORDER BY OrderDate DESC, OrderID DESC;
+
+    /* =========================
+       RS2: OrderDetails
+       ========================= */
+    SELECT
+        od.ID          AS OrderDetailID,
+        od.OrderID,
+        od.ProductVariantID,
+        od.Quantity,
+        od.UnitPrice,
+        od.Quantity * od.UnitPrice AS LineTotal
+    FROM OrderDetail od
+    JOIN #Orders o ON o.OrderID = od.OrderID
+    ORDER BY od.OrderID, od.ID;
+
+    /* =========================
+       RS3: Products in Orders
+       ========================= */
+    SELECT DISTINCT
+        o.OrderID,
+
+        p.ID           AS ProductID,
+        p.Name         AS ProductName,
+
+        pv.ID          AS ProductVariantID,
+        pv.Image,
+        pv.Price,
+
+        b.Name         AS BrandName,
+        cat.Name       AS CategoryName,
+        s.Name         AS SizeName,
+        c.Name         AS ColorName,
+        c.colorCode    AS ColorCode   -- đúng theo DB bạn tạo (colorCode)
+    FROM #Orders o
+    JOIN OrderDetail od      ON od.OrderID = o.OrderID
+    JOIN ProductVariant pv   ON pv.ID = od.ProductVariantID
+    JOIN Product p           ON p.ID = pv.ProductID
+    LEFT JOIN Brand b        ON b.ID = p.BrandID
+    LEFT JOIN Category cat   ON cat.ID = p.CategoryID
+    LEFT JOIN Size s         ON s.ID = pv.SizeID
+    LEFT JOIN Color c        ON c.ID = pv.ColorID
+    ORDER BY o.OrderID DESC, p.ID, pv.ID;
+
+    /* =========================
+       RS4: Payments of Orders
+       ========================= */
+    SELECT
+        pay.ID,
+        pay.OrderID,
+        pay.Method,
+        pay.Amount,
+        pay.Status,
+        pay.PaymentDate
+    FROM Payment pay
+    JOIN #Orders o ON o.OrderID = pay.OrderID
+    ORDER BY pay.PaymentDate DESC, pay.ID DESC;
+END;
+GO
+
+-- Test
+EXEC dbo.sp_GetOrdersByUserId @UserId = 1;
+
+
+SELECT * FROM [Order];
