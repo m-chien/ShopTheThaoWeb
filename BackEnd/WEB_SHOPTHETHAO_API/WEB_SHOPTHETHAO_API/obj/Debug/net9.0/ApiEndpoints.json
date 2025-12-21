@@ -295,6 +295,16 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "OrderController",
+    "Method": "GetMyOrders",
+    "RelativePath": "api/Order/my-orders",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ProductController",
     "Method": "GetAll",
     "RelativePath": "api/Product",

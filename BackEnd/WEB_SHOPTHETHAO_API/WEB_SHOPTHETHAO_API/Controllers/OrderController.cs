@@ -1,6 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Data;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using WEB_SHOPTHETHAO_API.Models;
+
 
 [Route("api/[controller]")]
 [ApiController]
@@ -63,4 +68,104 @@ public class OrderController : ControllerBase
 
         return NoContent();
     }
+
+    //[Authorize]
+    [HttpGet("my-orders")]
+    public async Task<IActionResult> GetMyOrders()
+    {
+        // 🔐 LẤY USERID TỪ TOKEN
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null)
+            return Unauthorized("Token không chứa UserId");
+
+        int userId = int.Parse(userIdClaim.Value);
+
+        var orders = new List<Order>();
+        var orderDetails = new List<OrderDetail>();
+        var products = new List<Dictionary<string, object?>>();
+        var payments = new List<Payment>();
+
+        var conn = _context.Database.GetDbConnection();
+        if (conn.State != ConnectionState.Open)
+            await conn.OpenAsync();
+
+        await using var cmd = conn.CreateCommand();
+        cmd.CommandText = "dbo.sp_GetOrdersByUserId";
+        cmd.CommandType = CommandType.StoredProcedure;
+        cmd.Parameters.Add(new SqlParameter("@UserId", SqlDbType.Int) { Value = userId });
+
+        await using var reader = await cmd.ExecuteReaderAsync();
+
+        /* ===== RS1: Orders ===== */
+        while (await reader.ReadAsync())
+        {
+            orders.Add(new Order
+            {
+                Id = Convert.ToInt32(reader["OrderID"]),
+                UserId = Convert.ToInt32(reader["UserID"]),
+                Status = reader["Status"]?.ToString(),
+                TotalAmount = reader["TotalAmount"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["TotalAmount"]),
+                DeliveryAddress = reader["DeliveryAddress"]?.ToString(),
+                Phone = reader["Phone"]?.ToString(),
+                OrderDate = Convert.ToDateTime(reader["OrderDate"]),
+                VoucherId = reader["VoucherID"] == DBNull.Value ? null : (int?)Convert.ToInt32(reader["VoucherID"])
+            });
+        }
+
+        /* ===== RS2: OrderDetails ===== */
+        if (await reader.NextResultAsync())
+        {
+            while (await reader.ReadAsync())
+            {
+                orderDetails.Add(new OrderDetail
+                {
+                    Id = Convert.ToInt32(reader["OrderDetailID"]),
+                    OrderId = Convert.ToInt32(reader["OrderID"]),
+                    ProductVariantId = Convert.ToInt32(reader["ProductVariantID"]),
+                    Quantity = Convert.ToInt32(reader["Quantity"]),
+                    UnitPrice = Convert.ToDecimal(reader["UnitPrice"])
+                });
+            }
+        }
+
+        /* ===== RS3: Products ===== */
+        if (await reader.NextResultAsync())
+        {
+            while (await reader.ReadAsync())
+            {
+                var row = new Dictionary<string, object?>();
+                for (int i = 0; i < reader.FieldCount; i++)
+                    row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+
+                products.Add(row);
+            }
+        }
+
+        /* ===== RS4: Payments ===== */
+        if (await reader.NextResultAsync())
+        {
+            while (await reader.ReadAsync())
+            {
+                payments.Add(new Payment
+                {
+                    Id = Convert.ToInt32(reader["ID"]),
+                    OrderId = Convert.ToInt32(reader["OrderID"]),
+                    Method = reader["Method"]?.ToString(),
+                    Amount = Convert.ToDecimal(reader["Amount"]),
+                    Status = reader["Status"]?.ToString(),
+                    PaymentDate = Convert.ToDateTime(reader["PaymentDate"])
+                });
+            }
+        }
+
+        return Ok(new
+        {
+            userId,
+            orders,
+            orderDetails,
+            products,
+            payments
+        });
+    }
+
 }

@@ -3,8 +3,28 @@
   "WorkspaceRootPath": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|f:\\ute\\nambahocki1\\laptrinhwebnangcao\\webcuoiky\\shopthethaoweb\\backend\\web_shopthethao_api\\web_shopthethao_api\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|solutionrelative:web_shopthethao_api\\controllers\\ordercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|f:\\ute\\nambahocki1\\laptrinhwebnangcao\\webcuoiky\\shopthethaoweb\\backend\\web_shopthethao_api\\web_shopthethao_api\\controllers\\checkoutcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|solutionrelative:web_shopthethao_api\\controllers\\checkoutcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|f:\\ute\\nambahocki1\\laptrinhwebnangcao\\webcuoiky\\shopthethaoweb\\backend\\web_shopthethao_api\\web_shopthethao_api\\controllers\\vnpaycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|solutionrelative:web_shopthethao_api\\controllers\\vnpaycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|f:\\ute\\nambahocki1\\laptrinhwebnangcao\\webcuoiky\\shopthethaoweb\\backend\\web_shopthethao_api\\web_shopthethao_api\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|solutionrelative:web_shopthethao_api\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|f:\\ute\\nambahocki1\\laptrinhwebnangcao\\webcuoiky\\shopthethaoweb\\backend\\web_shopthethao_api\\web_shopthethao_api\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|solutionrelative:web_shopthethao_api\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|f:\\ute\\nambahocki1\\laptrinhwebnangcao\\webcuoiky\\shopthethaoweb\\backend\\web_shopthethao_api\\web_shopthethao_api\\controllers\\voucherscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|solutionrelative:web_shopthethao_api\\controllers\\voucherscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|f:\\ute\\nambahocki1\\laptrinhwebnangcao\\webcuoiky\\shopthethaoweb\\backend\\web_shopthethao_api\\web_shopthethao_api\\dto\\request\\createpaymentrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -19,16 +39,8 @@
       "RelativeMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|solutionrelative:web_shopthethao_api\\service\\authentication.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|f:\\ute\\nambahocki1\\laptrinhwebnangcao\\webcuoiky\\shopthethaoweb\\backend\\web_shopthethao_api\\web_shopthethao_api\\controllers\\vnpaycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|solutionrelative:web_shopthethao_api\\controllers\\vnpaycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|f:\\ute\\nambahocki1\\laptrinhwebnangcao\\webcuoiky\\shopthethaoweb\\backend\\web_shopthethao_api\\web_shopthethao_api\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|solutionrelative:web_shopthethao_api\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|f:\\ute\\nambahocki1\\laptrinhwebnangcao\\webcuoiky\\shopthethaoweb\\backend\\web_shopthethao_api\\web_shopthethao_api\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|solutionrelative:web_shopthethao_api\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D41815D3-A443-4131-B0AF-F1B617E5B74C}|WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API.csproj|f:\\ute\\nambahocki1\\laptrinhwebnangcao\\webcuoiky\\shopthethaoweb\\backend\\web_shopthethao_api\\web_shopthethao_api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -42,7 +54,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -58,33 +70,70 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
+              "Title": "Order.cs",
+              "DocumentMoniker": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Models\\Order.cs",
+              "RelativeDocumentMoniker": "WEB_SHOPTHETHAO_API\\Models\\Order.cs",
+              "ToolTip": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Models\\Order.cs",
+              "RelativeToolTip": "WEB_SHOPTHETHAO_API\\Models\\Order.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-21T06:25:26.268Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "OrderController.cs",
+              "DocumentMoniker": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Controllers\\OrderController.cs",
+              "RelativeDocumentMoniker": "WEB_SHOPTHETHAO_API\\Controllers\\OrderController.cs",
+              "ToolTip": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Controllers\\OrderController.cs*",
+              "RelativeToolTip": "WEB_SHOPTHETHAO_API\\Controllers\\OrderController.cs*",
+              "ViewState": "AgIAAHwAAAAAAAAAAAAUwKgAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-21T06:15:29.655Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "VouchersController.cs",
+              "DocumentMoniker": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Controllers\\VouchersController.cs",
+              "RelativeDocumentMoniker": "WEB_SHOPTHETHAO_API\\Controllers\\VouchersController.cs",
+              "ToolTip": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Controllers\\VouchersController.cs",
+              "RelativeToolTip": "WEB_SHOPTHETHAO_API\\Controllers\\VouchersController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-21T06:03:47.422Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "CreatePaymentRequest.cs",
               "DocumentMoniker": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\DTO\\Request\\CreatePaymentRequest.cs",
               "RelativeDocumentMoniker": "WEB_SHOPTHETHAO_API\\DTO\\Request\\CreatePaymentRequest.cs",
-              "ToolTip": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\DTO\\Request\\CreatePaymentRequest.cs*",
-              "RelativeToolTip": "WEB_SHOPTHETHAO_API\\DTO\\Request\\CreatePaymentRequest.cs*",
+              "ToolTip": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\DTO\\Request\\CreatePaymentRequest.cs",
+              "RelativeToolTip": "WEB_SHOPTHETHAO_API\\DTO\\Request\\CreatePaymentRequest.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-20T18:16:17.586Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-20T18:16:17.586Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 7,
               "Title": "TokenService.cs",
               "DocumentMoniker": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Service\\TokenService.cs",
               "RelativeDocumentMoniker": "WEB_SHOPTHETHAO_API\\Service\\TokenService.cs",
-              "ToolTip": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Service\\TokenService.cs*",
-              "RelativeToolTip": "WEB_SHOPTHETHAO_API\\Service\\TokenService.cs*",
+              "ToolTip": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Service\\TokenService.cs",
+              "RelativeToolTip": "WEB_SHOPTHETHAO_API\\Service\\TokenService.cs",
               "ViewState": "AgIAAA4AAAAAAAAAAAA3wCIAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-20T18:11:24.793Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-20T18:11:24.793Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "Authentication.cs",
               "DocumentMoniker": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Service\\Authentication.cs",
               "RelativeDocumentMoniker": "WEB_SHOPTHETHAO_API\\Service\\Authentication.cs",
@@ -92,25 +141,24 @@
               "RelativeToolTip": "WEB_SHOPTHETHAO_API\\Service\\Authentication.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAG8AAABBAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-20T18:10:27.531Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-20T18:10:27.531Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "VnpayController.cs",
               "DocumentMoniker": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Controllers\\VnpayController.cs",
               "RelativeDocumentMoniker": "WEB_SHOPTHETHAO_API\\Controllers\\VnpayController.cs",
               "ToolTip": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Controllers\\VnpayController.cs",
               "RelativeToolTip": "WEB_SHOPTHETHAO_API\\Controllers\\VnpayController.cs",
-              "ViewState": "AgIAABsAAAAAAAAAAAAYwC4AAAAoAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAC4AAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-20T17:29:05.903Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 9,
               "Title": "CategoryController.cs",
               "DocumentMoniker": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Controllers\\CategoryController.cs",
               "RelativeDocumentMoniker": "WEB_SHOPTHETHAO_API\\Controllers\\CategoryController.cs",
@@ -122,20 +170,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "CheckoutController.cs",
               "DocumentMoniker": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Controllers\\CheckoutController.cs",
               "RelativeDocumentMoniker": "WEB_SHOPTHETHAO_API\\Controllers\\CheckoutController.cs",
-              "ToolTip": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Controllers\\CheckoutController.cs*",
-              "RelativeToolTip": "WEB_SHOPTHETHAO_API\\Controllers\\CheckoutController.cs*",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAtwBkAAAATAAAAAAAAAA==",
+              "ToolTip": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Controllers\\CheckoutController.cs",
+              "RelativeToolTip": "WEB_SHOPTHETHAO_API\\Controllers\\CheckoutController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-20T17:24:45.028Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "Program.cs",
               "DocumentMoniker": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Program.cs",
               "RelativeDocumentMoniker": "WEB_SHOPTHETHAO_API\\Program.cs",
@@ -147,15 +195,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 4,
               "Title": "UserController.cs",
               "DocumentMoniker": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Controllers\\UserController.cs",
               "RelativeDocumentMoniker": "WEB_SHOPTHETHAO_API\\Controllers\\UserController.cs",
               "ToolTip": "F:\\UTE\\NamBaHocKi1\\LapTrinhWebNangCao\\WebCuoiKy\\ShopTheThaoWeb\\BackEnd\\WEB_SHOPTHETHAO_API\\WEB_SHOPTHETHAO_API\\Controllers\\UserController.cs",
               "RelativeToolTip": "WEB_SHOPTHETHAO_API\\Controllers\\UserController.cs",
-              "ViewState": "AgIAAGkAAAAAAAAAAAAowH4AAAAXAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKoAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-20T12:16:11.48Z"
+              "WhenOpened": "2025-12-20T12:16:11.48Z",
+              "EditorCaption": ""
             }
           ]
         }
