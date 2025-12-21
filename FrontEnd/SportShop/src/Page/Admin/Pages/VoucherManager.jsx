@@ -20,7 +20,7 @@ import {
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 
-// Import API và CSS
+// Import API & CSS
 import {
   getAllVouchers,
   createVoucher,
@@ -43,21 +43,17 @@ const VoucherManager = () => {
     setLoading(true);
     try {
       const res = await getAllVouchers();
-
-      console.log("CHECK DATA API:", res);
-
       const rawData = res.data;
 
+      // Xử lý dữ liệu trả về từ API (hỗ trợ cả dạng mảng và dạng wrapper object)
       if (Array.isArray(rawData)) {
         setData(rawData);
       } else if (rawData && Array.isArray(rawData.data)) {
         setData(rawData.data);
       } else {
-        console.log("Dữ liệu không phải là mảng:", rawData);
         setData([]);
       }
     } catch (error) {
-      console.error("LỖI GỌI API:", error);
       message.error("Lỗi tải danh sách voucher!");
     } finally {
       setLoading(false);
@@ -78,21 +74,14 @@ const VoucherManager = () => {
   const handleEdit = (record) => {
     setEditingVoucher(record);
 
-    // --- SỬA QUAN TRỌNG: Lấy đúng tên biến Ngày Tháng ---
-    const startVal = record.startDate || record.StartDate;
-    const endVal = record.endDate || record.EndDate;
-    const nameVal = record.name || record.Name;
-    const discountVal = record.discountPercent || record.DiscountPercent;
-    const descVal = record.description || record.Description;
-    const typeVal = record.type || record.Type;
-
+    // Đổ dữ liệu vào form (Dùng đúng tên biến camelCase)
     form.setFieldsValue({
-      name: nameVal,
-      discountPercent: discountVal,
-      description: descVal,
-      type: typeVal,
-      startDate: startVal ? dayjs(startVal) : null,
-      endDate: endVal ? dayjs(endVal) : null,
+      name: record.name,
+      discountPercent: record.discountPercent,
+      description: record.description,
+      type: record.type,
+      startDate: record.startDate ? dayjs(record.startDate) : null,
+      endDate: record.endDate ? dayjs(record.endDate) : null,
     });
     setIsModalOpen(true);
   };
@@ -102,21 +91,22 @@ const VoucherManager = () => {
     try {
       const values = await form.validateFields();
 
-      // Chuẩn bị dữ liệu gửi đi
+      // Chuẩn bị payload sạch sẽ
       const payload = {
         name: values.name,
         discountPercent: values.discountPercent,
         description: values.description,
         type: values.type || "Giảm giá",
-
         startDate: values.startDate ? values.startDate.toISOString() : null,
         endDate: values.endDate ? values.endDate.toISOString() : null,
       };
 
       if (editingVoucher) {
-        // Cập nhật
-        const id = editingVoucher.id || editingVoucher.Id;
-        await updateVoucher(id, { ...payload, id: id });
+        // Cập nhật: Truyền thêm ID vào URL và body (nếu cần)
+        await updateVoucher(editingVoucher.id, {
+          ...payload,
+          id: editingVoucher.id,
+        });
         message.success("Cập nhật voucher thành công!");
       } else {
         // Thêm mới
@@ -127,7 +117,7 @@ const VoucherManager = () => {
       setIsModalOpen(false);
       fetchVouchers();
     } catch (error) {
-      console.log("Lỗi:", error);
+      console.error(error);
       message.error("Có lỗi xảy ra! Vui lòng kiểm tra lại.");
     }
   };
@@ -139,66 +129,66 @@ const VoucherManager = () => {
       message.success("Đã xóa voucher!");
       fetchVouchers();
     } catch (error) {
-      message.error("Xóa thất bại!");
+      message.error("Xóa thất bại (Có thể đang được sử dụng)!");
     }
   };
 
-  // --- CẤU HÌNH CỘT (QUAN TRỌNG NHẤT) ---
+  // --- CẤU HÌNH CỘT ---
   const columns = [
     {
       title: "ID",
+      dataIndex: "id",
       key: "id",
       width: 60,
-      render: (_, record) => record.id || record.Id,
+      render: (id) => id,
     },
     {
       title: "Tên Voucher",
+      dataIndex: "name",
       key: "name",
-      render: (_, record) => <b>{record.name || record.Name}</b>,
+      render: (name) => <b>{name}</b>,
     },
     {
       title: "Giảm giá",
+      dataIndex: "discountPercent",
       key: "discountPercent",
-      render: (_, record) => {
-        const val = record.discountPercent || record.DiscountPercent;
-        return <Tag color="red">-{val}%</Tag>;
-      },
+      render: (val) => <Tag color="red">-{val}%</Tag>,
     },
     {
       title: "Thời gian áp dụng",
       key: "duration",
       width: 220,
-      render: (_, record) => {
-        const start = record.startDate || record.StartDate;
-        const end = record.endDate || record.EndDate;
-
-        return (
-          <div style={{ fontSize: 13 }}>
-            <div>
-              BĐ: {start ? dayjs(start).format("DD/MM/YYYY HH:mm") : "..."}
-            </div>
-            <div>KT: {end ? dayjs(end).format("DD/MM/YYYY HH:mm") : "..."}</div>
+      render: (_, record) => (
+        <div style={{ fontSize: 13 }}>
+          <div>
+            BĐ:{" "}
+            {record.startDate
+              ? dayjs(record.startDate).format("DD/MM/YYYY HH:mm")
+              : "..."}
           </div>
-        );
-      },
+          <div>
+            KT:{" "}
+            {record.endDate
+              ? dayjs(record.endDate).format("DD/MM/YYYY HH:mm")
+              : "..."}
+          </div>
+        </div>
+      ),
     },
     {
       title: "Trạng thái",
       key: "status",
       render: (_, record) => {
-        const start = record.startDate || record.StartDate;
-        const end = record.endDate || record.EndDate;
-
-        if (!start || !end) return <Tag>Không xác định</Tag>;
+        if (!record.startDate || !record.endDate)
+          return <Tag>Không xác định</Tag>;
 
         const now = dayjs();
-        const startDate = dayjs(start);
-        const endDate = dayjs(end);
+        const start = dayjs(record.startDate);
+        const end = dayjs(record.endDate);
 
-        // --- SỬA Ở ĐÂY: Dùng ClassName từ CSS thay vì Color mặc định ---
-        if (now.isBefore(startDate)) {
+        if (now.isBefore(start)) {
           return <Tag className="status-upcoming">Sắp diễn ra</Tag>;
-        } else if (now.isAfter(endDate)) {
+        } else if (now.isAfter(end)) {
           return <Tag className="status-expired">Đã kết thúc</Tag>;
         } else {
           return <Tag className="status-active">Đang diễn ra</Tag>;
@@ -209,38 +199,34 @@ const VoucherManager = () => {
       title: "Hành động",
       key: "action",
       width: 150,
-      render: (_, record) => {
-        const id = record.id || record.Id;
-        return (
-          <Space>
+      render: (_, record) => (
+        <Space>
+          <Button
+            type="primary"
+            size="small"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
+            className="action-btn-edit"
+          >
+            Sửa
+          </Button>
+          <Popconfirm
+            title="Xóa voucher này?"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Xóa"
+            cancelText="Hủy"
+          >
             <Button
-              type="primary"
+              danger
               size="small"
-              icon={<EditOutlined />}
-              onClick={() => handleEdit(record)}
-              className="action-btn-edit" // Class này đã có trong code bạn gửi
+              icon={<DeleteOutlined />}
+              className="action-btn-delete"
             >
-              Sửa
+              Xóa
             </Button>
-            <Popconfirm
-              title="Xóa voucher này?"
-              onConfirm={() => handleDelete(id)}
-              okText="Xóa"
-              cancelText="Hủy"
-            >
-              {/* --- SỬA Ở ĐÂY: Thêm className action-btn-delete --- */}
-              <Button
-                danger
-                size="small"
-                icon={<DeleteOutlined />}
-                className="action-btn-delete"
-              >
-                Xóa
-              </Button>
-            </Popconfirm>
-          </Space>
-        );
-      },
+          </Popconfirm>
+        </Space>
+      ),
     },
   ];
 
@@ -259,8 +245,7 @@ const VoucherManager = () => {
       <Table
         columns={columns}
         dataSource={data}
-        // rowKey quan trọng: Phải lấy đúng ID duy nhất
-        rowKey={(record) => record.id || record.Id}
+        rowKey="id" // Antd tự lấy trường .id
         loading={loading}
         pagination={{ pageSize: 5 }}
         bordered

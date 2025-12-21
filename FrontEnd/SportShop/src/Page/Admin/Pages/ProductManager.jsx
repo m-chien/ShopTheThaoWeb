@@ -13,7 +13,12 @@ import {
   Select,
   InputNumber,
 } from "antd";
-import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+  SkinOutlined,
+} from "@ant-design/icons";
 
 import "../Css/ProductManager.css";
 
@@ -48,15 +53,15 @@ const ProductManager = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [form] = Form.useForm();
 
-  // State chứa danh sách biến thể để hiển thị trong bảng con
+  // State chứa danh sách biến thể
   const [variantList, setVariantList] = useState([]);
 
-  // State cho Modal sửa biến thể (Mini Modal - Sửa Giá/Kho)
+  // State cho Modal sửa biến thể (Mini Modal)
   const [isVariantModalOpen, setIsVariantModalOpen] = useState(false);
   const [currentVariant, setCurrentVariant] = useState(null);
   const [formVariant] = Form.useForm();
 
-  // State cho Modal Thêm Biến Thể Mới (Mini Modal - Thêm Size/Màu)
+  // State cho Modal Thêm Biến Thể Mới
   const [isAddVariantModalOpen, setIsAddVariantModalOpen] = useState(false);
   const [formAddVariant] = Form.useForm();
 
@@ -65,10 +70,13 @@ const ProductManager = () => {
     setLoading(true);
     try {
       const response = await getAllProduct();
-      if (response.data && Array.isArray(response.data.data)) {
-        setData(response.data.data);
-      } else if (Array.isArray(response.data)) {
-        setData(response.data);
+      const rawData = response.data;
+
+      // Xử lý dữ liệu trả về (Wrapper object hoặc mảng trực tiếp)
+      if (Array.isArray(rawData)) {
+        setData(rawData);
+      } else if (rawData && Array.isArray(rawData.data)) {
+        setData(rawData.data);
       } else {
         setData([]);
       }
@@ -80,7 +88,7 @@ const ProductManager = () => {
     }
   };
 
-  // --- 2. HÀM LẤY DỮ LIỆU BỔ TRỢ ---
+  // --- 2. HÀM LẤY DỮ LIỆU BỔ TRỢ (DANH MỤC, THƯƠNG HIỆU...) ---
   const fetchFilters = async () => {
     try {
       const [resCate, resBrand, resSize, resColor] = await Promise.all([
@@ -90,36 +98,19 @@ const ProductManager = () => {
         getAllColor(),
       ]);
 
-      setCategories(
-        resCate.data
-          ? Array.isArray(resCate.data)
-            ? resCate.data
-            : resCate.data.data || []
-          : []
-      );
-      setBrands(
-        resBrand.data
-          ? Array.isArray(resBrand.data)
-            ? resBrand.data
-            : resBrand.data.data || []
-          : []
-      );
-      setSizes(
-        resSize.data
-          ? Array.isArray(resSize.data)
-            ? resSize.data
-            : resSize.data.data || []
-          : []
-      );
-      setColors(
-        resColor.data
-          ? Array.isArray(resColor.data)
-            ? resColor.data
-            : resColor.data.data || []
-          : []
-      );
+      // Helper function để lấy mảng data an toàn
+      const extractData = (res) => {
+        if (Array.isArray(res.data)) return res.data;
+        if (res.data && Array.isArray(res.data.data)) return res.data.data;
+        return [];
+      };
+
+      setCategories(extractData(resCate));
+      setBrands(extractData(resBrand));
+      setSizes(extractData(resSize));
+      setColors(extractData(resColor));
     } catch (error) {
-      console.error("Lỗi lấy dữ liệu bộ lọc:", error);
+      message.error("Lỗi tải dữ liệu bộ lọc");
     }
   };
 
@@ -136,15 +127,10 @@ const ProductManager = () => {
       message.success("Đã xóa sản phẩm thành công!");
       fetchProducts();
     } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        message.error(error.response.data.message);
-      } else {
-        message.error("Xóa thất bại! Có thể sản phẩm đang có đơn hàng.");
-      }
+      const msg =
+        error.response?.data?.message ||
+        "Xóa thất bại! Có thể sản phẩm đang có đơn hàng.";
+      message.error(msg);
     }
   };
 
@@ -155,35 +141,32 @@ const ProductManager = () => {
     setIsModalOpen(true);
   };
 
-  // --- 5. XỬ LÝ SỬA (Mở Modal và điền dữ liệu cũ) ---
+  // --- 5. XỬ LÝ SỬA (Mở Modal và điền dữ liệu) ---
   const handleEdit = async (record) => {
     setEditingProduct(record);
     setIsModalOpen(true);
 
-    const id = record.productID || record.ProductID;
+    // Điền dữ liệu vào Form
+    form.setFieldsValue({
+      name: record.name,
+      description: record.description,
+      categoryID: record.categoryID,
+      brandID: record.brandID,
+    });
 
-    setTimeout(() => {
-      form.setFieldsValue({
-        name: record.name,
-        description: record.description,
-        categoryID: record.categoryID || record.CategoryID,
-        brandID: record.brandID || record.BrandID,
-      });
-    }, 100);
-
+    // Lấy danh sách biến thể
     try {
       setVariantList([]);
-      const res = await getVariantsByProductId(id);
-      if (res.data) {
-        if (Array.isArray(res.data)) setVariantList(res.data);
-        else if (res.data.data && Array.isArray(res.data.data))
-          setVariantList(res.data.data);
-        else setVariantList([]);
+      const res = await getVariantsByProductId(record.productID);
+      const variants = res.data;
+
+      if (Array.isArray(variants)) {
+        setVariantList(variants);
+      } else if (variants && Array.isArray(variants.data)) {
+        setVariantList(variants.data);
       }
     } catch (error) {
-      console.log(error);
       message.error("Lỗi tải thông tin biến thể!");
-      setVariantList([]);
     }
   };
 
@@ -193,10 +176,12 @@ const ProductManager = () => {
       const values = await form.validateFields();
 
       if (editingProduct) {
-        const id = editingProduct.productID || editingProduct.ProductID;
+        // Cập nhật
+        const id = editingProduct.productID;
         await updateProduct(id, { id: id, ...values });
-        message.success("Cập nhật thông tin chung thành công!");
+        message.success("Cập nhật thông tin thành công!");
       } else {
+        // Thêm mới
         await createProduct({
           name: values.name,
           description: values.description,
@@ -213,7 +198,6 @@ const ProductManager = () => {
       setIsModalOpen(false);
       fetchProducts();
     } catch (error) {
-      console.error(error);
       message.error("Thất bại! Vui lòng kiểm tra lại dữ liệu.");
     }
   };
@@ -222,14 +206,21 @@ const ProductManager = () => {
   // === CÁC HÀM XỬ LÝ BIẾN THỂ (MASTER-DETAIL LOGIC) ===
   // =======================================================
 
+  const refreshVariants = async (parentId) => {
+    try {
+      const res = await getVariantsByProductId(parentId);
+      if (Array.isArray(res.data)) setVariantList(res.data);
+      else if (res.data?.data) setVariantList(res.data.data);
+    } catch (e) {
+      /* Ignore */
+    }
+  };
+
   const handleDeleteVariant = async (variantId) => {
     try {
       await deleteProductVariant(variantId);
       message.success("Đã xóa biến thể!");
-      const parentId = editingProduct.productID || editingProduct.ProductID;
-      const res = await getVariantsByProductId(parentId);
-      if (res.data && Array.isArray(res.data)) setVariantList(res.data);
-      else if (res.data && res.data.data) setVariantList(res.data.data);
+      refreshVariants(editingProduct.productID);
     } catch (error) {
       message.error("Lỗi khi xóa biến thể!");
     }
@@ -238,12 +229,10 @@ const ProductManager = () => {
   const handleEditVariant = (record) => {
     setCurrentVariant(record);
     setIsVariantModalOpen(true);
-    setTimeout(() => {
-      formVariant.setFieldsValue({
-        price: record.price,
-        stockQuantity: record.stockQuantity,
-      });
-    }, 100);
+    formVariant.setFieldsValue({
+      price: record.price,
+      stockQuantity: record.stockQuantity,
+    });
   };
 
   const handleSaveVariant = async () => {
@@ -253,12 +242,9 @@ const ProductManager = () => {
         price: values.price,
         stockQuantity: values.stockQuantity,
       });
-      message.success("Cập nhật giá/kho thành công!");
+      message.success("Cập nhật thành công!");
       setIsVariantModalOpen(false);
-      const parentId = editingProduct.productID || editingProduct.ProductID;
-      const res = await getVariantsByProductId(parentId);
-      if (res.data && Array.isArray(res.data)) setVariantList(res.data);
-      else if (res.data && res.data.data) setVariantList(res.data.data);
+      refreshVariants(editingProduct.productID);
     } catch (error) {
       message.error("Cập nhật thất bại!");
     }
@@ -267,7 +253,8 @@ const ProductManager = () => {
   const handleAddNewVariant = async () => {
     try {
       const values = await formAddVariant.validateFields();
-      const parentId = editingProduct.productID || editingProduct.ProductID;
+      const parentId = editingProduct.productID;
+
       const payload = {
         ProductId: Number(parentId),
         SizeId: Number(values.sizeID),
@@ -281,40 +268,13 @@ const ProductManager = () => {
       message.success("Thêm biến thể mới thành công!");
       setIsAddVariantModalOpen(false);
       formAddVariant.resetFields();
-
-      const res = await getVariantsByProductId(parentId);
-      if (res.data) {
-        if (Array.isArray(res.data)) setVariantList(res.data);
-        else if (res.data.data) setVariantList(res.data.data);
-      }
+      refreshVariants(parentId);
     } catch (error) {
-      console.log("Chi tiết lỗi:", error);
-      if (error.response && error.response.data) {
-        const errData = error.response.data;
-        if (
-          errData.errors &&
-          Array.isArray(errData.errors) &&
-          errData.errors.length > 0
-        ) {
-          try {
-            const firstError = errData.errors[0];
-            const parsedError = JSON.parse(firstError);
-            if (parsedError && parsedError.message) {
-              message.error(parsedError.message);
-              return;
-            }
-          } catch (e) {
-            message.error(errData.errors[0]);
-            return;
-          }
-        }
-        if (errData.message && errData.message !== "Bad Request") {
-          message.error(errData.message);
-        } else {
-          message.error("Lỗi: Dữ liệu không hợp lệ hoặc đã tồn tại!");
-        }
+      const errData = error.response?.data;
+      if (errData?.message) {
+        message.error(errData.message);
       } else {
-        message.error("Lỗi kết nối Server!");
+        message.error("Lỗi: Dữ liệu không hợp lệ hoặc đã tồn tại!");
       }
     }
   };
@@ -419,44 +379,42 @@ const ProductManager = () => {
     {
       title: "Hành động",
       key: "action",
-      render: (_, record) => {
-        const id = record.productID || record.ProductID;
-        return (
-          <Space>
+      render: (_, record) => (
+        <Space>
+          <Button
+            icon={<EditOutlined />}
+            size="small"
+            className="action-btn-edit"
+            onClick={() => handleEdit(record)}
+          >
+            Sửa
+          </Button>
+          <Popconfirm
+            title="Xóa sản phẩm?"
+            description="Hành động này sẽ xóa tất cả size/màu liên quan!"
+            onConfirm={() => handleDelete(record.productID)}
+            okText="Xóa"
+            cancelText="Hủy"
+          >
             <Button
-              icon={<EditOutlined />}
+              danger
+              icon={<DeleteOutlined />}
               size="small"
-              className="action-btn-edit"
-              onClick={() => handleEdit(record)}
-            >
-              Sửa
-            </Button>
-            <Popconfirm
-              title="Xóa sản phẩm?"
-              description="Hành động này sẽ xóa tất cả size/màu liên quan!"
-              onConfirm={() => handleDelete(id)}
-              okText="Xóa"
-              cancelText="Hủy"
-            >
-              <Button
-                danger
-                icon={<DeleteOutlined />}
-                size="small"
-                className="action-btn-delete"
-              >
-                Xóa
-              </Button>
-            </Popconfirm>
-          </Space>
-        );
-      },
+              className="action-btn-delete"
+            />
+          </Popconfirm>
+        </Space>
+      ),
     },
   ];
 
   return (
     <div>
       <div className="product-page-header">
-        <h2>Quản lý sản phẩm</h2>
+        <h2>
+          <SkinOutlined style={{ marginRight: 8 }} />
+          Quản lý Sản Phẩm
+        </h2>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAddNew}>
           Thêm mới
         </Button>
@@ -465,7 +423,7 @@ const ProductManager = () => {
       <Table
         columns={columns}
         dataSource={Array.isArray(data) ? data : []}
-        rowKey={(record) => record.productID || record.ProductID}
+        rowKey="productID"
         loading={loading}
         pagination={{ pageSize: 6 }}
       />
@@ -602,7 +560,7 @@ const ProductManager = () => {
             </>
           )}
 
-          {/* --- NẾU LÀ SỬA: HIỆN DANH SÁCH BIẾN THỂ (NESTED TABLE) --- */}
+          {/* --- NẾU LÀ SỬA: HIỆN DANH SÁCH BIẾN THỂ --- */}
           {editingProduct && (
             <div className="variant-table-container">
               <p className="section-subtitle">
@@ -620,19 +578,17 @@ const ProductManager = () => {
                     title: "Size",
                     key: "sizeName",
                     width: 80,
-                    render: (_, record) => {
-                      const name = record.size.name;
-                      return <Tag color="purple">{name}</Tag>;
-                    },
+                    render: (_, record) => (
+                      <Tag color="purple">{record.size.name}</Tag>
+                    ),
                   },
                   {
                     title: "Màu",
                     key: "colorName",
                     width: 80,
-                    render: (_, record) => {
-                      const name = record.color.name;
-                      return <Tag color="blue">{name}</Tag>;
-                    },
+                    render: (_, record) => (
+                      <Tag color="blue">{record.color.name}</Tag>
+                    ),
                   },
                   {
                     title: "Giá tiền (VNĐ)",
@@ -691,10 +647,10 @@ const ProductManager = () => {
       </Modal>
 
       {/* ========================================= */}
-      {/* === MODAL 2: SỬA GIÁ / KHO (MINI MODAL) === */}
+      {/* === MODAL 2: SỬA GIÁ / KHO === */}
       {/* ========================================= */}
       <Modal
-        title={`Sửa giá và tồn kho đồ có Size ${currentVariant?.size.name} - Màu ${currentVariant?.color.name}`}
+        title={`Sửa giá: ${currentVariant?.size.name} - ${currentVariant?.color.name}`}
         open={isVariantModalOpen}
         onOk={handleSaveVariant}
         onCancel={() => setIsVariantModalOpen(false)}
@@ -728,7 +684,7 @@ const ProductManager = () => {
       </Modal>
 
       {/* ========================================= */}
-      {/* === MODAL 3: THÊM BIẾN THỂ MỚI (MINI MODAL) === */}
+      {/* === MODAL 3: THÊM BIẾN THỂ MỚI === */}
       {/* ========================================= */}
       <Modal
         title="Thêm Size/Màu mới"

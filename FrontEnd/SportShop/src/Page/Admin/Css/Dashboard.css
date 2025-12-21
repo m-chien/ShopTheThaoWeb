@@ -1,20 +1,63 @@
+/* Bao quanh toàn trang */
+.dashboard-container {
+  padding: 20px;
+}
+
 .dashboard-title {
-  margin-bottom: 24px;
-  font-size: 24px;
+  margin-bottom: 20px;
   font-weight: 600;
-  color: #1f1f1f;
-  border-left: 5px solid #1890ff;
-  padding-left: 10px;
+  color: #333;
 }
 
-/* Hiệu ứng khi di chuột vào thẻ thống kê */
-.dashboard-card {
-  transition: all 0.3s;
+/* --- Màu nền cho các Card Thống kê --- */
+.stat-card-revenue {
+  background-color: #e6f7ff !important;
+}
+
+.stat-card-orders {
+  background-color: #f6ffed !important;
+}
+
+.stat-card-customers {
+  background-color: #fff7e6 !important;
+}
+
+.stat-card-products {
+  background-color: #fff0f6 !important;
+}
+
+/* --- Layout dòng biểu đồ --- */
+.dashboard-chart-row {
+  margin-top: 30px;
+  display: flex;
+  gap: 20px;
+}
+
+/* Hộp trắng chứa biểu đồ và list */
+.dashboard-box {
+  background: #fff;
+  padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.dashboard-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+.box-left {
+  flex: 2; /* Chiếm 2 phần */
+}
+
+.box-right {
+  flex: 1; /* Chiếm 1 phần */
+}
+
+.box-title {
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Thông báo khi không có dữ liệu */
+.empty-data {
+  text-align: center;
+  padding: 50px;
+  color: #999;
 }

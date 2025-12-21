@@ -1,4 +1,4 @@
-/* --- OrderManager.css --- */
+/* --- OrderManager.css ---
 
 .order-page-header {
     display: flex;
@@ -16,12 +16,12 @@
 }
 
 /* Style cho các Tag trạng thái */
-.status-select {
+/* .status-select {
     width: 100%;
-}
+} */
 
 /* Phần thông tin khách hàng trong Modal */
-.customer-info-section {
+/* .customer-info-section {
     background-color: #f9f9f9;
     padding: 15px;
     border-radius: 8px;
@@ -37,12 +37,113 @@
     font-weight: 600;
     color: #555;
     margin-right: 8px;
-}
+} */
 
-.total-price-highlight {
+/* .total-price-highlight {
     font-size: 18px;
     color: #d4380d; /* Màu đỏ cam */
-    font-weight: bold;
+/*font-weight: bold;
     text-align: right;
     margin-top: 20px;
+} */
+/* Header giống các trang khác */
+.order-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.order-page-header h2 {
+  margin: 0;
+  color: #262626;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* --- BADGE TRẠNG THÁI --- */
+.order-status-pending {
+  color: #faad14; /* Vàng cam */
+  background: #fffbe6;
+  border: 1px solid #ffe58f;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.order-status-shipping {
+  color: #1677ff; /* Xanh dương */
+  background: #e6f7ff;
+  border: 1px solid #91caff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.order-status-completed {
+  color: #52c41a; /* Xanh lá */
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.order-status-cancelled {
+  color: #ff4d4f; /* Đỏ */
+  background: #fff1f0;
+  border: 1px solid #ffa39e;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* Nút hành động */
+.action-btn-view {
+  color: #722ed1;
+  border-color: #722ed1;
+  background-color: transparent;
+}
+.action-btn-view:hover {
+  color: #9254de !important;
+  border-color: #9254de !important;
+  background-color: #f9f0ff;
+}
+.customer-info-section {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.info-row {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #555;
+  margin-right: 5px;
+}
+
+.status-update-row {
+  display: flex;
+  align-items: center;
+  background-color: #e6f7ff; /* Màu nền xanh nhạt cho phần trạng thái */
+  padding: 10px;
+  border-radius: 4px;
+}
+
+/* Highlight tổng tiền cuối modal */
+.total-price-highlight {
+  margin-top: 20px;
+  text-align: right;
+  font-size: 18px;
+  font-weight: 700;
+  color: #d4380d; /* Màu đỏ cam */
+  padding-top: 15px;
+  border-top: 2px solid #f0f0f0;
 }

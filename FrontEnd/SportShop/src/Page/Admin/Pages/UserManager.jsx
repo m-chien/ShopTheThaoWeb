@@ -7,10 +7,10 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 
-// 1. Import CSS (Đảm bảo bạn đã tạo file này như hướng dẫn trước)
+// Import CSS
 import "../Css/UserManager.css";
 
-// 2. Import API từ Customer.js (File mới tạo)
+// Import API
 import { getAllCustomers, toggleCustomerStatus } from "../../../Api/Customer";
 
 const UserManager = () => {
@@ -25,29 +25,22 @@ const UserManager = () => {
     try {
       const res = await getAllCustomers(searchVal);
 
-      // --- THÊM DÒNG NÀY ĐỂ KIỂM TRA ---
-      console.log("Dữ liệu API trả về:", res.data);
-      // ---------------------------------
-
-      if (res.data) {
-        // Kiểm tra xem dữ liệu nằm ở res.data hay res.data.data (tùy backend trả về)
-        if (Array.isArray(res.data)) {
-          setData(res.data);
-        } else if (res.data.data && Array.isArray(res.data.data)) {
-          setData(res.data.data); // Trường hợp backend gói trong object { data: [...] }
-        } else {
-          setData([]); // Không đúng định dạng
-        }
+      // Xử lý dữ liệu trả về từ API (hỗ trợ cả dạng mảng và dạng wrapper object)
+      const rawData = res.data;
+      if (Array.isArray(rawData)) {
+        setData(rawData);
+      } else if (rawData && Array.isArray(rawData.data)) {
+        setData(rawData.data);
+      } else {
+        setData([]);
       }
     } catch (error) {
-      console.log("Lỗi:", error); // Log lỗi ra xem là gì
       message.error("Lỗi tải danh sách người dùng!");
     } finally {
       setLoading(false);
     }
   };
 
-  // Chạy lần đầu khi vào trang
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -60,19 +53,11 @@ const UserManager = () => {
   // --- XỬ LÝ KHÓA / MỞ KHÓA ---
   const handleToggleStatus = async (id) => {
     try {
-      // Gọi API Toggle trạng thái
       await toggleCustomerStatus(id);
       message.success("Cập nhật trạng thái thành công!");
-
-      // Load lại bảng dữ liệu để thấy trạng thái mới
-      fetchUsers(keyword);
+      fetchUsers(keyword); // Load lại bảng
     } catch (error) {
-      // Xử lý lỗi hiển thị message từ Backend nếu có
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+      if (error.response?.data?.message) {
         message.error(error.response.data.message);
       } else {
         message.error("Có lỗi xảy ra khi cập nhật trạng thái!");
@@ -87,8 +72,7 @@ const UserManager = () => {
       dataIndex: "userId",
       key: "userId",
       width: 60,
-      // Xử lý an toàn nếu backend trả về UserId hoặc userId
-      render: (id, record) => id || record.UserId,
+      render: (id) => id,
     },
     {
       title: "Họ và Tên",
@@ -128,60 +112,55 @@ const UserManager = () => {
       title: "Trạng thái",
       dataIndex: "isActive",
       key: "isActive",
-      render: (isActive) => {
-        return isActive ? (
+      render: (isActive) =>
+        isActive ? (
           <Tag color="success">HOẠT ĐỘNG</Tag>
         ) : (
           <Tag color="error">ĐÃ KHÓA</Tag>
-        );
-      },
+        ),
     },
     {
       title: "Hành động",
       key: "action",
-      render: (_, record) => {
-        const id = record.userId || record.UserId;
-        const isActive = record.isActive;
-
-        return (
-          <Space>
-            {isActive ? (
-              // NẾU ĐANG HOẠT ĐỘNG -> HIỆN NÚT KHÓA MÀU ĐỎ
-              <Popconfirm
-                title="Khóa tài khoản này?"
-                description="Người dùng sẽ không thể đăng nhập được nữa."
-                onConfirm={() => handleToggleStatus(id)}
-                okText="Khóa ngay"
-                cancelText="Hủy"
+      render: (_, record) => (
+        <Space>
+          {record.isActive ? (
+            <Popconfirm
+              title="Khóa tài khoản này?"
+              description="Người dùng sẽ không thể đăng nhập được nữa."
+              onConfirm={() => handleToggleStatus(record.userId)}
+              okText="Khóa ngay"
+              cancelText="Hủy"
+            >
+              <Button
+                size="small"
+                icon={<LockOutlined />}
+                className="btn-lock"
+                danger // Thêm thuộc tính danger của Antd cho nút đỏ
               >
-                <Button
-                  size="small"
-                  icon={<LockOutlined />}
-                  className="btn-lock" // Class CSS màu đỏ
-                >
-                  Khóa
-                </Button>
-              </Popconfirm>
-            ) : (
-              // NẾU ĐANG KHÓA -> HIỆN NÚT MỞ MÀU XANH
-              <Popconfirm
-                title="Mở khóa tài khoản này?"
-                onConfirm={() => handleToggleStatus(id)}
-                okText="Mở khóa"
-                cancelText="Hủy"
+                Khóa
+              </Button>
+            </Popconfirm>
+          ) : (
+            <Popconfirm
+              title="Mở khóa tài khoản này?"
+              onConfirm={() => handleToggleStatus(record.userId)}
+              okText="Mở khóa"
+              cancelText="Hủy"
+            >
+              <Button
+                size="small"
+                icon={<UnlockOutlined />}
+                className="btn-unlock"
+                type="primary" // Thêm type primary cho nút xanh
+                ghost // Thêm ghost để nút nhìn nhẹ nhàng hơn (tuỳ chọn)
               >
-                <Button
-                  size="small"
-                  icon={<UnlockOutlined />}
-                  className="btn-unlock" // Class CSS màu xanh
-                >
-                  Mở lại
-                </Button>
-              </Popconfirm>
-            )}
-          </Space>
-        );
-      },
+                Mở lại
+              </Button>
+            </Popconfirm>
+          )}
+        </Space>
+      ),
     },
   ];
 
@@ -200,8 +179,9 @@ const UserManager = () => {
             placeholder="Tìm theo tên, email, username..."
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            onPressEnter={handleSearch} // Cho phép nhấn Enter để tìm
+            onPressEnter={handleSearch}
             className="search-input"
+            allowClear // Cho phép xóa nhanh nội dung tìm kiếm
           />
           <Button
             type="primary"
@@ -217,7 +197,7 @@ const UserManager = () => {
       <Table
         columns={columns}
         dataSource={Array.isArray(data) ? data : []}
-        rowKey={(record) => record.userId || record.UserId}
+        rowKey="userId" // Antd tự lấy trường .userId
         loading={loading}
         pagination={{ pageSize: 10 }}
         bordered

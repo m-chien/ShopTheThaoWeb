@@ -9,9 +9,14 @@ import {
   Form,
   Input,
   Image,
-  Select, // Import thêm Select nếu bạn muốn dùng cái dropdown chọn ảnh
+  Select,
 } from "antd";
-import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+  AppstoreOutlined,
+} from "@ant-design/icons";
 
 // Import CSS
 import "../Css/CategoryManager.css";
@@ -34,7 +39,7 @@ const CategoryManager = () => {
   const [editingCategory, setEditingCategory] = useState(null);
   const [form] = Form.useForm();
 
-  // Danh sách ảnh có sẵn (nếu bạn muốn dùng Select chọn ảnh)
+  // Danh sách ảnh có sẵn
   const availableImages = [
     "AoKhoac.png",
     "AoThun.png",
@@ -53,11 +58,15 @@ const CategoryManager = () => {
     setLoading(true);
     try {
       const res = await getAllCategory();
-      if (res.data) {
-        if (Array.isArray(res.data)) setData(res.data);
-        else if (res.data.data && Array.isArray(res.data.data))
-          setData(res.data.data);
-        else setData([]);
+      const rawData = res.data;
+
+      // Xử lý dữ liệu trả về (Wrapper object hoặc mảng trực tiếp)
+      if (Array.isArray(rawData)) {
+        setData(rawData);
+      } else if (rawData && Array.isArray(rawData.data)) {
+        setData(rawData.data);
+      } else {
+        setData([]);
       }
     } catch (error) {
       message.error("Lỗi tải danh mục!");
@@ -77,12 +86,7 @@ const CategoryManager = () => {
       message.success("Đã xóa danh mục!");
       fetchCategories();
     } catch (error) {
-      // Backend trả về message lỗi cụ thể thì hiển thị ra
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+      if (error.response?.data?.message) {
         message.error(error.response.data.message);
       } else {
         message.error("Xóa thất bại! Có thể danh mục này đang chứa sản phẩm.");
@@ -101,14 +105,13 @@ const CategoryManager = () => {
   const handleEdit = (record) => {
     setEditingCategory(record);
     setIsModalOpen(true);
+
     // Điền dữ liệu cũ vào form
-    setTimeout(() => {
-      form.setFieldsValue({
-        name: record.name,
-        description: record.description,
-        image: record.image || record.Image,
-      });
-    }, 100);
+    form.setFieldsValue({
+      name: record.name,
+      description: record.description,
+      image: record.image,
+    });
   };
 
   // --- 5. LƯU (THÊM HOẶC SỬA) ---
@@ -116,7 +119,6 @@ const CategoryManager = () => {
     try {
       const values = await form.validateFields();
 
-      // Chuẩn bị dữ liệu gửi đi
       const payload = {
         name: values.name,
         description: values.description,
@@ -125,14 +127,8 @@ const CategoryManager = () => {
 
       if (editingCategory) {
         // == CẬP NHẬT ==
-        const id =
-          editingCategory.id ||
-          editingCategory.ID ||
-          editingCategory.categoryId;
-
-        payload.id = id;
-
-        await updateCategory(id, payload);
+        const id = editingCategory.id;
+        await updateCategory(id, { ...payload, id });
         message.success("Cập nhật thành công!");
       } else {
         // == THÊM MỚI ==
@@ -143,12 +139,7 @@ const CategoryManager = () => {
       setIsModalOpen(false);
       fetchCategories();
     } catch (error) {
-      console.log(error);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+      if (error.response?.data?.message) {
         message.error(error.response.data.message);
       } else {
         message.error("Có lỗi xảy ra, vui lòng kiểm tra lại!");
@@ -163,17 +154,15 @@ const CategoryManager = () => {
       dataIndex: "id",
       key: "id",
       width: 70,
-      render: (id, record) => id || record.ID || record.categoryId,
+      render: (id) => id,
     },
     {
       title: "Hình ảnh",
       dataIndex: "image",
       key: "image",
       width: 100,
-      render: (_, record) => {
-        let imgName = record.image || record.Image;
-
-        if (!imgName)
+      render: (imageName) => {
+        if (!imageName) {
           return (
             <Image
               width={50}
@@ -181,11 +170,12 @@ const CategoryManager = () => {
               fallback="https://via.placeholder.com/50"
             />
           );
+        }
 
-        let imgSrc = imgName;
+        let imgSrc = imageName;
         // Tự động thêm đường dẫn nếu là file nội bộ
-        if (!imgName.startsWith("http")) {
-          imgSrc = `/Category/${imgName}`;
+        if (!imageName.startsWith("http")) {
+          imgSrc = `/Category/${imageName}`;
         }
 
         return (
@@ -213,44 +203,44 @@ const CategoryManager = () => {
       title: "Hành động",
       key: "action",
       width: 200,
-      render: (_, record) => {
-        const id = record.id || record.ID || record.categoryId;
-        return (
-          <Space>
+      render: (_, record) => (
+        <Space>
+          <Button
+            icon={<EditOutlined />}
+            size="small"
+            className="action-btn-edit"
+            onClick={() => handleEdit(record)}
+          >
+            Sửa
+          </Button>
+          <Popconfirm
+            title="Xóa danh mục này?"
+            description="Hành động này không thể hoàn tác!"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Xóa"
+            cancelText="Hủy"
+          >
             <Button
-              icon={<EditOutlined />}
+              danger
+              icon={<DeleteOutlined />}
               size="small"
-              className="action-btn-edit"
-              onClick={() => handleEdit(record)}
+              className="action-btn-delete"
             >
-              Sửa
+              Xóa
             </Button>
-            <Popconfirm
-              title="Xóa danh mục này?"
-              description="Hành động này không thể hoàn tác!"
-              onConfirm={() => handleDelete(id)}
-              okText="Xóa"
-              cancelText="Hủy"
-            >
-              <Button
-                danger
-                icon={<DeleteOutlined />}
-                size="small"
-                className="action-btn-delete"
-              >
-                Xóa
-              </Button>
-            </Popconfirm>
-          </Space>
-        );
-      },
+          </Popconfirm>
+        </Space>
+      ),
     },
   ];
 
   return (
     <div>
       <div className="category-page-header">
-        <h2>Quản lý Danh Mục</h2>
+        <h2>
+          <AppstoreOutlined style={{ marginRight: 8 }} />
+          Quản lý Danh Mục
+        </h2>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAddNew}>
           Thêm mới
         </Button>
@@ -259,11 +249,9 @@ const CategoryManager = () => {
       <Table
         columns={columns}
         dataSource={Array.isArray(data) ? data : []}
-        rowKey={(record) => record.id || record.ID || record.categoryId}
+        rowKey="id" // Antd tự lấy trường .id
         loading={loading}
-        // --- SỬA Ở ĐÂY ---
-        pagination={{ pageSize: 5 }} // Đổi từ 10 thành 5
-        // ----------------
+        pagination={{ pageSize: 5 }}
         bordered
       />
 
@@ -285,7 +273,6 @@ const CategoryManager = () => {
             <Input placeholder="Ví dụ: Giày bóng đá..." />
           </Form.Item>
 
-          {/* Dùng Select chọn ảnh cho tiện (hoặc dùng Input như cũ tùy bạn) */}
           <Form.Item name="image" label="Chọn hình ảnh">
             <Select
               placeholder="Chọn ảnh có sẵn hoặc nhập link..."

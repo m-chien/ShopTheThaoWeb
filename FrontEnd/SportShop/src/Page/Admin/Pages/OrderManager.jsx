@@ -1,233 +1,327 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
-  Tag,
   Button,
-  Space,
+  message,
   Modal,
   Select,
-  message,
+  Tag,
+  Space,
   Divider,
 } from "antd";
-import { EyeOutlined } from "@ant-design/icons";
+import { ShoppingOutlined, EyeOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
 
-// Import CSS
+// Import API
+import { getAllOrders, updateOrder, getOrderDetails } from "../../../Api/Order";
 import "../Css/OrderManager.css";
 
 const { Option } = Select;
 
 const OrderManager = () => {
-  // 1. Giả lập dữ liệu Đơn hàng (giống bảng Order trong SQL)
-  // Trong thực tế, bạn sẽ gọi API ở useEffect để lấy dữ liệu này
-  const [orders, setOrders] = useState([
-    {
-      id: 1,
-      customer: "Trần Đăng Tuấn Khanh",
-      date: "2025-10-25 09:30",
-      total: 5000000,
-      status: "Paid",
-      address: "Đà Nẵng",
-      phone: "0900000001",
-      // Giả lập chi tiết đơn hàng (OrderDetail)
-      details: [
-        {
-          id: 1,
-          product: "Nike Air Max - Đỏ (S)",
-          quantity: 2,
-          price: 2500000,
-        },
-        {
-          id: 2,
-          product: "Nike Revolution 6 - Đen (M)",
-          quantity: 1,
-          price: 500000,
-        }, // Tặng kèm/giảm giá ví dụ
-      ],
-    },
-    {
-      id: 2,
-      customer: "Khách vãng lai",
-      date: "2025-10-26 14:15",
-      total: 2800000,
-      status: "Pending",
-      address: "Hồ Chí Minh",
-      phone: "0987654321",
-      details: [
-        {
-          id: 3,
-          product: "Adidas Ultraboost - Đen (M)",
-          quantity: 1,
-          price: 2800000,
-        },
-      ],
-    },
-  ]);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // State cho Modal chi tiết
+  // State Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
-  // Hàm xử lý màu sắc cho trạng thái
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Pending":
-        return "gold";
-      case "Shipping":
-        return "blue";
-      case "Paid":
-        return "green";
-      case "Completed":
-        return "green";
-      case "Cancelled":
-        return "red";
-      default:
-        return "default";
+  // State chi tiết đơn hàng
+  const [orderDetails, setOrderDetails] = useState([]);
+  const [loadingDetails, setLoadingDetails] = useState(false);
+
+  // --- 1. LẤY DANH SÁCH ĐƠN HÀNG ---
+  const fetchOrders = async () => {
+    setLoading(true);
+    try {
+      const res = await getAllOrders();
+      const rawData = res.data;
+
+      // Xử lý dữ liệu trả về
+      if (Array.isArray(rawData)) {
+        setData(rawData);
+      } else if (rawData && Array.isArray(rawData.data)) {
+        setData(rawData.data);
+      } else {
+        setData([]);
+      }
+    } catch (error) {
+      message.error("Lỗi tải danh sách đơn hàng!");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Hàm mở Modal xem chi tiết
-  const handleViewDetail = (record) => {
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  // --- 2. XỬ LÝ MỞ MODAL & GỌI API CHI TIẾT ---
+  const handleViewDetail = async (record) => {
     setSelectedOrder(record);
     setIsModalOpen(true);
+    setOrderDetails([]); // Reset bảng trước khi load mới
+
+    if (record.id) {
+      setLoadingDetails(true);
+      try {
+        const res = await getOrderDetails(record.id);
+
+        // Xử lý dữ liệu chi tiết trả về
+        if (res.data && Array.isArray(res.data.data)) {
+          setOrderDetails(res.data.data);
+        } else if (Array.isArray(res.data)) {
+          setOrderDetails(res.data);
+        } else {
+          setOrderDetails([]);
+        }
+      } catch (error) {
+        message.error("Không thể tải chi tiết sản phẩm!");
+      } finally {
+        setLoadingDetails(false);
+      }
+    }
   };
 
-  // Hàm thay đổi trạng thái đơn hàng
-  const handleChangeStatus = (value) => {
-    // Cập nhật lại state (Sau này sẽ gọi API update xuống DB)
-    const updatedOrders = orders.map((order) =>
-      order.id === selectedOrder.id ? { ...order, status: value } : order
-    );
-    setOrders(updatedOrders);
+  // --- 3. CẬP NHẬT TRẠNG THÁI ---
+  const handleChangeStatus = async (newStatus) => {
+    if (!selectedOrder) return;
 
-    // Cập nhật luôn cái đang mở trong modal để hiển thị ngay
-    setSelectedOrder({ ...selectedOrder, status: value });
+    try {
+      const id = selectedOrder.id;
 
-    message.success(
-      `Đã cập nhật trạng thái đơn hàng #${selectedOrder.id} thành ${value}`
-    );
+      const cleanPayload = {
+        id: parseInt(id),
+        userId: selectedOrder.userId,
+        status: newStatus,
+        totalAmount: selectedOrder.totalAmount,
+        deliveryAddress: selectedOrder.deliveryAddress,
+        phone: selectedOrder.phone,
+        orderDate: selectedOrder.orderDate
+          ? dayjs(selectedOrder.orderDate).toISOString()
+          : new Date().toISOString(),
+        voucherId: selectedOrder.voucherId || null,
+      };
+
+      await updateOrder(id, cleanPayload);
+      message.success(`Cập nhật trạng thái đơn #${id} thành công!`);
+
+      // Cập nhật UI ngay lập tức
+      setSelectedOrder({ ...selectedOrder, status: newStatus });
+      fetchOrders();
+    } catch (error) {
+      if (error.response?.status === 400) {
+        message.error("Lỗi dữ liệu (400). Kiểm tra lại Backend.");
+      } else {
+        message.error("Có lỗi xảy ra khi cập nhật!");
+      }
+    }
   };
 
-  // Cấu hình cột cho bảng danh sách chính
+  // --- HELPER: RENDER TRẠNG THÁI ---
+  const renderStatusTag = (status) => {
+    const s = status ? status.toLowerCase() : "";
+    if (s.includes("đang xử lý") || s.includes("pending")) {
+      return <span className="order-status-pending">Đang xử lý</span>;
+    } else if (s.includes("giao") || s.includes("shipping")) {
+      return <span className="order-status-shipping">Đang giao hàng</span>;
+    } else if (s.includes("hoàn thành") || s.includes("paid")) {
+      return <span className="order-status-completed">Hoàn thành</span>;
+    } else if (s.includes("hủy") || s.includes("cancelled")) {
+      return <span className="order-status-cancelled">Đã hủy</span>;
+    }
+    return <Tag>{status}</Tag>;
+  };
+
+  // --- CẤU HÌNH CỘT BẢNG CHÍNH ---
   const columns = [
-    { title: "ID", dataIndex: "id", key: "id", width: 80 },
-    { title: "Khách hàng", dataIndex: "customer", key: "customer" },
-    { title: "Ngày đặt", dataIndex: "date", key: "date" },
+    {
+      title: "Mã ĐH",
+      dataIndex: "id",
+      key: "id",
+      width: 80,
+      render: (id) => <b>#{id}</b>,
+    },
+    {
+      title: "Khách hàng",
+      dataIndex: "customerName",
+      key: "customerName",
+      render: (name, record) => (
+        <div>
+          <b>{name}</b>
+          <div style={{ fontSize: 12, color: "#888" }}>ID: {record.userId}</div>
+        </div>
+      ),
+    },
+    {
+      title: "Ngày đặt",
+      dataIndex: "orderDate",
+      key: "orderDate",
+      render: (date) => (date ? dayjs(date).format("DD/MM/YYYY HH:mm") : "..."),
+    },
     {
       title: "Tổng tiền",
-      dataIndex: "total",
-      key: "total",
-      render: (price) => (
-        <b style={{ color: "#d4380d" }}>{price.toLocaleString()} đ</b>
+      dataIndex: "totalAmount",
+      key: "totalAmount",
+      render: (amount) => (
+        <b style={{ color: "#d48806" }}>
+          {new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          }).format(amount)}
+        </b>
       ),
     },
     {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      render: (status) => (
-        <Tag color={getStatusColor(status)}>{status.toUpperCase()}</Tag>
-      ),
+      render: (status) => renderStatusTag(status),
     },
     {
       title: "Hành động",
       key: "action",
+      width: 150,
       render: (_, record) => (
-        <Button
-          type="primary"
-          icon={<EyeOutlined />}
-          onClick={() => handleViewDetail(record)}
-        >
-          Chi tiết
-        </Button>
+        <Space>
+          <Button
+            type="primary"
+            size="small"
+            icon={<EyeOutlined />}
+            onClick={() => handleViewDetail(record)}
+          >
+            Xử lý
+          </Button>
+        </Space>
       ),
     },
   ];
 
-  // Cấu hình cột cho bảng chi tiết sản phẩm trong Modal
+  // --- CẤU HÌNH CỘT CHI TIẾT SẢN PHẨM (TRONG MODAL) ---
   const detailColumns = [
-    { title: "Sản phẩm", dataIndex: "product", key: "product" },
-    { title: "Số lượng", dataIndex: "quantity", key: "quantity" },
+    {
+      title: "Sản phẩm",
+      dataIndex: "product",
+      key: "product",
+    },
+    {
+      title: "Số lượng",
+      dataIndex: "quantity",
+      key: "quantity",
+      align: "center",
+    },
     {
       title: "Đơn giá",
       dataIndex: "price",
       key: "price",
-      render: (p) => `${p.toLocaleString()} đ`,
+      align: "right",
+      render: (p) =>
+        new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }).format(p ?? 0),
     },
     {
       title: "Thành tiền",
-      key: "subtotal",
-      render: (_, r) => <b>{(r.quantity * r.price).toLocaleString()} đ</b>,
+      dataIndex: "total",
+      key: "total",
+      align: "right",
+      render: (t) => (
+        <b>
+          {new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          }).format(t ?? 0)}
+        </b>
+      ),
     },
   ];
 
   return (
     <div>
       <div className="order-page-header">
-        <h2>Quản lý đơn hàng</h2>
+        <h2>
+          <ShoppingOutlined style={{ marginRight: 8 }} />
+          Quản lý Đơn Hàng
+        </h2>
       </div>
 
-      <Table columns={columns} dataSource={orders} rowKey="id" />
+      <Table
+        columns={columns}
+        dataSource={data}
+        rowKey="id"
+        loading={loading}
+        pagination={{ pageSize: 10 }}
+        bordered
+      />
 
-      {/* MODAL CHI TIẾT ĐƠN HÀNG */}
+      {/* --- MODAL CHI TIẾT --- */}
       <Modal
         title={`Chi tiết đơn hàng #${selectedOrder?.id}`}
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
-        footer={null} // Tắt nút mặc định, tự custom nếu cần
-        width={700}
+        footer={null}
+        width={750}
       >
         {selectedOrder && (
-          <div>
-            {/* Thông tin khách hàng */}
+          <div className="order-detail-modal-content">
             <div className="customer-info-section">
               <div className="info-row">
                 <span className="info-label">Khách hàng:</span>{" "}
-                {selectedOrder.customer}
+                <b>{selectedOrder.customerName || selectedOrder.userId}</b>
               </div>
               <div className="info-row">
                 <span className="info-label">SĐT:</span> {selectedOrder.phone}
               </div>
               <div className="info-row">
                 <span className="info-label">Địa chỉ:</span>{" "}
-                {selectedOrder.address}
+                {selectedOrder.deliveryAddress}
               </div>
               <div className="info-row">
                 <span className="info-label">Ngày đặt:</span>{" "}
-                {selectedOrder.date}
+                {dayjs(selectedOrder.orderDate).format("DD/MM/YYYY HH:mm")}
               </div>
+
+              {/* Select Cập nhật trạng thái */}
               <div
-                className="info-row"
-                style={{ marginTop: 10, display: "flex", alignItems: "center" }}
+                className="info-row status-update-row"
+                style={{ marginTop: 15 }}
               >
                 <span className="info-label">Cập nhật trạng thái:</span>
                 <Select
-                  defaultValue={selectedOrder.status}
-                  style={{ width: 150 }}
+                  value={selectedOrder.status}
+                  style={{ width: 200, marginLeft: 10 }}
                   onChange={handleChangeStatus}
                 >
-                  <Option value="Pending">Pending</Option>
-                  <Option value="Shipping">Shipping</Option>
-                  <Option value="Paid">Paid</Option>
-                  <Option value="Completed">Completed</Option>
-                  <Option value="Cancelled">Cancelled</Option>
+                  <Option value="Đang xử lý">Đang xử lý</Option>
+                  <Option value="Đang giao hàng">Đang giao hàng</Option>
+                  <Option value="Hoàn thành">Hoàn thành / Đã thanh toán</Option>
+                  <Option value="Đã hủy">Đã hủy</Option>
                 </Select>
               </div>
             </div>
 
-            <Divider orientation="left">Danh sách sản phẩm</Divider>
+            <Divider titlePlacement="left" plain>
+              Danh sách sản phẩm
+            </Divider>
 
-            {/* Bảng sản phẩm bên trong */}
             <Table
               columns={detailColumns}
-              dataSource={selectedOrder.details}
+              dataSource={orderDetails}
               rowKey="id"
               pagination={false}
+              loading={loadingDetails}
               size="small"
               bordered
+              locale={{ emptyText: "Đang tải hoặc không có sản phẩm..." }}
             />
 
             <div className="total-price-highlight">
-              Tổng cộng: {selectedOrder.total.toLocaleString()} VNĐ
+              Tổng cộng:{" "}
+              {new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              }).format(selectedOrder.totalAmount)}
             </div>
           </div>
         )}

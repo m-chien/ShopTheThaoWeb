@@ -33,8 +33,9 @@ function App() {
           <Route path="/payment" element={<Payment />} /> */}
 
           <Route path="/" element={<Navigate to="/admin" replace />} />
+          {/* Layout Admin bao bọc các trang con */}
           <Route path="/admin" element={<AdminLayout />}>
-            {/* Index: Mặc định vào /admin sẽ hiện Dashboard */}
+            {/* 1. Dashboard (Trang chủ Admin) */}
             <Route index element={<Dashboard />} />
 
             {/* /admin/products: Quản lý sản phẩm */}

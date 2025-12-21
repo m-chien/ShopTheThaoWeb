@@ -9,17 +9,21 @@ import {
   Image,
   Select,
   Popconfirm,
-  Space,
 } from "antd";
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  DeleteOutlined,
+  SketchOutlined,
+} from "@ant-design/icons";
 
 // Import API
 import { getAllBrand, createBrand, deleteBrand } from "../../../Api/Brand";
 
-// --- 1. IMPORT FILE CSS ---
+// Import CSS
 import "../Css/BrandManager.css";
 
 const BrandManager = () => {
+  // --- STATE ---
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,23 +33,29 @@ const BrandManager = () => {
     "adidas_logo.png",
     "nike_logo.png",
     "puma_logo.png",
-    "mizuno_logo.png",
-    "kamito_logo.png",
-    "jorgabola_logo.png",
-    "grandSport_logo.png",
-    "UnderArmour.png",
-    "NewBalance.png",
+    "asics_logo.png",
+    "columbia_logo.png",
+    "crocs_logo.png",
+    "hoka_logo.png",
+    "on_logo.png",
+    "speedo_logo.png",
+    "teva_logo.png",
   ];
 
+  // --- LẤY DỮ LIỆU ---
   const fetchBrands = async () => {
     setLoading(true);
     try {
       const res = await getAllBrand();
-      if (res.data) {
-        if (Array.isArray(res.data)) setData(res.data);
-        else if (res.data.data && Array.isArray(res.data.data))
-          setData(res.data.data);
-        else setData([]);
+      const rawData = res.data;
+
+      // Xử lý dữ liệu trả về (Wrapper object hoặc mảng trực tiếp)
+      if (Array.isArray(rawData)) {
+        setData(rawData);
+      } else if (rawData && Array.isArray(rawData.data)) {
+        setData(rawData.data);
+      } else {
+        setData([]);
       }
     } catch (error) {
       message.error("Lỗi tải danh sách hãng!");
@@ -58,17 +68,14 @@ const BrandManager = () => {
     fetchBrands();
   }, []);
 
+  // --- XÓA THƯƠNG HIỆU ---
   const handleDelete = async (id) => {
     try {
       await deleteBrand(id);
       message.success("Đã xóa thương hiệu thành công!");
       fetchBrands();
     } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+      if (error.response?.data?.message) {
         message.error(error.response.data.message);
       } else {
         message.error("Xóa thất bại! Có thể hãng này đang có sản phẩm.");
@@ -76,11 +83,13 @@ const BrandManager = () => {
     }
   };
 
+  // --- MỞ MODAL THÊM MỚI ---
   const handleAddNew = () => {
     form.resetFields();
     setIsModalOpen(true);
   };
 
+  // --- LƯU (THÊM MỚI) ---
   const handleSave = async () => {
     try {
       const values = await form.validateFields();
@@ -95,11 +104,7 @@ const BrandManager = () => {
       setIsModalOpen(false);
       fetchBrands();
     } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
+      if (error.response?.data?.message) {
         message.error(error.response.data.message);
       } else {
         message.error("Có lỗi xảy ra!");
@@ -107,26 +112,27 @@ const BrandManager = () => {
     }
   };
 
+  // --- CẤU HÌNH CỘT BẢNG ---
   const columns = [
     {
       title: "ID",
       dataIndex: "id",
       key: "id",
       width: 70,
-      render: (id, record) => id || record.ID,
+      render: (id) => id,
     },
     {
       title: "Logo",
       dataIndex: "logo",
       key: "logo",
       width: 100,
-      render: (_, record) => {
-        let imgName = record.logo || record.Logo;
-        if (!imgName) return null;
+      render: (logoName) => {
+        if (!logoName) return null;
 
-        let imgSrc = imgName;
-        if (!imgName.startsWith("http")) {
-          imgSrc = `/Brand/${imgName}`;
+        let imgSrc = logoName;
+        // Tự động thêm đường dẫn nếu là file nội bộ
+        if (!logoName.startsWith("http")) {
+          imgSrc = `/Brand/${logoName}`;
         }
 
         return (
@@ -150,51 +156,51 @@ const BrandManager = () => {
       title: "Hành động",
       key: "action",
       width: 200,
-      render: (_, record) => {
-        const id = record.id || record.ID;
-        return (
-          <Popconfirm
-            title="Xóa hãng này?"
-            description="Hành động này không thể hoàn tác!"
-            onConfirm={() => handleDelete(id)}
-            okText="Xóa"
-            cancelText="Hủy"
+      render: (_, record) => (
+        <Popconfirm
+          title="Xóa hãng này?"
+          description="Hành động này không thể hoàn tác!"
+          onConfirm={() => handleDelete(record.id)}
+          okText="Xóa"
+          cancelText="Hủy"
+        >
+          <Button
+            danger
+            size="small"
+            icon={<DeleteOutlined />}
+            className="action-btn-delete"
           >
-            {/* --- 2. SỬA NÚT XÓA Ở ĐÂY --- */}
-            {/* Bỏ type="primary" để nó ăn style viền đỏ của class css */}
-            <Button
-              danger
-              size="small"
-              icon={<DeleteOutlined />}
-              className="action-btn-delete"
-            >
-              Xóa
-            </Button>
-          </Popconfirm>
-        );
-      },
+            Xóa
+          </Button>
+        </Popconfirm>
+      ),
     },
   ];
 
   return (
     <div>
-      {/* --- 3. SỬA HEADER Ở ĐÂY --- */}
-      <div className="product-page-header">
-        <h2>Quản lý Thương Hiệu</h2>
+      {/* Header trang */}
+      <div className="brand-page-header">
+        <h2>
+          <SketchOutlined style={{ marginRight: 8 }} />
+          Quản lý Thương Hiệu
+        </h2>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAddNew}>
           Thêm hãng mới
         </Button>
       </div>
 
+      {/* Bảng dữ liệu */}
       <Table
         columns={columns}
         dataSource={Array.isArray(data) ? data : []}
-        rowKey={(record) => record.id || record.ID}
+        rowKey="id" // Antd tự lấy trường .id
         loading={loading}
         pagination={{ pageSize: 5 }}
         bordered
       />
 
+      {/* Modal Form */}
       <Modal
         title="Thêm thương hiệu mới"
         open={isModalOpen}
