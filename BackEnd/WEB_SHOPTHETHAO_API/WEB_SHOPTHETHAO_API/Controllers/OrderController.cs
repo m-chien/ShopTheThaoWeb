@@ -69,7 +69,7 @@ public class OrderController : ControllerBase
         return NoContent();
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpGet("my-orders")]
     public async Task<IActionResult> GetMyOrders()
     {
