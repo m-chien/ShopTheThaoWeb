@@ -83,6 +83,21 @@ namespace WEB_SHOPTHETHAO_API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+        [HttpPost("logout")]
+        [AllowAnonymous] // cho phép client gọi dù token có hết hạn
+        public IActionResult Logout()
+        {
+            // Xoá cookie refreshToken trên trình duyệt
+            Response.Cookies.Delete("refreshToken", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None
+            });
+
+            // (Tuỳ) bạn cũng có thể xoá các cookie khác nếu có
+            return Ok(new { message = "Đăng xuất thành công" });
+        }
 
 
         [HttpGet("profile")]

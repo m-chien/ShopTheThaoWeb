@@ -472,7 +472,7 @@ SELECT * FROM Category;
 SELECT * FROM Brand;
 
 -- 3. Product
-SELECT * FROM Product;
+SELECT * FROM Product where Description = N'Giày chạy bộ Adidas Ultraboost';
 
 -- 4. Size
 SELECT * FROM Size;
@@ -481,7 +481,7 @@ SELECT * FROM Size;
 SELECT * FROM Color;
 
 -- 6. ProductVariant
-SELECT * FROM ProductVariant;
+SELECT * FROM ProductVariant where ProductID = 2;
 
 -- 7. User
 SELECT * FROM [User];
@@ -800,7 +800,7 @@ GO
 
 -- Test
 EXEC dbo.sp_GetOrdersByUserId @UserId = 1;
-
+/*
 -- Trigger giảm số lượng sản phẩm khi khách hàng đặt hàng
 SELECT * FROM [Order];
 IF OBJECT_ID('dbo.trg_OrderDetail_DecreaseStock', 'TR') IS NOT NULL
@@ -876,4 +876,4 @@ BEGIN
     END CATCH
 END
 GO
-
+*/
