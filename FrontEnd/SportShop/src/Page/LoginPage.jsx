@@ -50,7 +50,7 @@ export function LoginPage() {
           });
           setTimeout(() => {
             navigate(decoded.role === "Admin" ? "/admin" : "/trangchu");
-          }, 3000);
+          }, 1000);
         }
       } catch (error) {
         console.error("Login failed:", error);

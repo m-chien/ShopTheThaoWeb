@@ -12,6 +12,28 @@ export default function BillDetail() {
   const { id } = useParams();
   const [billData, setBillData] = useState(null);
 
+  const handleCancelOrder = async () => {
+    const confirmCancel = window.confirm(
+      "Bạn có chắc chắn muốn hủy đơn hàng này không?",
+    );
+    if (!confirmCancel) return;
+
+    try {
+      await api.delete(`/order/${billData.orderId}`);
+
+      alert("Hủy đơn hàng thành công!");
+      navigate("/profile");
+    } catch (err) {
+      console.error("Cancel order error:", err);
+
+      if (err.response?.data?.message) {
+        alert(err.response.data.message);
+      } else {
+        alert("Không thể hủy đơn hàng. Vui lòng thử lại!");
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchBill = async () => {
       try {
@@ -22,7 +44,7 @@ export default function BillDetail() {
 
         const orderData = orderRes.data.data;
         const user = userRes.data;
-        console.log("🚀 ~ fetchBill ~ user:", user)
+        console.log("🚀 ~ fetchBill ~ user:", user);
 
         // 1. Tìm đơn hàng hiện tại
         const order = orderData.orders.find((o) => o.id === Number(id));
@@ -258,7 +280,22 @@ export default function BillDetail() {
               <a href="/cart" className={styles.backBtn}>
                 ‹ Quay trở lại
               </a>
-              <button className={styles.continueBtn} onClick={() => navigate("/ProductList")}>Mua hàng tiếp »</button>
+
+              {billData.orderStatus === "Đang xử lý" && (
+                <button
+                  className={styles.cancelBtn}
+                  onClick={handleCancelOrder}
+                >
+                  Hủy đơn hàng
+                </button>
+              )}
+
+              <button
+                className={styles.continueBtn}
+                onClick={() => navigate("/ProductList")}
+              >
+                Mua hàng tiếp »
+              </button>
             </div>
           </div>
         </div>
