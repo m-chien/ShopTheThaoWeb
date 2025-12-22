@@ -1,7 +1,9 @@
 import { jwtDecode } from "jwt-decode";
 import { useRef, useState } from "react";
-import "../styles/AuthPage.css";
 import { useNavigate } from "react-router-dom";
+import "../styles/AuthPage.css";
+
+// Components & API
 import { User } from "../Api/User";
 import { useAuth } from "../Component/AuthProvider";
 import Footer from "../Component/Footer";
@@ -12,10 +14,10 @@ import { RegisterPage } from "./RegisterPage";
 export function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  // State
   const [currentPage, setCurrentPage] = useState("login");
   const [rememberMe, setRememberMe] = useState(false);
-  const usernameRef = useRef();
-  const passwordRef = useRef();
   const [showModal, setShowModal] = useState({
     isOpen: false,
     status: "",
@@ -23,47 +25,88 @@ export function LoginPage() {
     message: "",
   });
 
-  const handleSubmit = async () => {
-    if (usernameRef.current.value !== "" && passwordRef.current.value !== "") {
-      try {
-        const data = await User().login(
-          usernameRef.current.value,
-          passwordRef.current.value,
-        );
+  // Refs
+  const usernameRef = useRef();
+  const passwordRef = useRef();
 
-        const token = data.data.accessToken;
-        if (token) {
-          login(token);
-          let decoded;
-          try {
-            decoded = jwtDecode(token);
-          } catch (e) {
-            console.error("JWT decode failed:", e);
-            navigate("/trangchu");
-            return;
-          }
-          setShowModal({
-            isOpen: true,
-            status: "success",
-            title: "Đăng nhập thành công",
-            message: "Bạn đã đăng nhập thành công!",
-          });
-          setTimeout(() => {
-            navigate(decoded.role === "Admin" ? "/admin" : "/trangchu");
-          }, 1000);
-        }
-      } catch (error) {
-        console.error("Login failed:", error);
-        alert("Đăng nhập thất bại. Vui lòng kiểm tra thông tin.");
-      }
-    } else {
+  const handleSubmit = async (e) => {
+    if (e) e.preventDefault();
+
+    const username = usernameRef.current.value;
+    const password = passwordRef.current.value;
+
+    if (!username || !password) {
       setShowModal({
         isOpen: true,
         status: "error",
         title: "Lỗi đăng nhập",
-        message: "Vui lòng nhập đầy đủ thông tin!",
+        message: "Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu!",
       });
       return;
+    }
+
+    try {
+      const response = await User().login(username, password);
+      const token = response.data.accessToken;
+
+      if (token) {
+        login(token);
+
+        let decoded;
+        try {
+          decoded = jwtDecode(token);
+        } catch (err) {
+          console.error("JWT Decode Error:", err);
+          navigate("/");
+          return;
+        }
+
+        setShowModal({
+          isOpen: true,
+          status: "success",
+          title: "Đăng nhập thành công",
+          message: "Chào mừng bạn quay trở lại!",
+        });
+
+        setTimeout(() => {
+          navigate(decoded.role === "Admin" ? "/admin" : "/trangchu");
+        }, 1000);
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+
+      let displayMsg = "Đăng nhập thất bại. Vui lòng thử lại.";
+
+      if (error.response && error.response.data) {
+        const svData = error.response.data;
+
+        if (
+          svData.errors &&
+          Array.isArray(svData.errors) &&
+          svData.errors.length > 0
+        ) {
+          const firstError = svData.errors[0];
+          try {
+            const parsedError = JSON.parse(firstError);
+            displayMsg = parsedError.message || firstError;
+          } catch (e) {
+            displayMsg = firstError;
+          }
+        } else if (svData.message && svData.message !== "Bad Request") {
+          displayMsg = svData.message;
+        } else if (svData.title) {
+          displayMsg = svData.title;
+        }
+      } else if (error.message) {
+        displayMsg = error.message;
+      }
+
+      setShowModal({
+        isOpen: true,
+        status: "error",
+        title: "Thông báo",
+        message: displayMsg,
+      });
     }
   };
 
@@ -86,7 +129,7 @@ export function LoginPage() {
                 </p>
               </div>
 
-              <div className="auth-form">
+              <form className="auth-form" onSubmit={handleSubmit}>
                 <div className="input-group">
                   <label className="input-label">Nhập tên đăng nhập</label>
                   <input
@@ -124,7 +167,7 @@ export function LoginPage() {
                   </label>
                 </div>
 
-                <button onClick={handleSubmit} className="submit-btn">
+                <button type="submit" className="submit-btn">
                   Đăng nhập
                 </button>
 
@@ -137,12 +180,14 @@ export function LoginPage() {
                     Đăng ký ngay
                   </span>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
+
       <Footer />
+
       <NotificationModal
         isOpen={showModal.isOpen}
         status={showModal.status}
@@ -151,7 +196,6 @@ export function LoginPage() {
         onClose={() => setShowModal({ ...showModal, isOpen: false })}
         primaryButtonText="Đóng"
         showButtons={false}
-        onPrimaryClick={showModal.onPrimaryClick}
       />
     </div>
   );

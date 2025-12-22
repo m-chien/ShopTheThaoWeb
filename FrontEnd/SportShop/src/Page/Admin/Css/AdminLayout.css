@@ -1,41 +1,50 @@
+/* Container chính */
+.admin-layout-container {
+  min-height: 100vh;
+}
+
 /* 1. Logo Shop ở góc trái trên cùng */
 .admin-logo {
   height: 32px;
   margin: 16px;
-  background: rgba(255, 255, 255, 0.2); /* Màu nền mờ */
+  background: rgba(255, 255, 255, 0.2);
   color: #fff;
   text-align: center;
-  line-height: 32px; /* Căn giữa theo chiều dọc */
+  line-height: 32px;
   font-weight: bold;
   font-size: 16px;
   border-radius: 6px;
-
-  /* Xử lý chuyển động mượt mà */
   white-space: nowrap;
   overflow: hidden;
   user-select: none;
   transition: all 0.2s ease-in-out;
 }
 
-/* 2. Thanh Header trên cùng */
+/* 2. Thanh Header */
 .admin-header {
   padding: 0 24px !important;
   background: #fff !important;
   display: flex;
-  justify-content: flex-end; /* Đẩy nội dung sang phải */
+  justify-content: flex-end;
   align-items: center;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   z-index: 1;
 }
 
-/* Tên admin */
+/* Tên admin và Avatar */
+.admin-user-dropdown {
+  cursor: pointer;
+  color: inherit;
+  display: inline-block; /* Quan trọng để tránh lỗi React.Children */
+}
+
 .admin-username {
   margin-right: 10px;
   font-weight: 500;
   color: #333;
 }
 
-/* 3. Khung chứa nội dung chính (màu trắng ở giữa) */
+/* 3. Khung chứa nội dung chính */
 .admin-content-wrapper {
   margin: 16px;
   padding: 24px;

@@ -15,7 +15,7 @@ export default function DetailProduct() {
 
   const { data: products, loading } = useFetchAll(
     `/ProductVariant/detail/${id}`,
-    null,
+    null
   );
   console.log("🚀 ~ DetailProduct ~ products:", products);
   const navigate = useNavigate();
@@ -26,14 +26,14 @@ export default function DetailProduct() {
 
       // set selectedColor as the full color object (not only id)
       const colorObj = products.colors?.find(
-        (c) => c.colorID === firstVariant.colorID,
+        (c) => c.colorID === firstVariant.colorID
       );
       if (colorObj) setSelectedColor(colorObj);
       else setSelectedColor(null);
 
       // set selectedSize as the full size object
       const sizeObj = products.sizes?.find(
-        (s) => s.sizeID === firstVariant.sizeID,
+        (s) => s.sizeID === firstVariant.sizeID
       );
       if (sizeObj) setSelectedSize(sizeObj);
       else setSelectedSize(null);
@@ -67,32 +67,28 @@ export default function DetailProduct() {
       name: "Adidas Adistar 3 - Đỏ",
       price: 1750000,
       originalPrice: 3500000,
-      image:
-        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop&q=80",
+      image: "/Product/nike_red.png",
     },
     {
       id: 3,
       name: "Adidas Adistar 3 - Đen",
       price: 1750000,
       originalPrice: 3500000,
-      image:
-        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop&q=80",
+      image: "StreetRider_black.png",
     },
     {
       id: 4,
       name: "Adidas Adistar 3 - Trắng",
       price: 1750000,
       originalPrice: 3500000,
-      image:
-        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop&q=80",
+      image: "puma_jogger_white.png",
     },
     {
       id: 5,
       name: "Adidas Adistar 3 - Xanh",
       price: 1750000,
       originalPrice: 3500000,
-      image:
-        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop&q=80",
+      image: "PUMAREPRESENT_blue.png",
     },
   ];
 
@@ -121,7 +117,7 @@ export default function DetailProduct() {
         sizeName: selectedSize?.sizeName || "",
         quantity,
         isSelected: false,
-      }),
+      })
     );
   };
   const handleBuyNow = () => {
@@ -148,7 +144,7 @@ export default function DetailProduct() {
         sizeName: selectedSize?.sizeName || "",
         quantity,
         isSelected: true,
-      }),
+      })
     );
     navigate("/cart");
   };
@@ -267,14 +263,14 @@ export default function DetailProduct() {
                       setSelectedColor(color);
 
                       const variant = products.variants.find(
-                        (v) => v.colorID === color.colorID,
+                        (v) => v.colorID === color.colorID
                       );
 
                       if (!variant) return;
 
                       // set corresponding size object
                       const sizeObj = products.sizes?.find(
-                        (s) => s.sizeID === variant.sizeID,
+                        (s) => s.sizeID === variant.sizeID
                       );
 
                       setSelectedVariant(variant);
@@ -312,7 +308,7 @@ export default function DetailProduct() {
                         const variant = products.variants.find(
                           (v) =>
                             v.colorID === selectedColor?.colorID &&
-                            v.sizeID === size.sizeID,
+                            v.sizeID === size.sizeID
                         );
 
                         if (!variant) return;
