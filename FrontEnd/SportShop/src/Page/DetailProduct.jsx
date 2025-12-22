@@ -5,6 +5,7 @@ import Breadcrumb from "../Component/Breadcrumb";
 import CardProduct from "../Component/CardProduct";
 import Footer from "../Component/Footer";
 import Header from "../Component/Header";
+import NotificationModal from "../Component/NotificationModal";
 import useFetchAll from "../hooks/useFetchAll";
 import { addToCart } from "../redux/slices/cartslice";
 import styles from "../styles/DetailProduct.module.css";
@@ -54,6 +55,7 @@ export default function DetailProduct() {
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [activeTab, setActiveTab] = useState("description");
   const [mainImage, setMainImage] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const availableSizes = selectedColor
     ? products?.variants
         ?.filter((v) => v.colorID === selectedColor.colorID)
@@ -91,6 +93,12 @@ export default function DetailProduct() {
         isSelected: false,
       }),
     );
+    setShowModal({
+      isOpen: true,
+      status: "success",
+      title: "Thêm thành công",
+      message: "",
+    });
   };
   const handleBuyNow = () => {
     if (!selectedVariant || !selectedColor || !selectedSize) {
@@ -504,6 +512,15 @@ export default function DetailProduct() {
       </div>
 
       <Footer />
+      <NotificationModal
+        isOpen={showModal.isOpen}
+        onClose={() => setShowModal({ ...showModal, isOpen: false })}
+        status={showModal.status}
+        title={showModal.title}
+        message={showModal.message}
+        primaryButtonText="Đóng"
+        showButtons={false}
+      />
     </div>
   );
 }

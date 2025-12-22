@@ -5,12 +5,14 @@ import { User } from "../Api/User";
 import Breadcrumb from "../Component/Breadcrumb";
 import Footer from "../Component/Footer";
 import Header from "../Component/Header";
+import NotificationModal from "../Component/NotificationModal";
 import styles from "../styles/BillDetail.module.css";
 
 export default function BillDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [billData, setBillData] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const handleCancelOrder = async () => {
     const confirmCancel = window.confirm(
@@ -20,8 +22,12 @@ export default function BillDetail() {
 
     try {
       await api.delete(`/order/${billData.orderId}`);
-
-      alert("Hủy đơn hàng thành công!");
+      setShowModal({
+        isOpen: true,
+        status: "success",
+        title: "Hủy đơn hàng thành công!",
+        message: "",
+      });
       navigate("/profile");
     } catch (err) {
       console.error("Cancel order error:", err);
@@ -301,6 +307,15 @@ export default function BillDetail() {
         </div>
       </div>
       <Footer />
+      <NotificationModal
+        isOpen={showModal.isOpen}
+        onClose={() => setShowModal({ ...showModal, isOpen: false })}
+        status={showModal.status}
+        title={showModal.title}
+        message={showModal.message}
+        primaryButtonText="Đóng"
+        showButtons={false}
+      />
     </div>
   );
 }

@@ -66,7 +66,7 @@ export default function InformationForm({ onSubmit }) {
         Địa chỉ này cũng sẽ được dùng làm địa chỉ thanh toán cho đơn hàng này.
       </p>
 
-      <div className={styles.fieldFull}>
+      <div className={styles.row2}>
         <select
           value={province}
           onChange={(e) => setProvince(e.target.value)}
@@ -77,16 +77,6 @@ export default function InformationForm({ onSubmit }) {
           <option value="ho-chi-minh">Hồ Chí Minh</option>
           <option value="ha-noi">Hà Nội</option>
         </select>
-      </div>
-
-      <div className={styles.row2}>
-        <select
-          value={district}
-          onChange={(e) => setDistrict(e.target.value)}
-          className={styles.select}
-        >
-          <option value="">Chọn Quận/Huyện</option>
-        </select>
 
         <select
           value={ward}
@@ -94,17 +84,9 @@ export default function InformationForm({ onSubmit }) {
           className={styles.select}
         >
           <option value="">Chọn Phường/Xã</option>
-        </select>
-      </div>
-
-      <div className={styles.fieldFull}>
-        <select
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          className={styles.select}
-        >
-          <option value="Việt Nam">Việt Nam</option>
-          <option value="USA">United States</option>
+          <option value="da-nang">An Khê</option>
+          <option value="ho-chi-minh">Hòa Xuân</option>
+          <option value="ha-noi">Hải Châu</option>
         </select>
       </div>
 
@@ -131,23 +113,6 @@ export default function InformationForm({ onSubmit }) {
           placeholder="Địa chỉ nhận hàng (Số nhà, đường phố, hẻm, Căn hộ...)"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
-          className={styles.input}
-        />
-      </div>
-
-      <div className={styles.row2}>
-        <input
-          type="text"
-          placeholder="Thành phố (Thông tin điền tự động)"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          className={styles.input}
-        />
-        <input
-          type="text"
-          placeholder="Mã bưu điện (Thông tin điền tự động)"
-          value={postalCode}
-          onChange={(e) => setPostalCode(e.target.value)}
           className={styles.input}
         />
       </div>

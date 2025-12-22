@@ -193,7 +193,7 @@ CREATE TABLE Payment (
     Amount DECIMAL(18,2),                        -- Số tiền thanh toán
     Status NVARCHAR(50),                          -- Trạng thái thanh toán
     PaymentDate DATETIME DEFAULT GETDATE(),       -- Ngày thanh toán
-    CONSTRAINT FK_Payment_Order FOREIGN KEY (OrderID) REFERENCES [Order](ID)
+    CONSTRAINT FK_Payment_Order FOREIGN KEY (OrderID) REFERENCES [Order](ID) ON DELETE CASCADE
 );
 GO
 -- ========================
