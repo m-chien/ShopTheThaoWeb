@@ -50,17 +50,13 @@ export default function BillDetail() {
 
         const orderData = orderRes.data.data;
         const user = userRes.data;
-        console.log("🚀 ~ fetchBill ~ user:", user);
 
-        // 1. Tìm đơn hàng hiện tại
         const order = orderData.orders.find((o) => o.id === Number(id));
 
-        // 2. Lấy danh sách chi tiết đơn hàng (để lấy quantity)
         const currentOrderDetails = orderData.orderDetails.filter(
           (d) => d.orderId === Number(id),
         );
 
-        // 3. Lấy danh sách thông tin sản phẩm
         const products = orderData.products.filter(
           (p) => p.OrderID === Number(id),
         );
@@ -85,33 +81,23 @@ export default function BillDetail() {
           shippingAddress: {
             name: user.fullName,
             address: order.deliveryAddress,
-            // Nếu API không trả về ward/district/city ở đây thì bạn cần xử lý chuỗi address hoặc lấy từ user info nếu có
-            ward: "",
-            district: "",
-            city: "",
-            postalCode: "",
           },
 
-          // --- ĐÂY LÀ PHẦN QUAN TRỌNG ĐÃ SỬA ---
           items: products.map((p) => {
-            // Tìm detail tương ứng với product này qua ProductVariantID
             const detail = currentOrderDetails.find(
               (d) => d.productVariantId === p.ProductVariantID,
             );
 
             return {
-              id: p.ProductVariantID, // Thêm key id để React render list không bị lỗi
+              id: p.ProductVariantID,
               name: p.ProductName,
-              image: `/public/Product/${p.Image}`, // Lưu ý đường dẫn ảnh
+              image: `/public/Product/${p.Image}`,
               price: p.Price,
-              // Lấy quantity từ detail tìm được, nếu không thấy thì mặc định là 1
               quantity: detail ? detail.quantity : 1,
               size: p.SizeName,
               color: p.ColorName,
             };
           }),
-          // -------------------------------------
-
           subtotal: order.totalAmount,
           total: order.totalAmount,
         });
