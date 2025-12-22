@@ -4,6 +4,7 @@ import Header from "../Component/Header";
 import "../styles/AuthPage.css";
 import { useNavigate } from "react-router-dom";
 import { User } from "../Api/User";
+import NotificationModal from "../Component/NotificationModal";
 
 export function RegisterPage({ setCurrentPage }) {
   const navigate = useNavigate();
@@ -17,6 +18,13 @@ export function RegisterPage({ setCurrentPage }) {
     agreeTerms: false,
   });
 
+  const [showModal, setShowModal] = useState({
+    isOpen: false,
+    status: "",
+    title: "",
+    message: "",
+  });
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -26,8 +34,16 @@ export function RegisterPage({ setCurrentPage }) {
   };
 
   const handleSubmit = () => {
-    console.log(formData);
-    if (formData.password != formData.confirmPassword) return;
+    if (formData.password !== formData.confirmPassword) {
+      setShowModal({
+        isOpen: true,
+        status: "error",
+        title: "Lỗi đăng ký",
+        message: "Mật khẩu xác nhận không khớp!",
+      });
+      return;
+    }
+
     User()
       .register(
         formData.username,
@@ -36,22 +52,32 @@ export function RegisterPage({ setCurrentPage }) {
         formData.fullName,
       )
       .then((data) => {
-        alert("đăng ký thành công!!");
-        navigate("/");
-        // const token = data.accessToken;
-        // if (token) {
-        //   const decoded = jwt_decode(token);
-        //   navigate(decoded.role == "Admin" ? "/admin" : "/");
-        // }
+        setShowModal({
+          isOpen: true,
+          status: "success",
+          title: "Đăng ký thành công",
+          message: "Tài khoản của bạn đã được tạo thành công!",
+        });
+        setTimeout(() => {
+          navigate("/");
+        }, 3000);
       })
       .catch((error) => {
-        console.error("Login failed:", error.message);
+        const errors = error.response?.data?.errors;
+        const msg = errors
+          ? Object.values(errors).flat().join("\n")
+          : "Đăng ký thất bại!";
+        setShowModal({
+          isOpen: true,
+          status: "error",
+          title: "Đăng ký thất bại",
+          message: msg,
+        });
       });
   };
 
   return (
     <div className="auth-page">
-      {/* Header */}
       <Header />
 
       <div className="auth-main">
@@ -65,6 +91,7 @@ export function RegisterPage({ setCurrentPage }) {
                 </p>
               </div>
 
+              {/* Các input */}
               <div className="auth-form">
                 <div className="input-group">
                   <label className="input-label">Họ và tên</label>
@@ -95,7 +122,7 @@ export function RegisterPage({ setCurrentPage }) {
                     <label className="input-label">Tên đăng nhập</label>
                     <input
                       type="text"
-                      name="phone"
+                      name="username"
                       value={formData.username}
                       onChange={handleChange}
                       placeholder="Nguyen Van A"
@@ -212,7 +239,19 @@ export function RegisterPage({ setCurrentPage }) {
           </div>
         </div>
       </div>
+
       <Footer />
+
+      {/* Notification Modal */}
+      <NotificationModal
+        isOpen={showModal.isOpen}
+        status={showModal.status}
+        title={showModal.title}
+        message={showModal.message}
+        onClose={() => setShowModal({ ...showModal, isOpen: false })}
+        primaryButtonText="Đóng"
+        showButtons={false}
+      />
     </div>
   );
 }

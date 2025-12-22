@@ -1,6 +1,9 @@
 import "./App.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import PrivateRoute from "./Component/PrivateRoute";
+import RequireAdmin from "./Component/RequireAdmin";
 import AdminLayout from "./Page/Admin/Layout/AdminLayout";
+import UserLayout from "./Page/Admin/Layout/UserLayout";
 import BrandManager from "./Page/Admin/Pages/BrandManager";
 import CategoryManager from "./Page/Admin/Pages/CategoryManager";
 import Dashboard from "./Page/Admin/Pages/Dashboard";
@@ -21,51 +24,47 @@ import ProductListPage from "./Page/ProductListPage";
 import Profile from "./Page/Profile";
 
 function App() {
+  const token = sessionStorage.getItem("accessToken");
+  console.log("🚀 ~ App ~ token:", token);
+
   return (
     <>
       <BrowserRouter>
         <Routes>
-          {/* user */}
-          {/* <Route path="/" element={<Navigate to="/trangchu" replace />} />
-          <Route path="/trangchu" element={<HomePage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/Login" element={<LoginPage />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/detail-product/:id" element={<DetailProduct />} />
-          <Route path="/productList" element={<ProductListPage />} />
-          <Route path="/payment" element={<Payment />} /> */}
           <Route path="/" element={<Navigate to="/trangchu" replace />} />
-          <Route path="/trangchu" element={<HomePage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/Login" element={<LoginPage />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/detail-product/:id" element={<DetailProduct />} />
-          <Route path="/productList" element={<ProductListPage />} />
-          <Route path="/payment" element={<PaymentPage />} />
-          <Route path="/transportation" element={<TransportationPage />} />
-          <Route path="/information" element={<InformationPage />} />
-          <Route path="/bill-detail/:id" element={<BillDetail />} />
-          <Route path="/payment-result" element={<PaymentResult />} />
-
-          <Route path="/" element={<Navigate to="/admin" replace />} />
-          {/* Layout Admin bao bọc các trang con */}
-          <Route path="/admin" element={<AdminLayout />}>
-            {/* 1. Dashboard (Trang chủ Admin) */}
-            <Route index element={<Dashboard />} />
-
-            {/* /admin/products: Quản lý sản phẩm */}
-            <Route path="products" element={<ProductManager />} />
-            <Route path="orders" element={<OrderManager />} />
-            <Route path="categories" element={<CategoryManager />} />
-            <Route path="brands" element={<BrandManager />} />
-            <Route path="users" element={<UserManager />} />
-            <Route path="vouchers" element={<VoucherManager />} />
+          {/*khách hàng login*/}
+          <Route element={<PrivateRoute isAuth={!!token} />}>
+            <Route element={<UserLayout />}>
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/payment" element={<PaymentPage />} />
+              <Route path="/transportation" element={<TransportationPage />} />
+              <Route path="/information" element={<InformationPage />} />
+              <Route path="/bill-detail/:id" element={<BillDetail />} />
+              <Route path="/payment-result" element={<PaymentResult />} />
+            </Route>
           </Route>
-          <Route path="/payment" element={<PaymentPage />} />
-          <Route path="/transportation" element={<TransportationPage />} />
-          <Route path="/information" element={<InformationPage />} />
-          <Route path="/bill-detail/:id" element={<BillDetail />} />
-          <Route path="/payment-result" element={<PaymentResult />} />
+
+          {/*khách vãng lai*/}
+          <Route element={<UserLayout />}>
+            <Route path="/trangchu" element={<HomePage />} />
+            <Route path="/detail-product/:id" element={<DetailProduct />} />
+            <Route path="/productList" element={<ProductListPage />} />
+            <Route path="/login" element={<LoginPage />} />
+          </Route>
+
+          {/*Admin*/}
+          <Route element={<RequireAdmin />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="products" element={<ProductManager />} />
+              <Route path="orders" element={<OrderManager />} />
+              <Route path="categories" element={<CategoryManager />} />
+              <Route path="brands" element={<BrandManager />} />
+              <Route path="users" element={<UserManager />} />
+              <Route path="vouchers" element={<VoucherManager />} />
+            </Route>
+          </Route>
         </Routes>
       </BrowserRouter>
     </>

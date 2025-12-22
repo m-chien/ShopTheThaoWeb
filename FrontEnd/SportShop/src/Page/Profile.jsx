@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import "../styles/Profile.css";
 import { useNavigate } from "react-router-dom";
-import { api } from "../Api/Api";
-import { User } from "../Api/User";
 import avatar from "../assets/IMG_6162.JPG";
 import Breadcrumb from "../Component/Breadcrumb";
 import NotificationModal from "../Component/NotificationModal";
@@ -12,6 +10,7 @@ import Addresses from "../Component/Profile/Addresses";
 import Info from "../Component/Profile/Info";
 import { Orders } from "../Component/Profile/Orders";
 import Setting from "../Component/Profile/Setting";
+import useFetchAll from "../hooks/useFetchAll";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -20,66 +19,47 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-  const [userInfo, setUserInfo] = useState({
-    fullName: "Trần Minh Chiến",
-    email: "chientranminh355@gmail.com",
-    phone: "0969827284",
-    address: "88 Nguyễn Giản Thanh",
-    city: "TP. Đà Nẵng",
-    district: "Thanh Khê",
-    ward: "Phường An Khê",
-    postalCode: "700000",
-    avatar: avatar,
-  });
-  console.log("🚀 ~ Profile ~ userInfo:", userInfo);
+  // Dùng useFetchAll cho user info
+  const { data: userInfo, loading: loadingUser } = useFetchAll(
+    "/User/profile",
+    {
+      avatar,
+      fullName: "",
+      email: "",
+      phone: "",
+      address: "",
+      city: "",
+      district: "",
+      ward: "",
+      postalCode: "",
+    },
+  );
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const data = await User().getUserInfo(); // gọi trực tiếp
-        console.log("🚀 ~ fetchUser ~ data:", data);
-        setUserInfo(data.data);
-      } catch (err) {
-        console.log("Lỗi:", err);
-      }
-    };
+  // Dùng useFetchAll cho orders
+  const { data: ordersData, loading: loadingOrders } = useFetchAll(
+    "/Order/my-orders",
+    {
+      orders: [],
+      products: [],
+    },
+  );
 
-    fetchUser();
-  }, []);
-
-  const [orders, setOrders] = useState([]);
-
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const res = await api.get("/Order/my-orders");
-        const data = res.data.data;
-
-        const mappedOrders = data.orders.map((order) => {
-          const productsOfOrder = data.products.filter(
-            (p) => p.OrderID === order.id,
-          );
-
-          return {
-            id: order.id,
-            date: order.orderDate,
-            total: order.totalAmount,
-            status: order.status,
-            items: productsOfOrder.map(
-              (p) => `${p.ProductName} (${p.SizeName} - ${p.ColorName})`,
-            ),
-          };
-        });
-
-        setOrders(mappedOrders);
-      } catch (err) {
-        console.log("Fetch orders error:", err);
-        navigate("/login");
-      }
-    };
-
-    fetchOrders();
-  }, []);
+  // Map orders giống trước
+  const orders =
+    ordersData?.orders?.map((order) => {
+      const productsOfOrder = ordersData.products.filter(
+        (p) => p.OrderID === order.id,
+      );
+      return {
+        id: order.id,
+        date: order.orderDate,
+        total: order.totalAmount,
+        status: order.status,
+        items: productsOfOrder.map(
+          (p) => `${p.ProductName} (${p.SizeName} - ${p.ColorName})`,
+        ),
+      };
+    }) || [];
 
   const [editForm, setEditForm] = useState(userInfo);
 
@@ -89,13 +69,19 @@ export default function Profile() {
   };
 
   const handleSaveProfile = () => {
-    setUserInfo(editForm);
+    // Lưu editForm lên server nếu cần
+    setEditForm(editForm);
     setIsEditing(false);
   };
 
   const handleCancel = () => {
     setEditForm(userInfo);
     setIsEditing(false);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("accessToken");
+    navigate("/login");
   };
 
   const getStatusColor = (status) => {
@@ -111,14 +97,7 @@ export default function Profile() {
     }
   };
 
-  useEffect(() => {
-    api
-      .get("/Order/my-orders") // hoặc /profile
-      .catch((err) => {
-        console.log("Auth failed", err);
-        navigate("/login");
-      });
-  }, []);
+  if (loadingUser || loadingOrders) return <div>Loading...</div>;
 
   return (
     <div className="profile-page">
@@ -133,7 +112,7 @@ export default function Profile() {
           <div className="profile-sidebar">
             <div className="user-card">
               <img
-                src={"../../public/useAva.png"}
+                src={userInfo.avatar || avatar}
                 alt="Avatar"
                 className="user-avatar"
               />
@@ -161,9 +140,7 @@ export default function Profile() {
                 📦 Đơn hàng của tôi
               </button>
               <button
-                className={`nav-item ${
-                  activeTab === "addresses" ? "active" : ""
-                }`}
+                className={`nav-item ${activeTab === "addresses" ? "active" : ""}`}
                 onClick={() => {
                   setActiveTab("addresses");
                   setIsEditing(false);
@@ -180,50 +157,34 @@ export default function Profile() {
               >
                 ⚙️ Cài đặt
               </button>
-              <button className="nav-item logout-btn">🚪 Đăng xuất</button>
+              <button className="nav-item logout-btn" onClick={handleLogout}>
+                🚪 Đăng xuất
+              </button>
             </nav>
           </div>
 
           {/* Main Content */}
           <div className="profile-main">
-            {/* Tab: Thông tin tài khoản */}
             {activeTab === "info" && (
-              <div className="tab-content">
-                <Info
-                  userInfo={userInfo}
-                  isEditing={isEditing}
-                  editForm={editForm}
-                  handleEditChange={handleEditChange}
-                  setIsEditing={setIsEditing}
-                  handleSaveProfile={handleSaveProfile}
-                  handleCancel={handleCancel}
-                />
-              </div>
+              <Info
+                userInfo={userInfo}
+                isEditing={isEditing}
+                editForm={editForm}
+                handleEditChange={handleEditChange}
+                setIsEditing={setIsEditing}
+                handleSaveProfile={handleSaveProfile}
+                handleCancel={handleCancel}
+              />
             )}
-
-            {/* Tab: Đơn hàng của tôi */}
             {activeTab === "orders" && (
-              <div className="tab-content">
-                <Orders orders={orders} getStatusColor={getStatusColor} />
-              </div>
+              <Orders orders={orders} getStatusColor={getStatusColor} />
             )}
-
-            {/* Tab: Địa chỉ giao hàng */}
-            {activeTab === "addresses" && (
-              <div className="tab-content">
-                <Addresses userInfo={userInfo} />
-              </div>
-            )}
-
-            {/* Tab: Cài đặt */}
-            {activeTab === "settings" && (
-              <div className="tab-content">
-                <Setting />
-              </div>
-            )}
+            {activeTab === "addresses" && <Addresses userInfo={userInfo} />}
+            {activeTab === "settings" && <Setting />}
           </div>
         </div>
       </div>
+
       <Footer />
       <NotificationModal
         isOpen={showModal}
