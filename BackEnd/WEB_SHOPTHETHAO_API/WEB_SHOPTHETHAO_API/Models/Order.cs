@@ -46,7 +46,7 @@ public partial class Order
 
     [ForeignKey("UserId")]
     [InverseProperty("Orders")]
-    public virtual User User { get; set; } = null!;
+    public virtual User? User { get; set; } = null!;
 
     [ForeignKey("VoucherId")]
     [InverseProperty("Orders")]

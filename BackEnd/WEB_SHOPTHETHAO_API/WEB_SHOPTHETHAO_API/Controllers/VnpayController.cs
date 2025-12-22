@@ -60,7 +60,7 @@ namespace WEB_SHOPTHETHAO_API.Controllers
             _db.SaveChanges();
 
             return Redirect(
-                $"http://localhost:3000/payment-result" +
+                $"http://localhost:5173/payment-result" +
                 $"?paymentId={paymentId}&code={responseCode}&transNo={vnpTransNo}"
             );
         }

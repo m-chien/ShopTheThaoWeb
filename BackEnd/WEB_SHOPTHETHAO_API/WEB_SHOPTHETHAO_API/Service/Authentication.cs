@@ -10,7 +10,7 @@ namespace WEB_SHOPTHETHAO_API.Service
     {
         Task<LoginResponse> LoginAsync(LoginRequest request);
         Task<LoginResponse> RegisterAsync(RegisterRequest request);
-        Task<LoginResponse> RefreshTokenAsync(RefreshTokenRequest request);
+        Task<LoginResponse> RefreshTokenAsync(String request);
         Task<bool> AssignRoleToUserAsync(int userId, string roleName);
     }
 
@@ -111,13 +111,13 @@ namespace WEB_SHOPTHETHAO_API.Service
         /// <summary>
         /// Refresh token - tạo access token mới từ refresh token
         /// </summary>
-        public async Task<LoginResponse> RefreshTokenAsync(RefreshTokenRequest request)
+        public async Task<LoginResponse> RefreshTokenAsync(String request)
         {
             // Tìm user có refresh token này
             var user = await _context.Users
                 .Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
-                .FirstOrDefaultAsync(u => u.RefreshToken == request.RefreshToken);
+                .FirstOrDefaultAsync(u => u.RefreshToken == request);
 
             if (user == null)
             {
@@ -131,7 +131,7 @@ namespace WEB_SHOPTHETHAO_API.Service
             return new LoginResponse
             {
                 AccessToken = newAccessToken,
-                RefreshToken = request.RefreshToken // Giữ nguyên refresh token
+                RefreshToken = request // Giữ nguyên refresh token
             };
         }
 

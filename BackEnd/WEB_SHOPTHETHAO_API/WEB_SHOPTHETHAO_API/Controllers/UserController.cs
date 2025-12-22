@@ -26,47 +26,52 @@ namespace WEB_SHOPTHETHAO_API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequest request)
         {
-            try
+            var response = await _authService.LoginAsync(request);
+            Response.Cookies.Append("refreshToken", response.RefreshToken, new CookieOptions
             {
-                var response = await _authService.LoginAsync(request);
-                return Ok(response);
-            }
-            catch (UnauthorizedAccessException ex)
+                HttpOnly = true,
+                Secure = true,       
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(7)
+            });
+
+            return Ok(new
             {
-                return Unauthorized(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+                accessToken = response.AccessToken
+            });
         }
+
 
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterRequest request)
         {
-            try
-            {
                 var response = await _authService.RegisterAsync(request);
-                return Ok(response);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+                Response.Cookies.Append("refreshToken", response.RefreshToken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    Expires = DateTime.UtcNow.AddDays(7)
+                });
+
+                return Ok(new
+                {
+                    accessToken = response.AccessToken
+                });
         }
 
         [HttpPost("refresh-token")]
         [AllowAnonymous]
-        public async Task<IActionResult> RefreshToken(RefreshTokenRequest request)
+        public async Task<IActionResult> RefreshToken()
         {
             try
             {
-                var response = await _authService.RefreshTokenAsync(request);
+                var refreshToken = Request.Cookies["refreshToken"];
+                if (string.IsNullOrEmpty(refreshToken))
+                    return Unauthorized("Missing refresh token");
+
+                var response = await _authService.RefreshTokenAsync(refreshToken);
                 return Ok(response);
             }
             catch (UnauthorizedAccessException ex)
@@ -78,6 +83,7 @@ namespace WEB_SHOPTHETHAO_API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
 
         [HttpGet("profile")]
         [Authorize] // Yêu cầu phải đăng nhập

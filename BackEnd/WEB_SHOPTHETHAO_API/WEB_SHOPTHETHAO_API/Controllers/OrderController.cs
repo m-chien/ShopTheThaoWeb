@@ -17,12 +17,28 @@ public class OrderController : ControllerBase
     {
         _context = context;
     }
-
     // GET: api/order
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _context.Orders.ToListAsync());
+        var orders = await _context.Orders
+            .Include(o => o.User) // <--- QUAN TRỌNG: JOIN VỚI BẢNG USER
+            .Select(o => new
+            {
+                o.Id,
+                o.UserId,
+                // Lấy tên khách hàng, nếu null thì hiện "Khách vãng lai"
+                CustomerName = o.User != null ? o.User.FullName : "Khách vãng lai",
+                o.OrderDate,
+                o.Status,
+                o.TotalAmount,
+                o.DeliveryAddress,
+                o.Phone
+            })
+            .OrderByDescending(o => o.OrderDate) // Sắp xếp mới nhất lên đầu
+            .ToListAsync();
+
+        return Ok(orders);
     }
 
     // GET: api/order/5
@@ -60,13 +76,29 @@ public class OrderController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var item = await _context.Orders.FindAsync(id);
-        if (item == null) return NotFound();
+        try
+        {
+            // Tìm đối tượng cần xóa
+            var item = await _context.Orders.FindAsync(id);
+            if (item == null) return NotFound();
 
-        _context.Orders.Remove(item);
-        await _context.SaveChangesAsync();
+            _context.Orders.Remove(item);
+            await _context.SaveChangesAsync();
 
-        return NoContent();
+            return NoContent();
+        }
+        catch (DbUpdateException)
+        {
+            // Trả về lỗi 400 kèm thông báo để Frontend hiện lên
+            return BadRequest(new
+            {
+                message = "Không thể xóa! Dữ liệu này đang được sử dụng ở nơi khác (Đơn hàng chi tiết hoặc Lịch sử dùng voucher)."
+            });
+        }
+        catch (Exception ex) // Bắt các lỗi khác
+        {
+            return StatusCode(500, new { message = "Lỗi hệ thống: " + ex.Message });
+        }
     }
 
     [Authorize]
@@ -166,6 +198,49 @@ public class OrderController : ControllerBase
             products,
             payments
         });
+    }
+
+    // GET: api/Order/5/details
+    [HttpGet("{id}/details")]
+    public async Task<IActionResult> GetOrderDetails(int id)
+    {
+        try
+        {
+            var details = await _context.OrderDetails
+                .Where(od => od.OrderId == id)
+                .Include(od => od.ProductVariant)
+                    .ThenInclude(pv => pv.Product)
+                .Include(od => od.ProductVariant.Size)
+                .Include(od => od.ProductVariant.Color)
+                .Select(od => new
+                {
+                    Id = od.Id,
+                    ProductId = od.ProductVariant.Product.Id,
+
+                    // --- SỬA 1: Kiểm tra null khi nối chuỗi tên sản phẩm ---
+                    Product = (od.ProductVariant.Product != null && od.ProductVariant.Color != null && od.ProductVariant.Size != null)
+                              ? $"{od.ProductVariant.Product.Name} - {od.ProductVariant.Color.Name} ({od.ProductVariant.Size.Name})"
+                              : "Sản phẩm không xác định (Lỗi dữ liệu)",
+
+                    Quantity = od.Quantity,
+
+                    // --- SỬA 2: Xử lý giá tiền bị null (Thêm ?? 0) ---
+                    Price = od.UnitPrice ?? 0,
+
+                    Image = od.ProductVariant.Image,
+
+                    // --- SỬA 3: Tính tổng tiền an toàn ---
+                    Total = od.Quantity * (od.UnitPrice ?? 0)
+                })
+                .ToListAsync();
+
+            return Ok(details);
+        }
+        catch (Exception ex)
+        {
+            // Nếu lỗi, trả về 500 để Frontend biết đường báo lỗi
+            return StatusCode(500, new { message = "Lỗi Server: " + ex.Message });
+        }
     }
 
 }
