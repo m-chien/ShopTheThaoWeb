@@ -14,16 +14,12 @@ export function LoginPage() {
   const passwordRef = useRef();
 
   const handleSubmit = () => {
-    if (
-      usernameRef.current.value != "" &&
-      passwordRef.current.value != "" &&
-      rememberMe
-    ) {
+    if (usernameRef.current.value != "" && passwordRef.current.value != "") {
       User()
         .login(usernameRef.current.value, passwordRef.current.value)
         .then((data) => {
           console.log("Login successful:", data);
-          navigate("/")
+          navigate("/");
           // const token = data.accessToken;
           // if (token) {
           //   const decoded = jwt_decode(token);

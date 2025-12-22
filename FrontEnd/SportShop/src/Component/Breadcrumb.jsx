@@ -11,8 +11,13 @@ export default function Breadcrumb({ items }) {
       {items.map((item) => {
         return (
           <>
-            <span>›</span>
-            <span className="type" onClick={() => navigate(item.link)}>{item.label}</span>
+            <i
+              className="fa-solid fa-angle-right"
+              style={{ color: "#a8a8a8ff" }}
+            ></i>
+            <span className="type" onClick={() => navigate(item.link)}>
+              {item.label}
+            </span>
           </>
         );
       })}

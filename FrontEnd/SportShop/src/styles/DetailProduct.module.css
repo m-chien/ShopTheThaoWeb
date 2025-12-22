@@ -89,26 +89,6 @@
   font-weight: 700;
 }
 
-.thumbnail-images {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-}
-
-.thumbnail {
-  width: 100%;
-  height: 100px;
-  object-fit: cover;
-  border: 2px solid #e0e0e0;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.thumbnail:hover {
-  border-color: #3366cc;
-}
-
 /* Product Info */
 .product-info {
   display: flex;
@@ -135,6 +115,25 @@
   margin: 0;
   color: #1a1a2e;
   line-height: 1.3;
+}
+.thumbnail-images {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.thumbnail {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.thumbnail:hover {
+  border-color: #3366cc;
 }
 
 /* Product Meta */
@@ -495,6 +494,9 @@
   border-radius: 8px;
   margin-bottom: 30px;
   overflow: hidden;
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .tabs-header {
@@ -519,12 +521,12 @@
 }
 
 .tab-button:hover {
-  color: #3366cc;
+  color: #77e51f;
 }
 
 .tab-button.active {
-  color: #3366cc;
-  border-bottom-color: #3366cc;
+  color: #77e51f;
+  border-bottom-color: #77e51f;
 }
 
 .tabs-content {
@@ -706,6 +708,9 @@
   background: white;
   border-radius: 8px;
   padding: 30px;
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .related-products-section h2 {

@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { getAllProduct } from "../Api/Product.js";
+import { useCallback, useState } from "react";
+// Nhớ import hàm filterProducts vừa tạo ở Bước 1
+import { filterProducts } from "../Api/Product.js";
 import Breadcrumb from "../Component/Breadcrumb";
 import CardProduct from "../Component/CardProduct";
 import Filter from "../Component/Filter";
@@ -9,62 +10,64 @@ import styles from "../styles/ProductListPage.module.css";
 
 export default function ProductListPage() {
   const [products, setProducts] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [priceRange, setPriceRange] = useState([0, 5000000]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const res = await getAllProduct();
-      setProducts(res.data);
-    };
-
-    fetchProducts();
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const handleFilterChange = useCallback(async (filterData) => {
+    try {
+      setIsLoading(true);
+      const res = await filterProducts(filterData);
+      setProducts(res.data.data || []);
+    } catch (error) {
+      console.error("Lỗi khi lọc sản phẩm:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
-  const handleAddToCart = (product) => {
-    alert(`Đã thêm "${product.name}" vào giỏ hàng!`);
-  };
 
   return (
     <>
       <div className={styles.pageContainer}>
         <Header />
-        <Breadcrumb items={[{label: "Sản Phẩm", link: "/product" }]} />
+        <Breadcrumb items={[{ label: "Sản Phẩm", link: "/product" }]} />
         <div className={styles.mainContent}>
-          {/* Filter Component */}
-          <Filter
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-            priceRange={priceRange}
-            setPriceRange={setPriceRange}
-          />
-
-          {/* Products Section */}
+          <Filter onFilterChange={handleFilterChange} />
           <section className={styles.featuredProducts}>
             <div className={styles.productsHeader}>
               <h2>Danh sách sản phẩm</h2>
-              <p className={styles.productCount}>{products.length} Sản phẩm</p>
+              <p className={styles.productCount}>
+                {products.length || 0} Sản phẩm
+              </p>
             </div>
-            <div className={styles.productsGrid}>
-              {products.map((product) => {
-                return (
-                  <CardProduct
-                    key={product.productID}
-                    product={{
-                      id: product.productID,
-                      name: product.name,
-                      description: product.description,
-                      colors: product.colors,
-                      images: product.images,
-                      prices: product.prices,
-                      // Lấy giá thấp nhất để hiển thị
-                      minPrice: Math.min(...product.prices),
-                      maxPrice: Math.max(...product.prices),
-                    }}
-                    onAddToCart={handleAddToCart}
-                  />
-                );
-              })}
-            </div>
+
+            {isLoading ? (
+              <div style={{ textAlign: "center", padding: "20px" }}>
+                Đang tải...
+              </div>
+            ) : (
+              <div className={styles.productsGrid}>
+                {products.length > 0 ? (
+                  products.map((product) => {
+                    return (
+                      <CardProduct
+                        key={product.productVariantID}
+                        product={{
+                          id: product.productID,
+                          name: product.name,
+                          description: product.description,
+                          colors: product.colors,
+                          images: product.images,
+                          prices: product.prices,
+                          minPrice: Math.min(...product.prices),
+                          maxPrice: Math.max(...product.prices),
+                        }}
+                      />
+                    );
+                  })
+                ) : (
+                  <p>Không tìm thấy sản phẩm nào phù hợp.</p>
+                )}
+              </div>
+            )}
           </section>
         </div>
         <Footer />

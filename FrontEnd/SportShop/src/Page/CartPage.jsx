@@ -1,55 +1,67 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import "../styles/CartPage.css";
-import Breadcrumb from "../Component/Breadcrumb";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Breadcrumb from "../Component/Breadcrumb";
+import NotificationModal from "../Component/NotificationModal";
+import {
+  decrementQty,
+  incrementQty,
+  removeFromCart,
+  selectCartDistinctCount,
+  selectCartItems,
+  selectCartTotalAmount,
+  selectSelectedItems,
+  selectSelectedTotalAmount,
+  toggleSelect,
+} from "../redux/slices/cartslice";
 
 export default function CartPage() {
   const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Áo Đá Bóng Nam Puma Manchester City Fc Replica Sân Nhà 25/26",
-      price: 2200000,
-      image: "/public/Product/ManchesterCityHome.png",
-      quantity: 1,
-      size: "M",
-      color: "Xanh Dương",
-    },
-    {
-      id: 2,
-      name: "Áo Đá Bóng Nam Puma Manchester City Fc Replica Sân Khách 25/26",
-      price: 2200000,
-      image: "/public/Product/ManchesterCityAway.png",
-      quantity: 1,
-      size: "M",
-      color: "Đen",
-    },
-    {
-      id: 3,
-      name: "Mũ Lưỡi Trai Manchester City Essentials",
-      price: 2200000,
-      image: "/public/Product/ManchesterCityHat.png",
-      quantity: 1,
-      size: "M",
-      color: "Xanh Dương",
-    },
-  ]);
+  const dispatch = useDispatch();
+
+  const cartItems = useSelector(selectCartItems);
+  const distinctCount = useSelector(selectCartDistinctCount);
+  const totalAmount = useSelector(selectCartTotalAmount);
+  const selectedItems = useSelector(selectSelectedItems);
+  const selectedSubtotal = useSelector(selectSelectedTotalAmount);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [voucherCode, setVoucherCode] = useState("");
   const [appliedVoucher, setAppliedVoucher] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
-  const updateQuantity = (id, quantity) => {
-    if (quantity < 1) return;
-    setCartItems(
-      cartItems.map((item) => (item.id === id ? { ...item, quantity } : item)),
-    );
+  // tăng/xuống bằng action
+  const handleIncrement = (variantId) => {
+    dispatch(incrementQty(variantId));
   };
 
-  const removeItem = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
+  const handleDecrement = (variantId) => {
+    dispatch(decrementQty(variantId));
+  };
+
+  const handleRemove = (variantId) => {
+    dispatch(removeFromCart(variantId));
+  };
+
+  const handleToggleSelect = (variantId) => {
+    dispatch(toggleSelect(variantId));
+  };
+
+  // user nhập số trực tiếp: điều chỉnh bằng số lần increment/decrement
+  const handleQuantityChange = (variantId, newQty) => {
+    if (!Number.isFinite(newQty) || newQty < 1) return;
+    const item = cartItems.find((i) => i.variantId === variantId);
+    if (!item) return;
+    const diff = newQty - item.quantity;
+    if (diff === 0) return;
+    if (diff > 0) {
+      for (let i = 0; i < diff; i++) dispatch(incrementQty(variantId));
+    } else {
+      for (let i = 0; i < -diff; i++) dispatch(decrementQty(variantId));
+    }
   };
 
   const applyVoucher = () => {
@@ -62,19 +74,39 @@ export default function CartPage() {
     }
   };
 
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0,
-  );
   const discount = appliedVoucher ? appliedVoucher.discount : 0;
-  const shippingFee = 0; // Miễn phí vận chuyển
-  const total = subtotal - discount + shippingFee;
+  // dùng subtotal dựa trên selected items (nếu muốn tính theo các item được tick)
+  const subtotal = selectedSubtotal; // đổi thành totalAmount nếu muốn toàn giỏ
+  const total = subtotal - discount;
 
-  if (!sessionStorage.getItem("accessToken")) {
-    alert("Vui lòng đăng nhập trước khi vào");
-    navigate("/");
-    return <div>đăng nhập đi bạn eyy!!</div>;
-  }
+  const handleCheckoutClick = () => {
+    if (!selectedItems || selectedItems.length === 0) {
+      alert("lỗi");
+      // nếu chưa tick gì -> show modal hoặc yêu cầu chọn
+      setShowModal({
+        isOpen: true,
+        status: "error",
+        title: "Lỗi Thanh Toán",
+        message: "Vui lòng chọn ít nhất 1 sản phẩm để tiến hành thanh toán",
+      });
+      return;
+    }
+    // }
+    // tạo order với selectedItems -> gọi BE hoặc navigate đến thông tin (ghi order tạm)
+    navigate("/information");
+  };
+  // useEffect(() => {
+  //   if (!sessionStorage.getItem("accessToken")) {
+  //     setShowModal({
+  //       isOpen: true,
+  //       status: "error",
+  //       title: "Lỗi Xác Thực",
+  //       message: "Vui lòng Đăng nhập trước khi vào trang này",
+  //     });
+  //     navigate("/login");
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [navigate]);
 
   return (
     <div className="cart-page">
@@ -91,9 +123,17 @@ export default function CartPage() {
             {cartItems.length > 0 ? (
               <div className="items-list">
                 {cartItems.map((item) => (
-                  <div key={item.id} className="cart-item">
+                  <div key={item.variantId} className="cart-item">
+                    {/* Checkbox chọn mua */}
+                    <input
+                      type="checkbox"
+                      checked={!!item.isSelected}
+                      onChange={() => handleToggleSelect(item.variantId)}
+                      style={{ marginRight: 12 }}
+                    />
+
                     <img
-                      src={item.image}
+                      src={`../Product/${item.image}`}
                       alt={item.name}
                       className="item-image"
                     />
@@ -101,40 +141,35 @@ export default function CartPage() {
                     <div className="item-details">
                       <h3>{item.name}</h3>
                       <p className="item-meta">
-                        {item.size} / {item.color}
+                        {item.size?.name || ""} / {item.color?.name || ""}
                       </p>
                       <p className="item-price">
                         {item.price.toLocaleString("vi-VN")}đ
                       </p>
                       <button
                         className="remove-btn"
-                        onClick={() => removeItem(item.id)}
+                        onClick={() => handleRemove(item.variantId)}
                       >
                         Xóa
                       </button>
                     </div>
 
                     <div className="item-quantity">
-                      <button
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity - 1)
-                        }
-                      >
+                      <button onClick={() => handleDecrement(item.variantId)}>
                         −
                       </button>
                       <input
                         type="number"
                         value={item.quantity}
                         onChange={(e) =>
-                          updateQuantity(item.id, parseInt(e.target.value) || 1)
+                          handleQuantityChange(
+                            item.variantId,
+                            parseInt(e.target.value, 10) || 1,
+                          )
                         }
                         min="1"
                       />
-                      <button
-                        onClick={() =>
-                          updateQuantity(item.id, item.quantity + 1)
-                        }
-                      >
+                      <button onClick={() => handleIncrement(item.variantId)}>
                         +
                       </button>
                     </div>
@@ -156,7 +191,8 @@ export default function CartPage() {
           <div className="cart-summary">
             <div className="summary-section">
               <div className="summary-row">
-                <span>({cartItems.length} sản phẩm)</span>
+                {/* Hiển thị số sản phẩm được chọn (distinct) */}
+                <span>({selectedItems.length} sản phẩm được chọn)</span>
                 <span>{subtotal.toLocaleString("vi-VN")}đ</span>
               </div>
 
@@ -180,7 +216,9 @@ export default function CartPage() {
               </div>
             </div>
 
-            <button className="checkout-btn">THANH TOÁN</button>
+            <button className="checkout-btn" onClick={handleCheckoutClick}>
+              THANH TOÁN
+            </button>
 
             <p className="payment-note">
               *Phí ship và voucher áp dụng tại trang thanh toán
@@ -208,6 +246,15 @@ export default function CartPage() {
       </div>
 
       <Footer />
+      <NotificationModal
+        isOpen={showModal.isOpen}
+        onClose={() => setShowModal({ ...showModal, isOpen: false })}
+        status={showModal.status}
+        title={showModal.title}
+        message={showModal.message}
+        primaryButtonText="Đóng"
+        showButtons={false}
+      />
     </div>
   );
 }

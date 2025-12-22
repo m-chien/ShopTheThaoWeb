@@ -1,0 +1,58 @@
+/* ==================== SETTINGS ==================== */
+
+.settings-section {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.settings-section h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 15px 0;
+  color: #1a1a2e;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.setting-item div {
+  flex: 1;
+}
+
+.setting-item h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+  color: #333;
+}
+
+.setting-item p {
+  font-size: 0.85rem;
+  color: #999;
+  margin: 0;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #3366cc;
+}
+
+.checkbox span {
+  font-size: 0.9rem;
+  color: #666;
+}

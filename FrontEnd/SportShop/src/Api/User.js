@@ -1,16 +1,32 @@
 import { api } from "./Api"; // axios instance
 
 export const User = () => {
+  const register = async (username, pass, email, fullname) => {
+    try {
+      const response = await api.post("/User/register", {
+        userName: username,
+        password: pass,
+        email: email,
+        fullName: fullname,
+      });
+      console.log("🚀 ~ register ~ response:", response)
+      sessionStorage.setItem("accessToken", response.data.data.accessToken);
+      return response.data;
+    } catch (error) {
+      console.error("Login error:", error.response?.data || error.message);
+      throw error;
+    }
+  };
   // Đăng nhập
   const login = async (username, password) => {
     try {
       const response = await api.post("/User/login", {
-        userName: username,
-        password: password,
+        UserName: username,
+        Password: password,
       });
+      console.log("🚀 ~ login ~ response:", response)
 
       sessionStorage.setItem("accessToken", response.data.data.accessToken);
-      document.cookie = `refreshToken=${response.data.data.refreshToken}; path=/; secure; samesite=strict`;
       return response.data;
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
@@ -33,6 +49,7 @@ export const User = () => {
   };
 
   return {
+    register,
     login,
     getUserInfo, // nhớ return
   };

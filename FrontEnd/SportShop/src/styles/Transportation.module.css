@@ -1,0 +1,145 @@
+.transportationPage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 980px;
+  margin: 80px auto 40px;
+  padding: 0 16px;
+  width: 100%;
+}
+
+
+.infoBoxes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.infoBox {
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fff;
+  position: relative;
+}
+
+.infoLabel {
+  display: block;
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.infoContent {
+  font-size: 15px;
+  color: #111827;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.changeLink {
+  font-size: 13px;
+  color: #2563eb;
+  text-decoration: underline;
+  float: right;
+  margin-top: -30px;
+}
+
+.sectionTitle {
+  margin: 24px 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.form {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #e6e6e6;
+}
+
+.shippingOption {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.shippingOption:hover {
+  background: #f9fafb;
+}
+
+.radio {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.optionLabel {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+}
+
+.optionName {
+  font-size: 15px;
+  color: #111827;
+}
+
+.optionPrice {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.actionRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.backLink {
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.backLink:hover {
+  text-decoration: underline;
+}
+
+.primaryBtn {
+  background: #1f2937;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.primaryBtn:hover {
+  opacity: 0.95;
+}
+
+@media (max-width: 768px) {
+  .infoBoxes {
+    grid-template-columns: 1fr;
+  }
+
+  .container {
+    margin: 70px auto 20px;
+  }
+}

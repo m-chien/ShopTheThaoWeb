@@ -21,6 +21,8 @@
     "prop-types": "^15.8.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-intersection-observer": "^10.0.0",
+    "react-paginate": "^8.3.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.9.5",
     "recharts": "^3.6.0",

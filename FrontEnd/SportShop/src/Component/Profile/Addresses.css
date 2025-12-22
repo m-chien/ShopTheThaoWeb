@@ -1,0 +1,80 @@
+/* ==================== ADDRESSES ==================== */
+
+.addresses-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.address-card {
+  border: 2px solid #eee;
+  border-radius: 6px;
+  padding: 20px;
+  transition: all 0.2s ease;
+}
+
+.address-card:hover {
+  border-color: #3366cc;
+  box-shadow: 0 4px 12px rgba(51, 102, 204, 0.1);
+}
+
+.address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.address-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #1a1a2e;
+}
+
+.badge-default {
+  background: #3366cc;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.address-card p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+.address-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
+
+.edit-link,
+.delete-link {
+  background: none;
+  border: none;
+  color: #3366cc;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.edit-link:hover {
+  color: #1a4099;
+}
+
+.delete-link {
+  color: #ff3838;
+}
+
+.delete-link:hover {
+  color: #cc2222;
+}

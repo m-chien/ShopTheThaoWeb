@@ -1,0 +1,296 @@
+.billDetailPage {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  margin-top: 70px;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  width: 100%;
+  flex: 1;
+}
+
+.header {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+}
+
+.orderMeta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.orderId {
+  font-size: 1rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.status {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.status.delivered {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 20px;
+}
+
+.leftColumn,
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: #1a1a2e;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 12px;
+}
+
+.statusBox {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.statusRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.statusRow:last-child {
+  border-bottom: none;
+}
+
+.label {
+  font-weight: 500;
+  color: #666;
+}
+
+.value {
+  color: #1a1a2e;
+  font-weight: 500;
+}
+
+.value.paid {
+  color: #155724;
+  font-weight: 600;
+}
+
+.infoBox {
+  background-color: #f9f9f9;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.infoItem {
+  margin: 8px 0;
+  color: #333;
+  line-height: 1.6;
+}
+
+.infoItem:last-child {
+  margin-bottom: 0;
+}
+
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.itemRow {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  align-items: flex-start;
+}
+
+.itemImage {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.itemDetails {
+  flex: 1;
+}
+
+.itemName {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #1a1a2e;
+  margin: 0 0 4px 0;
+  line-height: 1.4;
+}
+
+.itemPrice {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0;
+}
+
+.itemTotal {
+  font-weight: 600;
+  color: #1a1a2e;
+  white-space: nowrap;
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 0.95rem;
+}
+
+.summaryRow span:first-child {
+  color: #666;
+}
+
+.summaryRow span:last-child {
+  color: #1a1a2e;
+  font-weight: 500;
+}
+
+.free {
+  color: #28a745 !important;
+  font-weight: 600 !important;
+}
+
+.totalRow {
+  border-top: 2px solid #e0e0e0;
+  padding-top: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.totalRow span:last-child {
+  color: #1a1a2e;
+  font-weight: 700;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 12px;
+}
+
+.backBtn,
+.continueBtn {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 6px;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: opacity 0.3s;
+}
+
+.backBtn {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.backBtn:hover {
+  opacity: 0.9;
+}
+
+.continueBtn {
+  background-color: #1a1a2e;
+  color: white;
+}
+
+.continueBtn:hover {
+  opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    margin-top: 0;
+    padding: 12px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .content {
+    grid-template-columns: 1fr;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .itemRow {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .itemImage {
+    width: 100%;
+    height: auto;
+  }
+
+  .itemTotal {
+    align-self: flex-end;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+  }
+}

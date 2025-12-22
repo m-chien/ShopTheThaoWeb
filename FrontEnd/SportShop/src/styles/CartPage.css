@@ -50,7 +50,7 @@
 
 .cart-item {
   display: grid;
-  grid-template-columns: 120px 1fr 100px 150px;
+  grid-template-columns: 40px 120px 1fr 100px 110px;
   gap: 20px;
   padding: 20px 0;
   border-bottom: 1px solid #eee;

@@ -12,23 +12,17 @@ import Banner from "../Component/Banner.jsx";
 import CardProduct from "../Component/CardProduct.jsx";
 import Category from "../Component/Category.jsx";
 import Footer from "../Component/Footer.jsx";
+import useFetchAll from "../hooks/useFetchAll.js";
 
 function HomePage() {
-  const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const { data: products, loading } = useFetchAll(
+    "/ProductVariant/grouped-products", []
+  );
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await getAllProduct();
-        setProducts(res.data.data);
-      } catch (error) {
-        console.error("❌ Lỗi khi fetch sản phẩm:", error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+  if (loading) {
+    return <div>Đang tải...</div>;
+  }
 
   return (
     <div className="home-page">
@@ -43,9 +37,10 @@ function HomePage() {
         pagination={{ clickable: true }}
         loop={true}
         autoplay={{
-          delay: 10000,
+          delay: 35000,
           disableOnInteraction: false,
         }}
+        speed={700}
         className="banner-swiper"
       >
         {bannerData.map((slide) => (
@@ -54,14 +49,14 @@ function HomePage() {
               title={slide.title}
               subtitle={slide.subtitle}
               stats={slide.stats}
-              image={slide.image}
+              video={slide.video}
             />
           </SwiperSlide>
         ))}
       </Swiper>
 
       {/* Category Section */}
-      <Category />
+      <Category title="Danh mục sản phẩm" path="/Category"/>
 
       {/* New Products Section */}
       <div className="NewProduct">
@@ -122,6 +117,36 @@ function HomePage() {
           )}
         </Swiper>
       </div>
+
+      <div className="banner-ads">
+        <img src="/public/bannerADS.png" alt="" />
+      </div>
+
+      <div className="grid-products">
+        {products.slice(0, 10).map((product) => {
+          return (
+            <CardProduct
+              key={product.productID}
+              product={{
+                id: product.productID,
+                name: product.name,
+                description: product.description,
+                colors: product.colors,
+                images: product.images,
+                prices: product.prices,
+                minPrice: Math.min(...product.prices),
+                maxPrice: Math.max(...product.prices),
+              }}
+            />
+          );
+        })}
+      </div>
+      <div className="view-more-button">
+        <a href="/productList">Xem tất cả</a>
+      </div>
+
+      <Category title="Thương hiệu nổi bật" path="/Brand"/>
+
       <Footer />
     </div>
   );

@@ -1,9 +1,11 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import "../styles/CardProduct.css";
+import { useInView } from "react-intersection-observer";
 import { useNavigate } from "react-router-dom";
 
 export default function CardProduct({ product }) {
+  const [ref, inView] = useInView({ triggerOnce: true });
   const navigate = useNavigate();
 
   // Safety checks
@@ -22,8 +24,8 @@ export default function CardProduct({ product }) {
     }
   };
 
-  const handleCardClick = (e) => {
-    // Không navigate nếu click vào button hoặc color selector hoặc thumbnails
+  const handleCardClick = (e, productId) => {
+    // Chặn navigate nếu click vào các thành phần con
     if (
       e.target.tagName === "BUTTON" ||
       e.target.closest(".color-selector") ||
@@ -31,13 +33,19 @@ export default function CardProduct({ product }) {
     ) {
       return;
     }
-    navigate("/detail-product");
+
+    navigate(`/detail-product/${productId}`);
   };
 
   return (
-    <div className="product-card" onClick={handleCardClick}>
+    <div
+      onClick={(e) => handleCardClick(e, product.id)}
+      ref={ref}
+      className={`product-card ${inView ? "fade-in" : "hidden"}`}
+    >
       <div className="product-image-wrapper">
         <img
+          loading="lazy"
           src={
             selectedImage
               ? `/public/Product/${selectedImage}`
@@ -51,8 +59,9 @@ export default function CardProduct({ product }) {
           <div className="image-thumbnails">
             {images.map((img, idx) => (
               <img
+                loading="lazy"
                 key={idx}
-                src={`/public/Product/${img}`}
+                src={`/Product/${img}`}
                 alt=""
                 className={selectedImage === img ? "active" : ""}
                 onClick={(e) => {
@@ -96,11 +105,11 @@ export default function CardProduct({ product }) {
                     e.stopPropagation();
                     handleColorChange(idx);
                   }}
-                  title={color.colorName} // vẫn giữ tooltip nếu muốn
+                  title={color.colorName}
                 >
                   <span
                     className="color-dot"
-                    style={{ backgroundColor: color.colorcode }}
+                    style={{ backgroundColor: color.colorCode }}
                   ></span>
                 </div>
               ))}

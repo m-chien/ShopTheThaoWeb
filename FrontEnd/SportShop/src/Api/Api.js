@@ -1,5 +1,12 @@
 import axios from "axios";
 
+export const apiDummy = axios.create({
+  baseURL: "https://dummyjson.com/",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 export const api = axios.create({
   baseURL: "https://localhost:7299/api",
   withCredentials: true,
@@ -23,8 +30,13 @@ api.interceptors.response.use(
 
       try {
         // Gọi API refresh token (lưu trong HttpOnly cookie)
-        const res = await axios.post("https://localhost:7299/api/User/refresh-token", {}, { withCredentials: true });
-        const newAccessToken = res.data.accessToken;
+        const res = await axios.post(
+          "https://localhost:7299/api/User/refresh-token",
+          null,
+          { withCredentials: true },
+        );
+        const newAccessToken = res.data.data.accessToken;
+        console.log("🚀 ~ newAccessToken:", newAccessToken)
 
         // Lưu access token mới
         sessionStorage.setItem("accessToken", newAccessToken);
@@ -33,12 +45,11 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        // Nếu refresh token cũng hết hạn, redirect login
-        window.location.href = "/login";
+        sessionStorage.removeItem("accessToken");
         return Promise.reject(refreshError);
       }
     }
 
     return Promise.reject(error);
-  }
+  },
 );

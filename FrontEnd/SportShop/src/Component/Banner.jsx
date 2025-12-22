@@ -1,17 +1,15 @@
 import styles from "../styles/Banner.module.css";
 import TypingText from "./TypingText.jsx";
 
-export default function Banner({ title, subtitle, stats, image }) {
+export default function Banner({ title, subtitle, stats, video }) {
   return (
-    <section
-      className={styles.banner}
-      style={{
-        backgroundImage: `
-      linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-      url(${image})
-    `,
-      }}
-    >
+    <section className={styles.banner}>
+      <video className={styles.videoBackground} autoPlay loop muted playsInline>
+        <source src={video} type="video/mp4" />
+      </video>
+
+      <div className={styles.overlay}></div>
+
       <div className={styles.bannerContent}>
         <h1>
           <TypingText text={title} />
@@ -19,6 +17,7 @@ export default function Banner({ title, subtitle, stats, image }) {
         <p>
           <TypingText text={subtitle} />
         </p>
+
         <div className={styles.bannerStats}>
           {stats.map((stat, index) => (
             <div className={styles.stat} key={index}>

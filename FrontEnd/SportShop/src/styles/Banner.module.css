@@ -1,26 +1,52 @@
 .banner {
-  background-size: cover;
-  background-position: center;
-  color: white;
-  padding: 80px 20px;
-  text-align: center;
+  position: relative;
+  width: 100%;
   min-height: 550px;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  color: white;
+  text-align: center;
 }
 
+/* VIDEO NỀN */
+.videoBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* LỚP TỐI PHỦ VIDEO */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 2;
+}
+
+.bannerContent {
+  position: relative;
+  z-index: 3; /* Quan trọng: nằm trên overlay và video */
+}
+
+/* Các phần còn lại giữ nguyên */
 .bannerContent h1 {
   font-size: 3rem;
   margin-bottom: 15px;
   font-weight: 700;
-  letter-spacing: -0.5px;
 }
 
 .bannerContent p {
   font-size: 1.2rem;
   margin-bottom: 50px;
-  opacity: 0.95;
   font-weight: 300;
 }
 
@@ -33,8 +59,6 @@
 }
 
 .stat {
-  display: flex;
-  flex-direction: column;
   background: rgba(255, 255, 255, 0.15);
   padding: 25px 20px;
   border-radius: 8px;
@@ -44,11 +68,10 @@
 .statNumber {
   font-size: 2.2rem;
   font-weight: 700;
-  margin-bottom: 5px;
 }
 
 .statLabel {
-  font-size: 0.9rem;
+  display: block;
   opacity: 0.9;
-  font-weight: 400;
+  font-size: 0.9rem;
 }

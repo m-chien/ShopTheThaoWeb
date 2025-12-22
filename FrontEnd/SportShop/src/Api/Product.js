@@ -1,8 +1,21 @@
-import { api } from "./Api";
+import { api, apiDummy } from "./Api";
 
 export const getAllProduct = () => {
   return api.get("/ProductVariant/grouped-products");
 };
+
+export const getAllProductDummy = () => {
+  console.log(apiDummy.get("/products"));
+  return apiDummy.get("/products");
+};
+
+export const filterProducts = (filterData) => {
+  return api.post("/ProductVariant/filter-sp", filterData);
+};
+
+export const detailproduct = (idProduct) => {
+  return api.get(`ProductVariant/detail/${idProduct}`);
+}
 
 export const deleteProduct = (id) => {
   return api.delete(`/Product/${id}`);

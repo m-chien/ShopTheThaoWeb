@@ -1,0 +1,223 @@
+/* Order Summary */
+.orderSummary {
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .orderSummary {
+    position: sticky;
+    /* place sticky summary below the fixed header (header ~72px) */
+    top: 80px;
+    height: fit-content;
+  }
+}
+
+.summaryBox {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+
+/* Cart Items */
+.cartItems {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.cartItem {
+  display: flex;
+  gap: 1rem;
+}
+
+.itemImageWrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.itemImage {
+  width: 5rem;
+  height: 5rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.itemBadge {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  background-color: #4b5563;
+  color: white;
+  font-size: 0.75rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.itemDetails {
+  flex: 1;
+}
+
+.itemName {
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+  color: #111827;
+  line-height: 1.4;
+}
+
+.itemSize {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.itemPrice {
+  font-weight: 500;
+  color: #111827;
+  flex-shrink: 0;
+}
+
+/* Promo Section */
+.promoSection {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.promoInput {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.promoInput:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.promoButton {
+  padding: 0.5rem 1.5rem;
+  background-color: #e5e7eb;
+  color: #374151;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.promoButton:hover {
+  background-color: #d1d5db;
+}
+
+/* Price Summary */
+.priceSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+  margin-bottom: 1rem;
+}
+
+.priceRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+
+.priceLabel {
+  color: #6b7280;
+}
+
+.priceValue {
+  font-weight: 500;
+  color: #111827;
+}
+
+.priceFree {
+  color: #059669;
+  font-weight: 600;
+}
+
+/* Total Section */
+.totalSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.totalLabel {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.totalAmount {
+  text-align: right;
+}
+
+.totalCurrency {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.totalPrice {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+  .checkoutContainer {
+    padding: 1rem;
+  }
+
+  .breadcrumb {
+    font-size: 0.75rem;
+  }
+
+  .paymentTitle {
+    font-size: 1.125rem;
+  }
+
+  .itemImage {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .itemName {
+    font-size: 0.8125rem;
+  }
+
+  .totalPrice {
+    font-size: 1.25rem;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+  }
+
+  .backButton {
+    order: 2;
+    text-align: center;
+  }
+
+  .submitButton {
+    order: 1;
+  }
+}
