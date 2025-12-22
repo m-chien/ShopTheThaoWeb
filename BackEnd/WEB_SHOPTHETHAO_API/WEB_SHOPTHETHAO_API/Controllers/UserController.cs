@@ -27,6 +27,11 @@ namespace WEB_SHOPTHETHAO_API.Controllers
         public async Task<IActionResult> Login(LoginRequest request)
         {
             var response = await _authService.LoginAsync(request);
+            if (!response.Success)
+            {
+                // Trả về lỗi cho Frontend kèm lời nhắn (Message)
+                return BadRequest(new { message = response.Message });
+            }
             Response.Cookies.Append("refreshToken", response.RefreshToken, new CookieOptions
             {
                 HttpOnly = true,

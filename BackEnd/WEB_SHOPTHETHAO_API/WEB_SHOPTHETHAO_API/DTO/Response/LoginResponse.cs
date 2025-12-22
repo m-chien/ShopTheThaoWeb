@@ -5,5 +5,8 @@ namespace WEB_SHOPTHETHAO_API.DTO.Response
     {
         public string AccessToken { get; set; } // JWT token - hiệu lực 5 phút
         public string RefreshToken { get; set; } // Refresh token - hiệu lực 1 ngày
+
+        public bool Success { get; set; } = true; // Mặc định là thành công
+        public string Message { get; set; }
     }
 }

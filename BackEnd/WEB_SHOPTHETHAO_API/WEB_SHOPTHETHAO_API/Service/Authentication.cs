@@ -32,30 +32,46 @@ namespace WEB_SHOPTHETHAO_API.Service
 
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
-            // Tìm user theo username
+            // 1. Tìm user theo username
             var user = await _context.Users
                 .Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
                 .FirstOrDefaultAsync(u => u.UserName == request.UserName);
 
-            // Kiểm tra user tồn tại, active và verify password hash
-            if (user == null || !user.IsActive || !_passwordService.VerifyPassword(request.Password, user.Password))
+            // 2. Kiểm tra User có tồn tại không
+            if (user == null)
             {
-                throw new UnauthorizedAccessException("Sai tài khoản hoặc mật khẩu");
+                return new LoginResponse { Success = false, Message = "Sai tài khoản hoặc mật khẩu" };
             }
 
+            // 3. 👇 QUAN TRỌNG: Kiểm tra Active TRƯỚC khi check pass
+            if (!user.IsActive)
+            {
+                return new LoginResponse
+                {
+                    Success = false,
+                    Message = "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ Admin."
+                };
+            }
+
+            // 4. Kiểm tra mật khẩu
+            if (!_passwordService.VerifyPassword(request.Password, user.Password))
+            {
+                return new LoginResponse { Success = false, Message = "Sai tài khoản hoặc mật khẩu" };
+            }
+
+            // --- Nếu qua hết các bước trên thì mới tạo Token ---
             var roles = user.UserRoles.Select(ur => ur.Role.RoleName).ToList();
 
-            // Tạo tokens
             var accessToken = _tokenService.GenerateAccessToken(user, roles);
             var refreshToken = _tokenService.GenerateRefreshToken();
 
-            // Lưu refresh token vào database
             user.RefreshToken = refreshToken;
             await _context.SaveChangesAsync();
 
             return new LoginResponse
             {
+                Success = true,
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
             };
@@ -96,7 +112,7 @@ namespace WEB_SHOPTHETHAO_API.Service
             await _context.SaveChangesAsync();
 
             // Gán role mặc định "User" cho user mới
-            await AssignRoleToUserAsync(newUser.UserId, "User");
+            await AssignRoleToUserAsync(newUser.UserId, "Customer");
 
             // Tự động login sau khi đăng ký (dùng password gốc chưa hash)
             var loginRequest = new LoginRequest

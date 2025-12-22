@@ -17,30 +17,64 @@ public class OrderController : ControllerBase
     {
         _context = context;
     }
+    //// GET: api/order
+    //[HttpGet]
+    //public async Task<IActionResult> GetAll()
+    //{
+    //    var orders = await _context.Orders
+    //        .Include(o => o.User) // <--- QUAN TRỌNG: JOIN VỚI BẢNG USER
+    //        .Select(o => new
+    //        {
+    //            o.Id,
+    //            o.UserId,
+    //            // Lấy tên khách hàng, nếu null thì hiện "Khách vãng lai"
+    //            CustomerName = o.User != null ? o.User.FullName : "Khách vãng lai",
+    //            o.OrderDate,
+    //            o.Status,
+    //            o.TotalAmount,
+    //            o.DeliveryAddress,
+    //            o.Phone
+    //        })
+    //        .OrderByDescending(o => o.OrderDate) // Sắp xếp mới nhất lên đầu
+    //        .ToListAsync();
+
+    //    return Ok(orders);
+    //}
+
     // GET: api/order
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         var orders = await _context.Orders
-            .Include(o => o.User) // <--- QUAN TRỌNG: JOIN VỚI BẢNG USER
+            .Include(o => o.User)
+            .Include(o => o.Payments) // <--- 1. JOIN THÊM BẢNG PAYMENT
             .Select(o => new
             {
                 o.Id,
                 o.UserId,
-                // Lấy tên khách hàng, nếu null thì hiện "Khách vãng lai"
                 CustomerName = o.User != null ? o.User.FullName : "Khách vãng lai",
                 o.OrderDate,
-                o.Status,
+                o.Status, // Trạng thái đơn hàng (Đang xử lý, Giao hàng...)
                 o.TotalAmount,
                 o.DeliveryAddress,
-                o.Phone
+                o.Phone,
+
+                // <--- 2. LẤY THÔNG TIN THANH TOÁN
+                // Lấy phương thức thanh toán (ví dụ: COD, Credit Card), mặc định là COD nếu null
+                PaymentMethod = o.Payments.Any()
+                                ? o.Payments.OrderByDescending(p => p.PaymentDate).FirstOrDefault().Method
+                                : "COD",
+
+                // Lấy trạng thái thanh toán (Đã thanh toán, Chờ thanh toán...), mặc định là Chưa thanh toán
+                PaymentStatus = o.Payments.Any()
+                                ? o.Payments.OrderByDescending(p => p.PaymentDate).FirstOrDefault().Status
+                                : "Chưa thanh toán"
             })
-            .OrderByDescending(o => o.OrderDate) // Sắp xếp mới nhất lên đầu
+            .OrderByDescending(o => o.OrderDate)
             .ToListAsync();
 
         return Ok(orders);
     }
-
     // GET: api/order/5
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
