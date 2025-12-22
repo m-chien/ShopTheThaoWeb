@@ -25,7 +25,7 @@ namespace WEB_SHOPTHETHAO_API.Service
             var vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var vnNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
 
-            // ✅ TxnRef UNIQUE (không trùng trong ngày)
+            //  TxnRef UNIQUE (không trùng trong ngày)
             var txnRef = $"{payment.Id}_{vnNow:yyyyMMddHHmmss}";
 
             var vnp = new SortedDictionary<string, string>
@@ -43,7 +43,7 @@ namespace WEB_SHOPTHETHAO_API.Service
                 ["vnp_Locale"] = "vn",
                 ["vnp_CreateDate"] = vnNow.ToString("yyyyMMddHHmmss"),
 
-                // ✅ thêm ExpireDate (15 phút)
+                //  thêm ExpireDate (15 phút)
                 ["vnp_ExpireDate"] = vnNow.AddMinutes(15).ToString("yyyyMMddHHmmss")
             };
 

@@ -20,8 +20,8 @@ CREATE TABLE Category (
     ID INT IDENTITY(1,1) PRIMARY KEY,          -- Khóa chính, tự tăng, định danh duy nhất cho danh mục
     Name NVARCHAR(100) NOT NULL,               -- Tên danh mục sản phẩm
     Description NVARCHAR(500),                 -- Mô tả chi tiết về danh mục
-    CreatedAt DATETIME DEFAULT GETDATE(),
-	image NVARCHAR(200) -- Ngày tạo danh mục, mặc định là ngày hiện tại
+    CreatedAt DATETIME DEFAULT GETDATE(),	   -- Ngày tạo danh mục, mặc định là ngày hiện tại
+	image NVARCHAR(200) 
 );
 
 
@@ -400,7 +400,7 @@ INSERT INTO [User]
 (UserName, Password, Email, FullName, PhoneNumber, AvatarUrl, Address, RefreshToken, IsActive, CreatedDate)
 VALUES
 ('tuan_khanh', '123456', 'khanh@example.com', N'Trần Đăng Tuấn Khanh', '0900000001', NULL, N'Đà Nẵng', NULL, 1, SYSUTCDATETIME()),
-('admin01', 'admin123', 'admin@example.com', N'Quản trị viên', '0900000002', NULL, N'Hồ Chí Minh', NULL, 1, SYSUTCDATETIME());
+('admin01', '$2a$11$gsPivpi2QoNvhxaCJfHaKuyzDExHw4j5aKdWAAgFPa3hz9t09vP4e', 'admin@example.com', N'Quản trị viên', '0900000002', NULL, N'Hồ Chí Minh', NULL, 1, SYSUTCDATETIME());
 
 
 -- Role
@@ -801,5 +801,79 @@ GO
 -- Test
 EXEC dbo.sp_GetOrdersByUserId @UserId = 1;
 
-
+-- Trigger giảm số lượng sản phẩm khi khách hàng đặt hàng
 SELECT * FROM [Order];
+IF OBJECT_ID('dbo.trg_OrderDetail_DecreaseStock', 'TR') IS NOT NULL
+    DROP TRIGGER dbo.trg_OrderDetail_DecreaseStock;
+GO
+
+CREATE TRIGGER dbo.trg_OrderDetail_DecreaseStock
+ON dbo.OrderDetail
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+        -- 1) Quantity hợp lệ
+        IF EXISTS (SELECT 1 FROM inserted WHERE Quantity IS NULL OR Quantity <= 0)
+        BEGIN
+            RAISERROR (N'Quantity phải > 0.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- 2) Gom số lượng theo ProductVariantID
+        DECLARE @req TABLE (
+            ProductVariantID INT PRIMARY KEY,
+            TotalQty INT NOT NULL
+        );
+
+        INSERT INTO @req(ProductVariantID, TotalQty)
+        SELECT ProductVariantID, SUM(Quantity)
+        FROM inserted
+        GROUP BY ProductVariantID;
+
+        -- 3) Check ProductVariantID tồn tại
+        IF EXISTS (
+            SELECT 1
+            FROM @req r
+            LEFT JOIN dbo.ProductVariant pv ON pv.ID = r.ProductVariantID
+            WHERE pv.ID IS NULL
+        )
+        BEGIN
+            RAISERROR (N'ProductVariantID không tồn tại.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- 4) Check tồn kho đủ
+        IF EXISTS (
+            SELECT 1
+            FROM @req r
+            JOIN dbo.ProductVariant pv ON pv.ID = r.ProductVariantID
+            WHERE ISNULL(pv.StockQuantity, 0) < r.TotalQty
+        )
+        BEGIN
+            RAISERROR (N'Không đủ tồn kho cho một hoặc nhiều biến thể.', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- 5) Trừ tồn kho
+        UPDATE pv
+        SET pv.StockQuantity = pv.StockQuantity - r.TotalQty
+        FROM dbo.ProductVariant pv
+        JOIN @req r ON r.ProductVariantID = pv.ID;
+
+    END TRY
+    BEGIN CATCH
+        DECLARE @msg NVARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR (N'Trigger giảm tồn kho lỗi: %s', 16, 1, @msg);
+        ROLLBACK TRANSACTION;
+        RETURN;
+    END CATCH
+END
+GO
+
