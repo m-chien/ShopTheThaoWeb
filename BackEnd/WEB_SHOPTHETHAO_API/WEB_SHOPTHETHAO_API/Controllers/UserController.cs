@@ -104,6 +104,60 @@ namespace WEB_SHOPTHETHAO_API.Controllers
             return Ok(new { message = "Đăng xuất thành công" });
         }
 
+        [HttpPut("update-profile")]
+        [Authorize]
+        public async Task<IActionResult> UpdateProfile([FromBody] updateUserRequest request)
+        {
+            var userName = User.FindFirst(ClaimTypes.Name)?.Value;
+            if (string.IsNullOrEmpty(userName))
+                return Unauthorized(new { message = "Token không hợp lệ" });
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
+            if (user == null)
+                return NotFound(new { message = "Không tìm thấy user" });
+
+            // Cập nhật thông tin
+            user.FullName = request.FullName;
+            user.Email = request.Email;
+            user.PhoneNumber = request.Phone;
+            user.Address = request.Address;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Cập nhật thông tin thành công",
+                user.FullName,
+                user.Email,
+                user.PhoneNumber,
+                user.Address
+            });
+        }
+
+        [Authorize]
+        [HttpPut("change-password")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim))
+                return Unauthorized("Token không hợp lệ");
+
+            var userId = int.Parse(userIdClaim);
+
+            var result = await _authService.ChangePasswordAsync(
+                userId,
+                request.OldPassword,
+                request.NewPassword
+            );
+
+            if (!result)
+                return BadRequest(new { message = "Mật khẩu cũ không đúng" });
+
+            return Ok(new { message = "Đổi mật khẩu thành công, vui lòng đăng nhập lại" });
+        }
+
+
+
 
         [HttpGet("profile")]
         [Authorize] // Yêu cầu phải đăng nhập
@@ -135,6 +189,8 @@ namespace WEB_SHOPTHETHAO_API.Controllers
                 UserName = user.UserName,
                 Email = user.Email,
                 FullName = user.FullName,
+                phone = user.PhoneNumber,
+                address = user.Address,
                 Roles = roles,
                 IsActive = user.IsActive,
                 CreatedDate = user.CreatedDate

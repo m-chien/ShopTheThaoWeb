@@ -10,9 +10,12 @@ namespace WEB_SHOPTHETHAO_API.Service
     {
         Task<LoginResponse> LoginAsync(LoginRequest request);
         Task<LoginResponse> RegisterAsync(RegisterRequest request);
-        Task<LoginResponse> RefreshTokenAsync(String request);
+        Task<LoginResponse> RefreshTokenAsync(string refreshToken);
         Task<bool> AssignRoleToUserAsync(int userId, string roleName);
+
+        Task<bool> ChangePasswordAsync(int userId, string oldPassword, string newPassword);
     }
+
 
     public class AuthenticationService : IAuthenticationService
     {
@@ -76,6 +79,26 @@ namespace WEB_SHOPTHETHAO_API.Service
                 RefreshToken = refreshToken
             };
         }
+        public async Task<bool> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return false;
+
+            // Kiểm tra mật khẩu cũ
+            if (!_passwordService.VerifyPassword(oldPassword, user.Password))
+                return false;
+
+            // Hash mật khẩu mới
+            user.Password = _passwordService.HashPassword(newPassword);
+
+            // (Nâng cao) revoke refresh token
+            user.RefreshToken = null;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+
 
         /// <summary>
         /// Đăng ký user mới - hash password
