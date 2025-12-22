@@ -32,7 +32,7 @@ namespace WEB_SHOPTHETHAO_API.Controllers
             string txnRef = query["vnp_TxnRef"].ToString();
             string vnpTransNo = query["vnp_TransactionNo"].ToString();
 
-            // ✅ Parse paymentId từ txnRef (có thể là "3" hoặc "3_2025...")
+            //  Parse paymentId từ txnRef (có thể là "3" hoặc "3_2025...")
             string paymentIdStr = txnRef.Contains("_") ? txnRef.Split('_')[0] : txnRef;
 
             if (!int.TryParse(paymentIdStr, out int paymentId))
@@ -44,7 +44,7 @@ namespace WEB_SHOPTHETHAO_API.Controllers
 
             var order = _db.Orders.Find(payment.OrderId);
 
-            // ✅ Success khi cả 2 = "00"
+            //  Success khi cả 2 = "00"
             bool isSuccess = responseCode == "00" && tranStatus == "00";
 
             if (isSuccess)
