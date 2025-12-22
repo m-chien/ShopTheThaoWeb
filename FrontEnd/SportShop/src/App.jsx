@@ -1,5 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { useAuth } from "./Component/AuthProvider";
 import PrivateRoute from "./Component/PrivateRoute";
 import RequireAdmin from "./Component/RequireAdmin";
 import AdminLayout from "./Page/Admin/Layout/AdminLayout";
@@ -24,7 +25,7 @@ import ProductListPage from "./Page/ProductListPage";
 import Profile from "./Page/Profile";
 
 function App() {
-  const token = sessionStorage.getItem("accessToken");
+  const { token } = useAuth();
   console.log("🚀 ~ App ~ token:", token);
 
   return (

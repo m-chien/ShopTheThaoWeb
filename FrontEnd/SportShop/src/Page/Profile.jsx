@@ -3,6 +3,7 @@ import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import "../styles/Profile.css";
 import { useNavigate } from "react-router-dom";
+import { api } from "../Api/Api";
 import avatar from "../assets/IMG_6162.JPG";
 import Breadcrumb from "../Component/Breadcrumb";
 import NotificationModal from "../Component/NotificationModal";
@@ -11,6 +12,7 @@ import Info from "../Component/Profile/Info";
 import { Orders } from "../Component/Profile/Orders";
 import Setting from "../Component/Profile/Setting";
 import useFetchAll from "../hooks/useFetchAll";
+import { useAuth } from "../Component/AuthProvider";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -18,6 +20,7 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState("info");
   const [isEditing, setIsEditing] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const {logout} = useAuth();
 
   // Dùng useFetchAll cho user info
   const { data: userInfo, loading: loadingUser } = useFetchAll(
@@ -79,9 +82,23 @@ export default function Profile() {
     setIsEditing(false);
   };
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("accessToken");
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      // Gọi BE để xoá refreshToken (HttpOnly cookie)
+      await api.post("/User/logout", null, {
+        withCredentials: true,
+      });
+      logout();
+    } catch (err) {
+      console.error("Logout error:", err);
+      // lỗi cũng kệ, vẫn cho logout FE
+    } finally {
+      // Xoá access token phía client
+      sessionStorage.removeItem("accessToken");
+
+      // Điều hướng về login
+      navigate("/login", { replace: true });
+    }
   };
 
   const getStatusColor = (status) => {

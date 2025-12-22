@@ -10,7 +10,6 @@ export const User = () => {
         fullName: fullname,
       });
       console.log("🚀 ~ register ~ response:", response)
-      sessionStorage.setItem("accessToken", response.data.data.accessToken);
       return response.data;
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
@@ -25,8 +24,6 @@ export const User = () => {
         Password: password,
       });
       console.log("🚀 ~ login ~ response:", response)
-
-      sessionStorage.setItem("accessToken", response.data.data.accessToken);
       return response.data;
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);

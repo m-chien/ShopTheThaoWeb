@@ -3,12 +3,14 @@ import { useRef, useState } from "react";
 import "../styles/AuthPage.css";
 import { useNavigate } from "react-router-dom";
 import { User } from "../Api/User";
+import { useAuth } from "../Component/AuthProvider";
 import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import NotificationModal from "../Component/NotificationModal";
 import { RegisterPage } from "./RegisterPage";
 
 export function LoginPage() {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState("login");
   const [rememberMe, setRememberMe] = useState(false);
@@ -31,8 +33,7 @@ export function LoginPage() {
 
         const token = data.data.accessToken;
         if (token) {
-          sessionStorage.setItem("accessToken", token);
-
+          login(token);
           let decoded;
           try {
             decoded = jwtDecode(token);
@@ -47,12 +48,9 @@ export function LoginPage() {
             title: "Đăng nhập thành công",
             message: "Bạn đã đăng nhập thành công!",
           });
-          const onCloseSuccess = () => {
-            setShowModal({ ...showModal, isOpen: false });
+          setTimeout(() => {
             navigate(decoded.role === "Admin" ? "/admin" : "/trangchu");
-          };
-
-          setShowModal((prev) => ({ ...prev, onPrimaryClick: onCloseSuccess }));
+          }, 3000);
         }
       } catch (error) {
         console.error("Login failed:", error);
@@ -152,7 +150,7 @@ export function LoginPage() {
         message={showModal.message}
         onClose={() => setShowModal({ ...showModal, isOpen: false })}
         primaryButtonText="Đóng"
-        showButtons={true}
+        showButtons={false}
         onPrimaryClick={showModal.onPrimaryClick}
       />
     </div>

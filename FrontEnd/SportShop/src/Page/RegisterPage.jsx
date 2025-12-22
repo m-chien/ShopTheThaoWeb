@@ -4,9 +4,11 @@ import Header from "../Component/Header";
 import "../styles/AuthPage.css";
 import { useNavigate } from "react-router-dom";
 import { User } from "../Api/User";
+import { useAuth } from "../Component/AuthProvider";
 import NotificationModal from "../Component/NotificationModal";
 
 export function RegisterPage({ setCurrentPage }) {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: "",
@@ -52,6 +54,8 @@ export function RegisterPage({ setCurrentPage }) {
         formData.fullName,
       )
       .then((data) => {
+        const token = data.data.accessToken;
+        login(token);
         setShowModal({
           isOpen: true,
           status: "success",
