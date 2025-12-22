@@ -1,6 +1,57 @@
 import "../../Component/Profile/Setting.css";
+import { useState } from "react";
+import { api } from "../../Api/Api";
+import { useAuth } from "../AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const Setting = () => {
+  const [showChangePass, setShowChangePass] = useState(false);
+  const [form, setForm] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [loading, setLoading] = useState(false);
+
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const handleChangePassword = async () => {
+    if (form.newPassword !== form.confirmPassword) {
+      alert("Mật khẩu mới không khớp");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await api.put("/User/change-password", {
+        oldPassword: form.oldPassword,
+        newPassword: form.newPassword,
+      });
+
+      alert("Đổi mật khẩu thành công, vui lòng đăng nhập lại");
+
+      // logout sau khi đổi pass (đúng security)
+      await api.post("/User/logout");
+      logout();
+      sessionStorage.removeItem("accessToken");
+      navigate("/login", { replace: true });
+
+    } catch (err) {
+      alert(
+        err?.response?.data?.message || "Mật khẩu cũ không đúng"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <h2>Cài đặt tài khoản</h2>
@@ -12,50 +63,55 @@ const Setting = () => {
             <h4>Mật khẩu</h4>
             <p>Đổi mật khẩu của tài khoản</p>
           </div>
-          <button className="setting-btn">Đổi mật khẩu</button>
+          <button
+            className="setting-btn"
+            onClick={() => setShowChangePass(!showChangePass)}
+          >
+            Đổi mật khẩu
+          </button>
         </div>
-      </div>
 
-      <div className="settings-section">
-        <h3>Thông báo</h3>
-        <div className="setting-item">
-          <div>
-            <h4>Email thông báo</h4>
-            <p>Nhận thông báo về đơn hàng qua email</p>
-          </div>
-          <label className="checkbox">
-            <input type="checkbox" defaultChecked />
-            <span>Bật</span>
-          </label>
-        </div>
-        <div className="setting-item">
-          <div>
-            <h4>SMS thông báo</h4>
-            <p>Nhận thông báo về đơn hàng qua SMS</p>
-          </div>
-          <label className="checkbox">
-            <input type="checkbox" defaultChecked />
-            <span>Bật</span>
-          </label>
-        </div>
-      </div>
+        {showChangePass && (
+          <div className="change-password-form">
+            <div className="form-group">
+              <label>Mật khẩu hiện tại</label>
+              <input
+                type="password"
+                name="oldPassword"
+                value={form.oldPassword}
+                onChange={handleChange}
+              />
+            </div>
 
-      <div className="settings-section">
-        <h3>Dữ liệu</h3>
-        <div className="setting-item">
-          <div>
-            <h4>Tải xuống dữ liệu cá nhân</h4>
-            <p>Tải xuống toàn bộ thông tin cá nhân của bạn</p>
+            <div className="form-group">
+              <label>Mật khẩu mới</label>
+              <input
+                type="password"
+                name="newPassword"
+                value={form.newPassword}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Xác nhận mật khẩu mới</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={form.confirmPassword}
+                onChange={handleChange}
+              />
+            </div>
+
+            <button
+              className="save-btn"
+              onClick={handleChangePassword}
+              disabled={loading}
+            >
+              {loading ? "Đang xử lý..." : "Lưu mật khẩu"}
+            </button>
           </div>
-          <button className="setting-btn">Tải xuống</button>
-        </div>
-        <div className="setting-item">
-          <div>
-            <h4>Xóa tài khoản</h4>
-            <p>Xóa vĩnh viễn tài khoản và dữ liệu liên quan</p>
-          </div>
-          <button className="setting-btn delete-btn">Xóa tài khoản</button>
-        </div>
+        )}
       </div>
     </>
   );

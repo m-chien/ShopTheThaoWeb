@@ -1,18 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "../Component/Footer";
 import Header from "../Component/Header";
 import "../styles/Profile.css";
 import { useNavigate } from "react-router-dom";
 import { api } from "../Api/Api";
 import avatar from "../assets/IMG_6162.JPG";
+import { useAuth } from "../Component/AuthProvider";
 import Breadcrumb from "../Component/Breadcrumb";
 import NotificationModal from "../Component/NotificationModal";
-import Addresses from "../Component/Profile/Addresses";
 import Info from "../Component/Profile/Info";
 import { Orders } from "../Component/Profile/Orders";
 import Setting from "../Component/Profile/Setting";
 import useFetchAll from "../hooks/useFetchAll";
-import { useAuth } from "../Component/AuthProvider";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -20,7 +19,14 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState("info");
   const [isEditing, setIsEditing] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const {logout} = useAuth();
+  const { logout } = useAuth();
+
+  const [editForm, setEditForm] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
 
   // Dùng useFetchAll cho user info
   const { data: userInfo, loading: loadingUser } = useFetchAll(
@@ -31,14 +37,18 @@ export default function Profile() {
       email: "",
       phone: "",
       address: "",
-      city: "",
-      district: "",
-      ward: "",
-      postalCode: "",
     },
   );
-
-  // Dùng useFetchAll cho orders
+  useEffect(() => {
+    if (userInfo) {
+      setEditForm({
+        fullName: userInfo.fullName || "",
+        email: userInfo.email || "",
+        phone: userInfo.phone || "",
+        address: userInfo.address || "",
+      });
+    }
+  }, [userInfo]);
   const { data: ordersData, loading: loadingOrders } = useFetchAll(
     "/Order/my-orders",
     {
@@ -47,7 +57,6 @@ export default function Profile() {
     },
   );
 
-  // Map orders giống trước
   const orders =
     ordersData?.orders?.map((order) => {
       const productsOfOrder = ordersData.products.filter(
@@ -64,17 +73,19 @@ export default function Profile() {
       };
     }) || [];
 
-  const [editForm, setEditForm] = useState(userInfo);
-
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditForm({ ...editForm, [name]: value });
   };
 
-  const handleSaveProfile = () => {
-    // Lưu editForm lên server nếu cần
-    setEditForm(editForm);
-    setIsEditing(false);
+  const handleSaveProfile = async () => {
+    try {
+      await api.put("/User/update-profile", editForm);
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Update profile error:", err);
+      alert("Cập nhật thông tin thất bại");
+    }
   };
 
   const handleCancel = () => {
@@ -84,19 +95,14 @@ export default function Profile() {
 
   const handleLogout = async () => {
     try {
-      // Gọi BE để xoá refreshToken (HttpOnly cookie)
       await api.post("/User/logout", null, {
         withCredentials: true,
       });
       logout();
     } catch (err) {
       console.error("Logout error:", err);
-      // lỗi cũng kệ, vẫn cho logout FE
     } finally {
-      // Xoá access token phía client
       sessionStorage.removeItem("accessToken");
-
-      // Điều hướng về login
       navigate("/login", { replace: true });
     }
   };
@@ -157,15 +163,6 @@ export default function Profile() {
                 📦 Đơn hàng của tôi
               </button>
               <button
-                className={`nav-item ${activeTab === "addresses" ? "active" : ""}`}
-                onClick={() => {
-                  setActiveTab("addresses");
-                  setIsEditing(false);
-                }}
-              >
-                📍 Địa chỉ giao hàng
-              </button>
-              <button
                 className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
                 onClick={() => {
                   setActiveTab("settings");
@@ -196,7 +193,6 @@ export default function Profile() {
             {activeTab === "orders" && (
               <Orders orders={orders} getStatusColor={getStatusColor} />
             )}
-            {activeTab === "addresses" && <Addresses userInfo={userInfo} />}
             {activeTab === "settings" && <Setting />}
           </div>
         </div>

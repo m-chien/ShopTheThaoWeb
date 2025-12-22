@@ -1,6 +1,14 @@
 import "../../Component/Profile/Info.css";
 
-const Info = ({ userInfo, isEditing, editForm, handleEditChange, setIsEditing, handleSaveProfile, handleCancel }) => {
+const Info = ({
+  userInfo,
+  isEditing,
+  editForm,
+  handleEditChange,
+  setIsEditing,
+  handleSaveProfile,
+  handleCancel,
+}) => {
   return (
     <>
       <div className="section-header">
@@ -30,22 +38,6 @@ const Info = ({ userInfo, isEditing, editForm, handleEditChange, setIsEditing, h
             <label>Địa chỉ:</label>
             <span>{userInfo.address}</span>
           </div>
-          <div className="info-row">
-            <label>Thành phố:</label>
-            <span>{userInfo.city}</span>
-          </div>
-          <div className="info-row">
-            <label>Quận/Huyện:</label>
-            <span>{userInfo.district}</span>
-          </div>
-          <div className="info-row">
-            <label>Phường/Xã:</label>
-            <span>{userInfo.ward}</span>
-          </div>
-          <div className="info-row">
-            <label>Mã bưu chính:</label>
-            <span>{userInfo.postalCode}</span>
-          </div>
         </div>
       ) : (
         <div className="info-edit">
@@ -53,8 +45,8 @@ const Info = ({ userInfo, isEditing, editForm, handleEditChange, setIsEditing, h
             <label>Họ và tên</label>
             <input
               type="text"
-              name="name"
-              value={editForm.name}
+              name="fullName"
+              value={editForm.fullName}
               onChange={handleEditChange}
             />
           </div>
@@ -82,42 +74,6 @@ const Info = ({ userInfo, isEditing, editForm, handleEditChange, setIsEditing, h
               type="text"
               name="address"
               value={editForm.address}
-              onChange={handleEditChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Thành phố</label>
-            <input
-              type="text"
-              name="city"
-              value={editForm.city}
-              onChange={handleEditChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Quận/Huyện</label>
-            <input
-              type="text"
-              name="district"
-              value={editForm.district}
-              onChange={handleEditChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Phường/Xã</label>
-            <input
-              type="text"
-              name="ward"
-              value={editForm.ward}
-              onChange={handleEditChange}
-            />
-          </div>
-          <div className="form-group">
-            <label>Mã bưu chính</label>
-            <input
-              type="text"
-              name="postalCode"
-              value={editForm.postalCode}
               onChange={handleEditChange}
             />
           </div>

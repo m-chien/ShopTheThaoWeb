@@ -15,7 +15,7 @@ export default function DetailProduct() {
 
   const { data: products, loading } = useFetchAll(
     `/ProductVariant/detail/${id}`,
-    null
+    null,
   );
   console.log("🚀 ~ DetailProduct ~ products:", products);
   const navigate = useNavigate();
@@ -26,14 +26,14 @@ export default function DetailProduct() {
 
       // set selectedColor as the full color object (not only id)
       const colorObj = products.colors?.find(
-        (c) => c.colorID === firstVariant.colorID
+        (c) => c.colorID === firstVariant.colorID,
       );
       if (colorObj) setSelectedColor(colorObj);
       else setSelectedColor(null);
 
       // set selectedSize as the full size object
       const sizeObj = products.sizes?.find(
-        (s) => s.sizeID === firstVariant.sizeID
+        (s) => s.sizeID === firstVariant.sizeID,
       );
       if (sizeObj) setSelectedSize(sizeObj);
       else setSelectedSize(null);
@@ -59,38 +59,10 @@ export default function DetailProduct() {
         ?.filter((v) => v.colorID === selectedColor.colorID)
         .map((v) => v.sizeID)
     : products?.sizes?.map((s) => s.sizeID);
-
-  // Related products (unchanged)
-  const relatedProducts = [
-    {
-      id: 2,
-      name: "Adidas Adistar 3 - Đỏ",
-      price: 1750000,
-      originalPrice: 3500000,
-      image: "/Product/nike_red.png",
-    },
-    {
-      id: 3,
-      name: "Adidas Adistar 3 - Đen",
-      price: 1750000,
-      originalPrice: 3500000,
-      image: "StreetRider_black.png",
-    },
-    {
-      id: 4,
-      name: "Adidas Adistar 3 - Trắng",
-      price: 1750000,
-      originalPrice: 3500000,
-      image: "puma_jogger_white.png",
-    },
-    {
-      id: 5,
-      name: "Adidas Adistar 3 - Xanh",
-      price: 1750000,
-      originalPrice: 3500000,
-      image: "PUMAREPRESENT_blue.png",
-    },
-  ];
+  const { data: relatedProducts } = useFetchAll(
+    "/ProductVariant/grouped-products",
+    [],
+  );
 
   const handleAddToCart = () => {
     if (!selectedVariant || !selectedColor || !selectedSize) {
@@ -117,7 +89,7 @@ export default function DetailProduct() {
         sizeName: selectedSize?.sizeName || "",
         quantity,
         isSelected: false,
-      })
+      }),
     );
   };
   const handleBuyNow = () => {
@@ -144,7 +116,7 @@ export default function DetailProduct() {
         sizeName: selectedSize?.sizeName || "",
         quantity,
         isSelected: true,
-      })
+      }),
     );
     navigate("/cart");
   };
@@ -263,14 +235,14 @@ export default function DetailProduct() {
                       setSelectedColor(color);
 
                       const variant = products.variants.find(
-                        (v) => v.colorID === color.colorID
+                        (v) => v.colorID === color.colorID,
                       );
 
                       if (!variant) return;
 
                       // set corresponding size object
                       const sizeObj = products.sizes?.find(
-                        (s) => s.sizeID === variant.sizeID
+                        (s) => s.sizeID === variant.sizeID,
                       );
 
                       setSelectedVariant(variant);
@@ -308,7 +280,7 @@ export default function DetailProduct() {
                         const variant = products.variants.find(
                           (v) =>
                             v.colorID === selectedColor?.colorID &&
-                            v.sizeID === size.sizeID
+                            v.sizeID === size.sizeID,
                         );
 
                         if (!variant) return;
@@ -510,13 +482,23 @@ export default function DetailProduct() {
         <div className={styles["related-products-section"]}>
           <h2>Sản Phẩm Liên Quan</h2>
           <div className={styles["related-products-grid"]}>
-            {relatedProducts.map((relProduct) => (
-              <CardProduct
-                key={relProduct.id}
-                product={relProduct}
-                onAddToCart={handleAddToCart}
-              />
-            ))}
+            {relatedProducts.slice(20, 25).map((product) => {
+              return (
+                <CardProduct
+                  key={product.productID}
+                  product={{
+                    id: product.productID,
+                    name: product.name,
+                    description: product.description,
+                    colors: product.colors,
+                    images: product.images,
+                    prices: product.prices,
+                    minPrice: Math.min(...product.prices),
+                    maxPrice: Math.max(...product.prices),
+                  }}
+                />
+              );
+            })}
           </div>
         </div>
       </div>
